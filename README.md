@@ -175,12 +175,12 @@ npm run build
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### Quick Start: Prerequisites
 
 - Node.js 18+
 - npm or yarn
 
-### Installation
+### Quick Start: Installation
 
 1. **Install all dependencies:**
 
