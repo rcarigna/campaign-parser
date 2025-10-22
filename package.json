@@ -1,0 +1,36 @@
+{
+  "name": "obsidian-parser",
+  "version": "1.0.0",
+  "description": "Full-stack web application for document parsing with React TypeScript frontend and Node.js backend",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "install:all": "npm install && npm run install:client && npm run install:server",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install",
+    "clean": "npm run clean:client && npm run clean:server",
+    "clean:client": "cd client && rm -rf dist node_modules/.vite",
+    "clean:server": "cd server && rm -rf dist",
+    "dev": "concurrently --kill-others --prefix-colors \"bgBlue.bold,bgMagenta.bold\" --prefix \"[SERVER],[ CLIENT]\" \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "start": "concurrently --kill-others \"npm run start:server\" \"npm run start:client\"",
+    "start:client": "cd client && npm run preview",
+    "start:server": "cd server && npm start",
+    "test": "npm run test:client && npm run test:server",
+    "test:client": "cd client && npm test",
+    "test:server": "cd server && npm test",
+    "test:watch": "concurrently --kill-others --prefix-colors \"bgGreen.bold,bgYellow.bold\" --prefix \"[CLIENT-TEST],[SERVER-TEST]\" \"npm run test:watch:client\" \"npm run test:watch:server\"",
+    "test:watch:client": "cd client && npm test -- --watch",
+    "test:watch:server": "cd server && npm test -- --watch"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
