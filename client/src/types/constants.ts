@@ -1,12 +1,21 @@
-export const ALLOWED_MIME_TYPES = [
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/msword',
-    'text/markdown',
-    'text/plain',
-] as const;
+export enum AllowedMimeType {
+    DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    DOC = 'application/msword',
+    MARKDOWN = 'text/markdown',
+    // PLAIN_TEXT = 'text/plain',
+}
 
-export const ALLOWED_EXTENSIONS = ['.doc', '.docx', '.md'] as const;
+export enum AllowedExtension {
+    DOC = '.doc',
+    DOCX = '.docx',
+    MARKDOWN = '.md',
+}
+
 export const MAX_FILE_SIZE_KB = 10 * 1024; // 10MB in KB
+
+// Helper arrays for runtime checks (if needed)
+export const ALLOWED_MIME_TYPES = Object.values(AllowedMimeType);
+export const ALLOWED_EXTENSIONS = Object.values(AllowedExtension);
 
 export type ParsedDocument = {
     filename: string;
