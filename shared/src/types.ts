@@ -11,6 +11,11 @@ export enum AllowedExtension {
     MARKDOWN = '.md',
 }
 
+export enum DocumentType {
+    WORD_DOCUMENT = 'word_document',
+    MARKDOWN = 'markdown',
+}
+
 export const MAX_FILE_SIZE_KB = 10 * 1024; // 10MB in KB
 
 // Helper arrays for runtime checks
@@ -62,7 +67,7 @@ export type Image = {
 
 export type ParsedDocument = {
     filename: string;
-    type: 'word_document' | 'markdown';
+    type: DocumentType;
     content: WordDocumentContent | MarkdownContent;
     metadata: DocumentMetadata;
 };

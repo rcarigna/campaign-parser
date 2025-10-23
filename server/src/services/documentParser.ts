@@ -1,5 +1,6 @@
 import mammoth from 'mammoth';
 import { marked } from 'marked';
+import { DocumentType, AllowedMimeType } from '@obsidian-parser/shared';
 import type {
     ParsedDocument,
     DocumentMetadata,
@@ -10,81 +11,117 @@ import type {
     Image
 } from '@obsidian-parser/shared';
 
-export const parseDocument = async (file: Express.Multer.File): Promise<ParsedDocument> => {
-    const { originalname, mimetype, size, buffer } = file;
+type FileParsingResult = {
+    content: WordDocumentContent | MarkdownContent;
+    type: DocumentType;
+};
 
-    let content: WordDocumentContent | MarkdownContent;
-    let type: 'word_document' | 'markdown';
+const isWordDocument = (mimetype: string): boolean => {
+    return mimetype === AllowedMimeType.DOCX ||
+        mimetype === AllowedMimeType.DOC;
+};
+
+const isMarkdownDocument = (originalname: string, mimetype: string): boolean => {
+    return originalname.endsWith('.md') ||
+        mimetype === AllowedMimeType.MARKDOWN ||
+        mimetype === 'text/plain';
+};
+
+const parseWordDocument = async (buffer: Buffer): Promise<WordDocumentContent> => {
+    const result = await mammoth.convertToHtml({ buffer });
+
+    return {
+        html: result.value,
+        text: result.value.replace(/<[^>]*>/g, ''), // Strip HTML tags for plain text
+        messages: result.messages,
+        warnings: result.messages.filter(m => m.type === 'warning'),
+        errors: result.messages.filter(m => m.type === 'error')
+    };
+};
+
+const parseFrontmatter = (markdownText: string): { metadata: Record<string, string>; contentWithoutFrontmatter: string } => {
+    const frontmatterMatch = markdownText.match(/^---\n(.*?)\n---/s);
+    const metadata: Record<string, string> = {};
+    let contentWithoutFrontmatter = markdownText;
+
+    if (frontmatterMatch) {
+        try {
+            // Simple YAML-like parsing for basic frontmatter
+            const frontmatterLines = frontmatterMatch[1].split('\n');
+            frontmatterLines.forEach(line => {
+                const colonIndex = line.indexOf(':');
+                if (colonIndex > 0) {
+                    const key = line.substring(0, colonIndex).trim();
+                    const value = line.substring(colonIndex + 1).trim().replace(/^["']|["']$/g, '');
+                    metadata[key] = value;
+                }
+            });
+            contentWithoutFrontmatter = markdownText.replace(frontmatterMatch[0], '').trim();
+        } catch (e) {
+            // If frontmatter parsing fails, just ignore it
+        }
+    }
+
+    return { metadata, contentWithoutFrontmatter };
+};
+
+const parseMarkdownDocument = (buffer: Buffer): MarkdownContent => {
+    const markdownText = buffer.toString('utf-8');
+    const htmlContent = marked(markdownText);
+    const { metadata, contentWithoutFrontmatter } = parseFrontmatter(markdownText);
+
+    return {
+        raw: markdownText,
+        html: htmlContent,
+        text: contentWithoutFrontmatter,
+        frontmatter: metadata,
+        headings: extractHeadings(markdownText),
+        links: extractLinks(markdownText),
+        images: extractImages(markdownText)
+    };
+};
+
+const createDocumentMetadata = (originalname: string, mimetype: string, size: number): DocumentMetadata => {
+    return {
+        size,
+        mimeType: mimetype,
+        lastModified: new Date()
+    };
+};
+
+const parseFileContent = async (file: Express.Multer.File): Promise<FileParsingResult> => {
+    const { originalname, mimetype, buffer } = file;
+
+    if (isWordDocument(mimetype)) {
+        const content = await parseWordDocument(buffer);
+        return { content, type: DocumentType.WORD_DOCUMENT };
+    }
+
+    if (isMarkdownDocument(originalname, mimetype)) {
+        const content = parseMarkdownDocument(buffer);
+        return { content, type: DocumentType.MARKDOWN };
+    }
+
+    throw new Error(`Unsupported file type: ${mimetype}`);
+};
+
+export const parseDocument = async (file: Express.Multer.File): Promise<ParsedDocument> => {
+    const { originalname, mimetype, size } = file;
 
     try {
-        if (mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-            mimetype === 'application/msword') {
-            // Parse DOC/DOCX files
-            const result = await mammoth.convertToHtml({ buffer });
-            content = {
-                html: result.value,
-                text: result.value.replace(/<[^>]*>/g, ''), // Strip HTML tags for plain text
-                messages: result.messages,
-                warnings: result.messages.filter(m => m.type === 'warning'),
-                errors: result.messages.filter(m => m.type === 'error')
-            };
-            type = 'word_document';
-        } else if (originalname.endsWith('.md') || mimetype === 'text/markdown' || mimetype === 'text/plain') {
-            // Parse Markdown files
-            const markdownText = buffer.toString('utf-8');
-            const htmlContent = marked(markdownText);
-
-            // Extract metadata if present (basic frontmatter parsing)
-            const frontmatterMatch = markdownText.match(/^---\n(.*?)\n---/s);
-            const metadata: Record<string, string> = {};
-            let contentWithoutFrontmatter = markdownText;
-
-            if (frontmatterMatch) {
-                try {
-                    // Simple YAML-like parsing for basic frontmatter
-                    const frontmatterLines = frontmatterMatch[1].split('\n');
-                    frontmatterLines.forEach(line => {
-                        const colonIndex = line.indexOf(':');
-                        if (colonIndex > 0) {
-                            const key = line.substring(0, colonIndex).trim();
-                            const value = line.substring(colonIndex + 1).trim().replace(/^["']|["']$/g, '');
-                            metadata[key] = value;
-                        }
-                    });
-                    contentWithoutFrontmatter = markdownText.replace(frontmatterMatch[0], '').trim();
-                } catch (e) {
-                    // If frontmatter parsing fails, just ignore it
-                }
-            }
-
-            content = {
-                raw: markdownText,
-                html: htmlContent,
-                text: contentWithoutFrontmatter,
-                frontmatter: metadata,
-                headings: extractHeadings(markdownText),
-                links: extractLinks(markdownText),
-                images: extractImages(markdownText)
-            };
-            type = 'markdown';
-        } else {
-            throw new Error(`Unsupported file type: ${mimetype}`);
-        }
+        const { content, type } = await parseFileContent(file);
+        const metadata = createDocumentMetadata(originalname, mimetype, size);
 
         return {
             filename: originalname,
             type,
             content,
-            metadata: {
-                size,
-                mimeType: mimetype,
-                lastModified: new Date()
-            }
+            metadata
         };
     } catch (error: any) {
         throw new Error(`Failed to parse ${originalname}: ${error.message}`);
     }
-}
+};
 
 const extractHeadings = (markdown: string): Heading[] => {
     const headingRegex = /^(#{1,6})\s+(.+)$/gm;

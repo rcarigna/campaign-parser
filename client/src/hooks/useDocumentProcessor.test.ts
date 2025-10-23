@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useDocumentProcessor } from './useDocumentProcessor';
 import { uploadDocument } from '../services';
-import { type SerializedParsedDocument } from '../types/constants';
+import { type SerializedParsedDocument, DocumentType } from '@obsidian-parser/shared';
 
 // Mock the uploadDocument service
 jest.mock('../services', () => ({
@@ -22,7 +22,7 @@ describe('useDocumentProcessor', () => {
             links: [],
             images: [],
         },
-        type: 'markdown',
+        type: DocumentType.MARKDOWN,
         metadata: {
             mimeType: 'text/markdown',
             size: 1024,

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { uploadDocument } from './documentService';
-import { type SerializedParsedDocument } from '../types/constants';
+import { type SerializedParsedDocument, DocumentType } from '@obsidian-parser/shared';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -10,7 +10,7 @@ describe('documentService', () => {
         const mockFile = new File(['test content'], 'test.md', { type: 'text/markdown' });
         const mockParsedDocument: SerializedParsedDocument = {
             filename: 'test.md',
-            type: 'markdown',
+            type: DocumentType.MARKDOWN,
             content: {
                 raw: '# Test',
                 html: '<h1>Test</h1>',

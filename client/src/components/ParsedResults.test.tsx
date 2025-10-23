@@ -1,10 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import { ParsedResults } from './ParsedResults';
-import { type SerializedParsedDocument } from '../types/constants';
+import {
+  type SerializedParsedDocument,
+  DocumentType,
+} from '@obsidian-parser/shared';
 
 const mockParsedData: SerializedParsedDocument = {
   filename: 'Test Document.md',
-  type: 'markdown',
+  type: DocumentType.MARKDOWN,
   content: {
     raw: '# Test Content',
     html: '<h1>Test Content</h1>',

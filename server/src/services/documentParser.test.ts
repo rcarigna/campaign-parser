@@ -10,4 +10,5 @@ describe('Document Parser', () => {
 		const invalidFile = {} as Express.Multer.File;
 		await expect(parseDocument(invalidFile)).rejects.toThrow();
 	});
+
 });
