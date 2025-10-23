@@ -42,14 +42,14 @@ jobs:
         run: cd server && npm test -- --coverage
 
       - name: Upload Client Coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           file: ./client/coverage/lcov.info
           flags: client
           name: client-coverage
 
       - name: Upload Server Coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           file: ./server/coverage/lcov.info
           flags: server
@@ -72,6 +72,9 @@ jobs:
       - name: Install dependencies
         run: npm run install:all
 
+      - name: Build shared package
+        run: npm run build:shared
+
       - name: Build client
         run: npm run build:client
 
@@ -79,16 +82,22 @@ jobs:
         run: npm run build:server
 
       - name: Upload client build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: client-build
           path: client/dist/
 
       - name: Upload server build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: server-build
           path: server/dist/
+
+      - name: Upload shared build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-build
+          path: shared/dist/
 
   security-scan:
     runs-on: ubuntu-latest
