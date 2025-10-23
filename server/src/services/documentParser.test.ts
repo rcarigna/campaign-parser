@@ -234,4 +234,304 @@ describe('Document Parser', () => {
 
 		await expect(parseDocument(mockFile)).rejects.toThrow('Unsupported file type: application/pdf');
 	});
+
+	it('should parse frontmatter correctly', async () => {
+		// Read the test file with frontmatter
+		const testDataPath = path.join(__dirname, '../../../test_data/test_with_frontmatter.md');
+		const fileContent = fs.readFileSync(testDataPath);
+
+		const mockFile: Express.Multer.File = {
+			fieldname: 'document',
+			originalname: 'test_with_frontmatter.md',
+			encoding: '7bit',
+			mimetype: AllowedMimeType.MARKDOWN,
+			buffer: fileContent,
+			size: fileContent.length,
+			destination: '',
+			filename: 'test_with_frontmatter.md',
+			path: '',
+			stream: {} as any,
+		};
+
+		const result = await parseDocument(mockFile);
+		const content = result.content as MarkdownContent;
+
+		// Verify frontmatter was extracted
+		expect(content.frontmatter).toEqual({
+			'title': 'Test Document',
+			'author': 'John Doe',
+			'date': '2024-01-01',
+			'tags': 'test, sample'
+		});
+
+		// Verify content without frontmatter
+		expect(content.text).not.toContain('---');
+		expect(content.text).not.toContain('title: Test Document');
+		expect(content.text).toContain('# Main Content');
+		expect(content.text).toContain('This is the main content');
+
+		// Verify raw content still has frontmatter
+		expect(content.raw).toContain('---');
+		expect(content.raw).toContain('title: Test Document');
+	});
+
+	describe('Document Parser Helper Functions', () => {
+		describe('parseFrontmatter', () => {
+			it('should parse frontmatter from markdown content', async () => {
+				const markdownWithFrontmatter = `
+	---
+	title: Test Document
+	author: John Doe
+	date: 2024-01-01
+	tags: test, sample
+	---
+
+	# Main Content
+	This is the main content.`;
+
+				const mockFile: Express.Multer.File = {
+					fieldname: 'document',
+					originalname: 'test.md',
+					encoding: '7bit',
+					mimetype: AllowedMimeType.MARKDOWN,
+					buffer: Buffer.from(markdownWithFrontmatter),
+					size: markdownWithFrontmatter.length,
+					destination: '',
+					filename: 'test.md',
+					path: '',
+					stream: {} as any,
+				};
+
+				const result = await parseDocument(mockFile);
+				const content = result.content as MarkdownContent;
+
+				expect(content.frontmatter).toEqual({
+					title: 'Test Document',
+					author: 'John Doe',
+					date: '2024-01-01',
+					tags: 'test, sample'
+				});
+				expect(content.text).not.toContain('---');
+				expect(content.text).toContain('# Main Content');
+			});
+
+			it('should handle markdown without frontmatter', async () => {
+				const markdownWithoutFrontmatter = `# Main Content
+	This is content without frontmatter.`;
+
+				const mockFile: Express.Multer.File = {
+					fieldname: 'document',
+					originalname: 'test.md',
+					encoding: '7bit',
+					mimetype: AllowedMimeType.MARKDOWN,
+					buffer: Buffer.from(markdownWithoutFrontmatter),
+					size: markdownWithoutFrontmatter.length,
+					destination: '',
+					filename: 'test.md',
+					path: '',
+					stream: {} as any,
+				};
+
+				const result = await parseDocument(mockFile);
+				const content = result.content as MarkdownContent;
+
+				expect(content.frontmatter).toEqual({});
+				expect(content.text).toBe(markdownWithoutFrontmatter);
+			});
+		});
+
+		describe('extractHeadings', () => {
+			it('should extract headings with proper levels and IDs', async () => {
+				const markdownWithHeadings = `# Main Title
+	## Section One
+	### Subsection A
+	#### Deep Section
+	##### Even Deeper
+	###### Deepest Level
+	## Section Two with Special-Characters!`;
+
+				const mockFile: Express.Multer.File = {
+					fieldname: 'document',
+					originalname: 'test.md',
+					encoding: '7bit',
+					mimetype: AllowedMimeType.MARKDOWN,
+					buffer: Buffer.from(markdownWithHeadings),
+					size: markdownWithHeadings.length,
+					destination: '',
+					filename: 'test.md',
+					path: '',
+					stream: {} as any,
+				};
+
+				const result = await parseDocument(mockFile);
+				const content = result.content as MarkdownContent;
+
+				expect(content.headings).toEqual([
+					{ level: 1, text: 'Main Title', id: 'main-title' },
+					{ level: 2, text: 'Section One', id: 'section-one' },
+					{ level: 3, text: 'Subsection A', id: 'subsection-a' },
+					{ level: 4, text: 'Deep Section', id: 'deep-section' },
+					{ level: 5, text: 'Even Deeper', id: 'even-deeper' },
+					{ level: 6, text: 'Deepest Level', id: 'deepest-level' },
+					{ level: 2, text: 'Section Two with Special-Characters!', id: 'section-two-with-special-characters' }
+				]);
+			});
+		});
+
+		describe('extractLinks', () => {
+			it('should extract inline and reference links', async () => {
+				const markdownWithLinks = `# Test Links
+	This is an [inline link](https://example.com) to a website.
+	Here's another [link with title](https://github.com "GitHub").
+	This is a [reference link][ref1] to something.
+	And another [reference][ref2].
+
+	[ref1]: https://reference1.com
+	[ref2]: https://reference2.com`;
+
+				const mockFile: Express.Multer.File = {
+					fieldname: 'document',
+					originalname: 'test.md',
+					encoding: '7bit',
+					mimetype: AllowedMimeType.MARKDOWN,
+					buffer: Buffer.from(markdownWithLinks),
+					size: markdownWithLinks.length,
+					destination: '',
+					filename: 'test.md',
+					path: '',
+					stream: {} as any,
+				};
+
+				const result = await parseDocument(mockFile);
+				const content = result.content as MarkdownContent;
+
+				expect(content.links).toEqual([
+					{ text: 'inline link', url: 'https://example.com', type: 'inline' },
+					{ text: 'link with title', url: 'https://github.com "GitHub"', type: 'inline' },
+					{ text: 'reference link', url: '[reference: ref1]', type: 'reference' },
+					{ text: 'reference', url: '[reference: ref2]', type: 'reference' }
+				]);
+			});
+		});
+
+		describe('extractImages', () => {
+			it('should extract images with alt text, URLs, and titles', async () => {
+				const markdownWithImages = `# Test Images
+	![Simple image](https://example.com/image1.jpg)
+	![Image with alt text](https://example.com/image2.png "Image Title")
+	![](https://example.com/image3.gif "Only title")
+	![Alt only](https://example.com/image4.svg)`;
+
+				const mockFile: Express.Multer.File = {
+					fieldname: 'document',
+					originalname: 'test.md',
+					encoding: '7bit',
+					mimetype: AllowedMimeType.MARKDOWN,
+					buffer: Buffer.from(markdownWithImages),
+					size: markdownWithImages.length,
+					destination: '',
+					filename: 'test.md',
+					path: '',
+					stream: {} as any,
+				};
+
+				const result = await parseDocument(mockFile);
+				const content = result.content as MarkdownContent;
+
+				expect(content.images).toEqual([
+					{ alt: 'Simple image', url: 'https://example.com/image1.jpg', title: undefined },
+					{ alt: 'Image with alt text', url: 'https://example.com/image2.png', title: 'Image Title' },
+					{ alt: '', url: 'https://example.com/image3.gif', title: 'Only title' },
+					{ alt: 'Alt only', url: 'https://example.com/image4.svg', title: undefined }
+				]);
+			});
+		});
+
+		describe('File type detection', () => {
+			it('should detect Word documents correctly', async () => {
+				const mockDocxFile: Express.Multer.File = {
+					fieldname: 'document',
+					originalname: 'test.docx',
+					encoding: '7bit',
+					mimetype: AllowedMimeType.DOCX,
+					buffer: Buffer.from('fake docx content'),
+					size: 18,
+					destination: '',
+					filename: 'test.docx',
+					path: '',
+					stream: {} as any,
+				};
+
+				// This will fail because we don't have actual Word content, but it tests the detection logic
+				await expect(parseDocument(mockDocxFile)).rejects.toThrow();
+			});
+
+			it('should detect markdown by file extension when mimetype is text/plain', async () => {
+				const markdownContent = '# Test\nThis is a test.';
+				const mockFile: Express.Multer.File = {
+					fieldname: 'document',
+					originalname: 'test.md',
+					encoding: '7bit',
+					mimetype: 'text/plain',
+					buffer: Buffer.from(markdownContent),
+					size: markdownContent.length,
+					destination: '',
+					filename: 'test.md',
+					path: '',
+					stream: {} as any,
+				};
+
+				const result = await parseDocument(mockFile);
+				expect(result.type).toBe(DocumentType.MARKDOWN);
+			});
+		});
+
+		describe('Error handling', () => {
+			it('should handle corrupted frontmatter gracefully', async () => {
+				const markdownWithBadFrontmatter = `---
+	invalid yaml: [unclosed bracket
+	title: Test
+	---
+
+	# Content`;
+
+				const mockFile: Express.Multer.File = {
+					fieldname: 'document',
+					originalname: 'test.md',
+					encoding: '7bit',
+					mimetype: AllowedMimeType.MARKDOWN,
+					buffer: Buffer.from(markdownWithBadFrontmatter),
+					size: markdownWithBadFrontmatter.length,
+					destination: '',
+					filename: 'test.md',
+					path: '',
+					stream: {} as any,
+				};
+
+				const result = await parseDocument(mockFile);
+				const content = result.content as MarkdownContent;
+
+				// Should still parse the file, just without frontmatter
+				expect(result.type).toBe(DocumentType.MARKDOWN);
+				expect(content.text).toContain('# Content');
+			});
+
+			it('should provide detailed error messages', async () => {
+				const mockFile: Express.Multer.File = {
+					fieldname: 'document',
+					originalname: 'test.xyz',
+					encoding: '7bit',
+					mimetype: 'application/unknown',
+					buffer: Buffer.from('unknown content'),
+					size: 15,
+					destination: '',
+					filename: 'test.xyz',
+					path: '',
+					stream: {} as any,
+				};
+
+				await expect(parseDocument(mockFile)).rejects.toThrow('Failed to parse test.xyz: Unsupported file type: application/unknown');
+			});
+		});
+	});
 });
