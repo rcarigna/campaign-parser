@@ -1,7 +1,7 @@
-import { type ParsedDocument } from '../types/constants';
+import { type SerializedParsedDocument } from '../types/constants';
 
 type ParsedResultsProps = {
-  parsedData: ParsedDocument | null;
+  parsedData: SerializedParsedDocument | null;
 };
 
 export const ParsedResults = ({

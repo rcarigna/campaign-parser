@@ -1,15 +1,23 @@
 import { render, screen } from '@testing-library/react';
 import { ParsedResults } from './ParsedResults';
-import { type ParsedDocument } from '../types/constants';
+import { type SerializedParsedDocument } from '../types/constants';
 
-const mockParsedData: ParsedDocument = {
-  filename: 'Test Document',
-  content: 'This is test content',
+const mockParsedData: SerializedParsedDocument = {
+  filename: 'Test Document.md',
   type: 'markdown',
+  content: {
+    raw: '# Test Content',
+    html: '<h1>Test Content</h1>',
+    text: 'Test Content',
+    frontmatter: {},
+    headings: [{ level: 1, text: 'Test Content', id: 'test-content' }],
+    links: [],
+    images: [],
+  },
   metadata: {
     size: 1234,
-    lastModified: '2023-01-01',
-    mimeType: 'markdown',
+    lastModified: '2023-01-01T00:00:00.000Z',
+    mimeType: 'text/markdown',
   },
 };
 
@@ -23,17 +31,17 @@ describe('ParsedResults', () => {
     render(<ParsedResults parsedData={mockParsedData} />);
 
     expect(screen.getByText('Parsed JSON Output')).toBeInTheDocument();
-    expect(screen.getByText(/Test Document/)).toBeInTheDocument();
-    expect(screen.getByText(/This is test content/)).toBeInTheDocument();
+    expect(screen.getByText(/Test Document\.md/)).toBeInTheDocument();
+    expect(screen.getByText(/Test Content/)).toBeInTheDocument();
     expect(screen.getByText(/markdown/)).toBeInTheDocument();
-    expect(screen.getByText(/2023-01-01/)).toBeInTheDocument();
+    expect(screen.getByText(/2023-01-01T00:00:00\.000Z/)).toBeInTheDocument();
   });
 
   it('should render with correct CSS classes', () => {
     render(<ParsedResults parsedData={mockParsedData} />);
 
     const resultsDiv = screen.getByText('Parsed JSON Output').parentElement;
-    const jsonOutputDiv = screen.getByText(/Test Document/).parentElement;
+    const jsonOutputDiv = screen.getByText(/Test Document\.md/).parentElement;
 
     expect(resultsDiv).toHaveClass('results');
     expect(jsonOutputDiv).toHaveClass('json-output');
@@ -42,7 +50,7 @@ describe('ParsedResults', () => {
   it('should format JSON with proper indentation', () => {
     render(<ParsedResults parsedData={mockParsedData} />);
 
-    const preElement = screen.getByText(/Test Document/);
+    const preElement = screen.getByText(/Test Document\.md/);
     expect(preElement.tagName).toBe('PRE');
   });
 });

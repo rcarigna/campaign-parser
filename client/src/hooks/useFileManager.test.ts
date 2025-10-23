@@ -1,9 +1,6 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useFileManager } from './useFileManager';
 import {
-
-    ALLOWED_MIME_TYPES,
-    ALLOWED_EXTENSIONS,
     MAX_FILE_SIZE_KB,
 } from '../types/constants';
 

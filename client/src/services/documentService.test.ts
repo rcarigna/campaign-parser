@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { uploadDocument } from './documentService';
-import { type ParsedDocument } from '../types/constants';
+import { type SerializedParsedDocument } from '../types/constants';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -8,10 +8,18 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 describe('documentService', () => {
     describe('uploadDocument', () => {
         const mockFile = new File(['test content'], 'test.md', { type: 'text/markdown' });
-        const mockParsedDocument: ParsedDocument = {
+        const mockParsedDocument: SerializedParsedDocument = {
             filename: 'test.md',
             type: 'markdown',
-            content: 'parsed content',
+            content: {
+                raw: '# Test',
+                html: '<h1>Test</h1>',
+                text: 'Test',
+                frontmatter: {},
+                headings: [{ level: 1, text: 'Test', id: 'test' }],
+                links: [],
+                images: [],
+            },
             metadata: { size: 1234, lastModified: new Date().toISOString(), mimeType: 'text/markdown' },
         };
 

@@ -5,19 +5,23 @@
   "private": true,
   "workspaces": [
     "client",
-    "server"
+    "server",
+    "shared"
   ],
   "scripts": {
-    "install:all": "npm install && npm run install:client && npm run install:server",
+    "install:all": "npm install && npm run install:client && npm run install:server && npm run install:shared",
     "install:client": "cd client && npm install",
     "install:server": "cd server && npm install",
-    "clean": "npm run clean:client && npm run clean:server",
+    "install:shared": "cd shared && npm install",
+    "clean": "npm run clean:client && npm run clean:server && npm run clean:shared",
     "clean:client": "cd client && rm -rf dist node_modules/.vite",
     "clean:server": "cd server && rm -rf dist",
-    "dev": "concurrently --kill-others --prefix-colors \"bgBlue.bold,bgMagenta.bold\" --prefix \"[SERVER],[ CLIENT]\" \"npm run dev:server\" \"npm run dev:client\"",
+    "clean:shared": "cd shared && rm -rf dist",
+    "build:shared": "cd shared && npm run build",
+    "dev": "npm run build:shared && concurrently --kill-others --prefix-colors \"bgBlue.bold,bgMagenta.bold\" --prefix \"[SERVER],[ CLIENT]\" \"npm run dev:server\" \"npm run dev:client\"",
     "dev:client": "cd client && npm run dev",
     "dev:server": "cd server && npm run dev",
-    "build": "npm run build:client && npm run build:server",
+    "build": "npm run build:shared && npm run build:client && npm run build:server",
     "build:client": "cd client && npm run build",
     "build:server": "cd server && npm run build",
     "start": "concurrently --kill-others \"npm run start:server\" \"npm run start:client\"",

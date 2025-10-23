@@ -32,6 +32,9 @@ jobs:
       - name: Install all dependencies
         run: npm run install:all
 
+      - name: Build shared package
+        run: npm run build:shared
+
       - name: Run tests (Client)
         run: cd client && npm test -- --coverage --watchAll=false
 

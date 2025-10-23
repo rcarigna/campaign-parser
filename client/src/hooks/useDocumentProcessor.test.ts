@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useDocumentProcessor } from './useDocumentProcessor';
 import { uploadDocument } from '../services';
-import { type ParsedDocument } from '../types/constants';
+import { type SerializedParsedDocument } from '../types/constants';
 
 // Mock the uploadDocument service
 jest.mock('../services', () => ({
@@ -11,9 +11,17 @@ jest.mock('../services', () => ({
 const mockUploadDocument = uploadDocument as jest.MockedFunction<typeof uploadDocument>;
 
 describe('useDocumentProcessor', () => {
-    const mockParsedData: ParsedDocument = {
+    const mockParsedData: SerializedParsedDocument = {
         filename: 'test.md',
-        content: 'This is a test document.',
+        content: {
+            raw: '# Test',
+            html: '<h1>Test</h1>',
+            text: 'Test',
+            frontmatter: {},
+            headings: [{ level: 1, text: 'Test', id: 'test' }],
+            links: [],
+            images: [],
+        },
         type: 'markdown',
         metadata: {
             mimeType: 'text/markdown',

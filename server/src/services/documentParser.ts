@@ -1,55 +1,14 @@
 import mammoth from 'mammoth';
 import { marked } from 'marked';
-
-// Use type instead of interface as per guidelines
-export type ParsedDocument = {
-    filename: string;
-    type: 'word_document' | 'markdown';
-    content: WordDocumentContent | MarkdownContent;
-    metadata: DocumentMetadata;
-};
-
-export type DocumentMetadata = {
-    size: number;
-    lastModified: Date;
-    mimeType: string;
-};
-
-export type WordDocumentContent = {
-    html: string;
-    text: string;
-    messages: unknown[];
-    warnings: unknown[];
-    errors: unknown[];
-};
-
-export type MarkdownContent = {
-    raw: string;
-    html: string;
-    text: string;
-    frontmatter: Record<string, string>;
-    headings: Heading[];
-    links: Link[];
-    images: Image[];
-};
-
-export type Heading = {
-    level: number;
-    text: string;
-    id: string;
-};
-
-export type Link = {
-    text: string;
-    url: string;
-    type: 'inline' | 'reference';
-};
-
-export type Image = {
-    alt: string;
-    url: string;
-    title?: string;
-};
+import type {
+    ParsedDocument,
+    DocumentMetadata,
+    WordDocumentContent,
+    MarkdownContent,
+    Heading,
+    Link,
+    Image
+} from '@obsidian-parser/shared';
 
 export const parseDocument = async (file: Express.Multer.File): Promise<ParsedDocument> => {
     const { originalname, mimetype, size, buffer } = file;
