@@ -18,14 +18,12 @@ export const useFileManager = (): UseFileManagerReturn => {
     const [error, setError] = useState<string | null>(null);
 
     const validateFile = useCallback((file: File): void => {
-        console.log('Validating file:', file);
         const isAllowedMimeType = ALLOWED_MIME_TYPES.includes(file.type as any);
         const isAllowedExtension = ALLOWED_EXTENSIONS.some((ext) =>
             file.name.toLowerCase().endsWith(ext)
         );
         const isFileSizeValid = file.size <= MAX_FILE_SIZE_KB * 1024;
 
-        console.log(`isAllowedMimeType: ${isAllowedMimeType}, isAllowedExtension: ${isAllowedExtension}, isFileSizeValid: ${isFileSizeValid}`);
         if (!isAllowedMimeType && !isAllowedExtension) {
             throw new Error(`Please select a file with one of these extensions: ${ALLOWED_EXTENSIONS.join(
                 ', '
