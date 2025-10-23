@@ -22,3 +22,4 @@ This is a full-stack web application for document parsing:
 - **Use ES modules syntax** (import/export) throughout the codebase
 - Follow KISS (Keep It Simple, Stupid) principle
 - Write modular, testable, and reusable code
+- Use conventional commits for commit messages
