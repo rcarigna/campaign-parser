@@ -3,11 +3,13 @@ import { ParsedResults } from './ParsedResults';
 import { type ParsedDocument } from '../types/constants';
 
 const mockParsedData: ParsedDocument = {
-  title: 'Test Document',
+  filename: 'Test Document',
   content: 'This is test content',
+  type: 'markdown',
   metadata: {
-    author: 'Test Author',
-    createdAt: '2023-01-01',
+    size: 1234,
+    lastModified: '2023-01-01',
+    mimeType: 'markdown',
   },
 };
 
@@ -23,7 +25,7 @@ describe('ParsedResults', () => {
     expect(screen.getByText('Parsed JSON Output')).toBeInTheDocument();
     expect(screen.getByText(/Test Document/)).toBeInTheDocument();
     expect(screen.getByText(/This is test content/)).toBeInTheDocument();
-    expect(screen.getByText(/Test Author/)).toBeInTheDocument();
+    expect(screen.getByText(/markdown/)).toBeInTheDocument();
     expect(screen.getByText(/2023-01-01/)).toBeInTheDocument();
   });
 
