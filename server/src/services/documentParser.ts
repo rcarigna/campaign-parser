@@ -40,7 +40,8 @@ const parseWordDocument = async (buffer: Buffer): Promise<WordDocumentContent> =
 };
 
 const parseFrontmatter = (markdownText: string): { metadata: Record<string, string>; contentWithoutFrontmatter: string } => {
-    const frontmatterMatch = markdownText.match(/^---\n(.*?)\n---/s);
+    // Improved regex to handle whitespace around frontmatter delimiters, leading newlines, and indented delimiters
+    const frontmatterMatch = markdownText.match(/(?:^|\n)\s*---\s*\n(.*?)\n\s*---\s*/s);
     const metadata: Record<string, string> = {};
     let contentWithoutFrontmatter = markdownText;
 
@@ -124,13 +125,14 @@ export const parseDocument = async (file: Express.Multer.File): Promise<ParsedDo
 };
 
 const extractHeadings = (markdown: string): Heading[] => {
-    const headingRegex = /^(#{1,6})\s+(.+)$/gm;
+    // Improved regex to handle indented headings
+    const headingRegex = /^(\s*)(#{1,6})\s+(.+)$/gm;
     const headings: Heading[] = [];
     let match: RegExpExecArray | null;
 
     while ((match = headingRegex.exec(markdown)) !== null) {
-        const level = match[1].length;
-        const text = match[2].trim();
+        const level = match[2].length; // match[2] is the ### part
+        const text = match[3].trim(); // match[3] is the heading text
         const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
         headings.push({ level, text, id });
     }
@@ -167,7 +169,8 @@ const extractLinks = (markdown: string): Link[] => {
 };
 
 const extractImages = (markdown: string): Image[] => {
-    const imageRegex = /!\[([^\]]*)\]\(([^)]+)(?:\s+"([^"]*)")?\)/g;
+    // Improved regex to properly separate URL from title
+    const imageRegex = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g;
     const images: Image[] = [];
     let match: RegExpExecArray | null;
 
