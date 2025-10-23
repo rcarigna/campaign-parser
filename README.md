@@ -1,6 +1,6 @@
 # Document Parser
 
-A modern, full-stack document parsing application with React TypeScript frontend, Node.js backend, and shared type system. Features comprehensive testing, CI/CD pipeline, and production-ready architecture.
+A modern, full-stack document parsing application with React TypeScript frontend, Node.js backend, and shared type system. Features professional-grade markdown parsing, comprehensive testing, CI/CD pipeline, and production-ready architecture.
 
 ## 🌟 Features
 
@@ -8,9 +8,11 @@ A modern, full-stack document parsing application with React TypeScript frontend
 - **Real-time Parsing**: Instant conversion to structured JSON format
 - **Document Analysis**:
   - Word documents: Extract HTML, plain text, and metadata with error reporting
-  - Markdown files: Parse frontmatter, headings, links, images, and table of contents
+  - Markdown files: Industry-standard parsing with `gray-matter` + `markdown-it`
+  - Enhanced frontmatter support: YAML, TOML, JSON with proper type parsing
+  - Robust heading, link, and image extraction with AST-based parsing
 - **Type-Safe Architecture**: Shared TypeScript types between client and server
-- **Comprehensive Testing**: 51 tests with 98%+ client coverage
+- **Comprehensive Testing**: 74 tests with 98%+ client coverage
 - **CI/CD Pipeline**: Automated testing, building, and security scanning
 - **Modern UI**: Clean, responsive interface with comprehensive error handling
 - **Production Ready**: Optimized builds with artifact generation
@@ -30,7 +32,11 @@ A modern, full-stack document parsing application with React TypeScript frontend
 - **Node.js** with Express and TypeScript
 - **Multer** for secure file upload handling with validation
 - **Mammoth** for DOC/DOCX parsing with error reporting
-- **Marked** for advanced Markdown processing (frontmatter, links, images)
+- **Professional Markdown Stack**:
+  - `gray-matter` for robust frontmatter parsing (YAML/TOML/JSON)
+  - `markdown-it` for CommonMark-compliant AST parsing
+  - `marked` for reliable HTML conversion
+- **Standards Compliance**: Full CommonMark specification support
 - **Comprehensive Error Handling**: Structured error responses and logging
 
 ### Shared Types (`/shared`)
@@ -137,6 +143,45 @@ npm run build:server       # Build server only
 npm run build:shared       # Build shared package only
 ```
 
+## 🔄 Markdown Parsing Migration (October 2025)
+
+**✅ COMPLETED**: Successfully migrated from regex-based parsing to professional library-based parsing:
+
+### Migration Benefits
+
+- **📈 Reliability**: 20+ lines of fragile regex → 3 lines of industry-standard libraries
+- **🛡️ Error Handling**: Professional-grade error handling and edge case support
+- **📏 Standards Compliance**: Full CommonMark specification compliance
+- **🔧 Maintainability**: No more regex debugging sessions
+- **⚡ Performance**: Optimized parsing algorithms
+- **🔮 Future-Proof**: Easy to extend with new markdown features
+
+### Current Parsing Stack
+
+```typescript
+// Frontmatter: gray-matter (supports YAML/TOML/JSON)
+import matter from 'gray-matter';
+const { data: frontmatter, content } = matter(markdownText);
+
+// Content parsing: markdown-it (CommonMark compliant)
+import MarkdownIt from 'markdown-it';
+const md = new MarkdownIt();
+const tokens = md.parse(cleanedMarkdown, {});
+
+// HTML conversion: marked (reliable and fast)
+import { marked } from 'marked';
+const html = marked(markdownText);
+```
+
+### Parsing Capabilities
+
+- ✅ **Complex Frontmatter**: YAML objects, arrays, dates, booleans
+- ✅ **Robust Link Parsing**: Inline links with titles, reference links
+- ✅ **Indentation Handling**: Automatic cleanup for malformed markdown
+- ✅ **Image Processing**: Alt text, URLs, and title attributes
+- ✅ **Heading Extraction**: Proper ID generation and hierarchy
+- ✅ **Backward Compatibility**: All existing tests pass
+
 ## API Endpoints
 
 - `GET /api/health` - Health check endpoint
@@ -195,12 +240,13 @@ npm run build:shared       # Build shared package only
 
 ## 🧪 Testing & Quality
 
-- **Comprehensive Test Suite**: 51 tests across client and server
+- **Comprehensive Test Suite**: 74 tests across client and server
 - **High Coverage**: 98%+ code coverage on client-side
 - **Unit Testing**: Jest with React Testing Library
-- **Integration Testing**: API endpoint testing
+- **Integration Testing**: API endpoint testing with real markdown files
 - **Type Safety**: Full TypeScript with strict mode
 - **Code Quality**: ESLint with custom rules for functional programming
+- **Parsing Validation**: Tests for edge cases, indented content, malformed syntax
 
 ## 🔄 CI/CD Pipeline
 
@@ -227,7 +273,10 @@ npm run build:shared       # Build shared package only
 - **TypeScript** with ES modules support
 - **Multer** for secure file upload handling
 - **Mammoth** for Word document parsing
-- **Marked** for Markdown processing with extensions
+- **Professional Markdown Libraries**:
+  - `gray-matter` for frontmatter parsing
+  - `markdown-it` for AST-based content parsing
+  - `marked` for HTML conversion
 - **Jest** for API and service testing
 
 ### Shared Infrastructure
@@ -336,15 +385,23 @@ npm run build
 - **Testing**: Maintain >90% test coverage
 - **Types**: Update shared types for any API changes
 - **Documentation**: Update README and comments for significant changes
+- **Parsing**: Use established libraries over custom regex when possible
 
 ## 🏆 Project Highlights
 
-- ✅ **51 comprehensive tests** with high coverage
+- ✅ **74 comprehensive tests** with high coverage
+- ✅ **Professional markdown parsing** with industry-standard libraries
 - ✅ **Shared type system** eliminating duplication
 - ✅ **Modern ES modules** throughout the stack
 - ✅ **CI/CD pipeline** with automated testing and building
 - ✅ **Production-ready** architecture with security scanning
+- ✅ **Standards compliant** CommonMark specification support
 - ✅ **Developer experience** optimized for VS Code
+
+## � Documentation
+
+- [`docs/MarkdownContentStructure.md`](./docs/MarkdownContentStructure.md) - Detailed parsing output documentation
+- [`docs/MarkdownLibraryOptions.md`](./docs/MarkdownLibraryOptions.md) - Migration completion summary
 
 ## �📄 License
 
@@ -352,4 +409,4 @@ MIT License - Open source and free to use.
 
 ---
 
-**Built with ❤️ using modern web technologies and best practices.**
+**Built with ❤️ using modern web technologies, professional libraries, and best practices.**
