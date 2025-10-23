@@ -1,5 +1,7 @@
 import mammoth from 'mammoth';
 import { marked } from 'marked';
+import matter from 'gray-matter';
+import MarkdownIt from 'markdown-it';
 import { DocumentType, AllowedMimeType } from '@obsidian-parser/shared';
 import type {
     ParsedDocument,
@@ -39,31 +41,44 @@ const parseWordDocument = async (buffer: Buffer): Promise<WordDocumentContent> =
     };
 };
 
-const parseFrontmatter = (markdownText: string): { metadata: Record<string, string>; contentWithoutFrontmatter: string } => {
-    // Improved regex to handle whitespace around frontmatter delimiters, leading newlines, and indented delimiters
-    const frontmatterMatch = markdownText.match(/(?:^|\n)\s*---\s*\n(.*?)\n\s*---\s*/s);
-    const metadata: Record<string, string> = {};
-    let contentWithoutFrontmatter = markdownText;
+const parseFrontmatter = (markdownText: string): { metadata: Record<string, any>; contentWithoutFrontmatter: string } => {
+    try {
+        // Trim leading whitespace to handle indented frontmatter
+        let cleanedText = markdownText.trim();
 
-    if (frontmatterMatch) {
-        try {
-            // Simple YAML-like parsing for basic frontmatter
-            const frontmatterLines = frontmatterMatch[1].split('\n');
-            frontmatterLines.forEach(line => {
-                const colonIndex = line.indexOf(':');
-                if (colonIndex > 0) {
-                    const key = line.substring(0, colonIndex).trim();
-                    const value = line.substring(colonIndex + 1).trim().replace(/^["']|["']$/g, '');
-                    metadata[key] = value;
-                }
-            });
-            contentWithoutFrontmatter = markdownText.replace(frontmatterMatch[0], '').trim();
-        } catch (e) {
-            // If frontmatter parsing fails, just ignore it
+        // Check if frontmatter exists and fix indentation issues
+        const frontmatterMatch = cleanedText.match(/^---\s*\n(.*?)\n\s*---/s);
+        if (frontmatterMatch) {
+            const frontmatterContent = frontmatterMatch[1];
+            // Remove leading tabs/spaces from each line in the frontmatter
+            const cleanedFrontmatter = frontmatterContent
+                .split('\n')
+                .map(line => line.replace(/^\s+/, ''))
+                .join('\n');
+
+            // Reconstruct the markdown with clean frontmatter
+            cleanedText = `---\n${cleanedFrontmatter}\n---${cleanedText.substring(frontmatterMatch[0].length)}`;
         }
-    }
 
-    return { metadata, contentWithoutFrontmatter };
+        const { data: metadata, content: contentWithoutFrontmatter } = matter(cleanedText);
+
+        // Convert all values to strings to match expected behavior
+        const stringifiedMetadata: Record<string, any> = {};
+        Object.keys(metadata).forEach(key => {
+            const value = metadata[key];
+            if (value instanceof Date) {
+                // Convert dates to ISO string format, then extract just the date part
+                stringifiedMetadata[key] = value.toISOString().split('T')[0];
+            } else {
+                stringifiedMetadata[key] = String(value);
+            }
+        });
+
+        return { metadata: stringifiedMetadata, contentWithoutFrontmatter };
+    } catch (e) {
+        // If frontmatter parsing fails, return original content with empty metadata
+        return { metadata: {}, contentWithoutFrontmatter: markdownText };
+    }
 };
 
 const parseMarkdownDocument = (buffer: Buffer): MarkdownContent => {
@@ -125,62 +140,120 @@ export const parseDocument = async (file: Express.Multer.File): Promise<ParsedDo
 };
 
 const extractHeadings = (markdown: string): Heading[] => {
-    // Improved regex to handle indented headings
-    const headingRegex = /^(\s*)(#{1,6})\s+(.+)$/gm;
-    const headings: Heading[] = [];
-    let match: RegExpExecArray | null;
+    // Clean up indentation issues - remove leading whitespace from each line
+    const cleanedMarkdown = markdown
+        .split('\n')
+        .map(line => line.replace(/^\s+/, ''))
+        .join('\n');
 
-    while ((match = headingRegex.exec(markdown)) !== null) {
-        const level = match[2].length; // match[2] is the ### part
-        const text = match[3].trim(); // match[3] is the heading text
-        const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-        headings.push({ level, text, id });
-    }
+    const md = new MarkdownIt();
+    const tokens = md.parse(cleanedMarkdown, {});
+    const headings: Heading[] = [];
+
+    tokens.forEach((token, index) => {
+        if (token.type === 'heading_open') {
+            const level = parseInt(token.tag.substring(1)); // h1 -> 1, h2 -> 2, etc.
+            const nextToken = tokens[index + 1];
+
+            if (nextToken && nextToken.type === 'inline') {
+                const text = nextToken.content;
+                const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+                headings.push({ level, text, id });
+            }
+        }
+    });
 
     return headings;
 };
 
 const extractLinks = (markdown: string): Link[] => {
+    // Clean up indentation issues - remove leading whitespace from each line
+    const cleanedMarkdown = markdown
+        .split('\n')
+        .map(line => line.replace(/^\s+/, ''))
+        .join('\n');
+
+    const md = new MarkdownIt();
+    const tokens = md.parse(cleanedMarkdown, {});
     const links: Link[] = [];
 
-    // Inline links: [text](url)
-    const inlineLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-    let match: RegExpExecArray | null;
-
-    while ((match = inlineLinkRegex.exec(markdown)) !== null) {
-        links.push({
-            text: match[1],
-            url: match[2],
-            type: 'inline' as const
-        });
+    // First, detect reference link patterns in the original markdown to maintain type distinction
+    const referenceLinkPattern = /\[([^\]]+)\]\[([^\]]+)\]/g;
+    const referenceLinks: { text: string; ref: string }[] = [];
+    let match;
+    while ((match = referenceLinkPattern.exec(markdown)) !== null) {
+        referenceLinks.push({ text: match[1], ref: match[2] });
     }
 
-    // Reference links: [text][ref] and [ref]: url
-    const refLinkRegex = /\[([^\]]+)\]\[([^\]]+)\]/g;
-    while ((match = refLinkRegex.exec(markdown)) !== null) {
-        links.push({
-            text: match[1],
-            url: `[reference: ${match[2]}]`,
-            type: 'reference' as const
-        });
-    }
+    // Process all tokens to find links within inline tokens
+    tokens.forEach(token => {
+        if (token.type === 'inline' && token.children) {
+            token.children.forEach((child, index) => {
+                if (child.type === 'link_open') {
+                    const href = child.attrGet('href') || '';
+                    const title = child.attrGet('title');
+                    const nextChild = token.children![index + 1];
+
+                    if (nextChild && nextChild.type === 'text') {
+                        const text = nextChild.content;
+
+                        // Check if this was originally a reference link
+                        const isReferenceLink = referenceLinks.some(ref => ref.text === text);
+
+                        if (isReferenceLink) {
+                            const refLink = referenceLinks.find(ref => ref.text === text);
+                            links.push({
+                                text: text,
+                                url: `[reference: ${refLink?.ref}]`,
+                                type: 'reference' as const
+                            });
+                        } else {
+                            // Inline link - reconstruct URL with title if present (for backward compatibility)
+                            const url = title ? `${href} "${title}"` : href;
+                            links.push({
+                                text: text,
+                                url: url,
+                                type: 'inline' as const
+                            });
+                        }
+                    }
+                }
+            });
+        }
+    });
 
     return links;
 };
 
 const extractImages = (markdown: string): Image[] => {
-    // Improved regex to properly separate URL from title
-    const imageRegex = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g;
-    const images: Image[] = [];
-    let match: RegExpExecArray | null;
+    // Clean up indentation issues - remove leading whitespace from each line
+    const cleanedMarkdown = markdown
+        .split('\n')
+        .map(line => line.replace(/^\s+/, ''))
+        .join('\n');
 
-    while ((match = imageRegex.exec(markdown)) !== null) {
-        images.push({
-            alt: match[1] || '',
-            url: match[2],
-            title: match[3] || undefined
-        });
-    }
+    const md = new MarkdownIt();
+    const tokens = md.parse(cleanedMarkdown, {});
+    const images: Image[] = [];
+
+    // Process all tokens to find images within inline tokens
+    tokens.forEach(token => {
+        if (token.type === 'inline' && token.children) {
+            token.children.forEach(child => {
+                if (child.type === 'image') {
+                    const src = child.attrGet('src') || '';
+                    const alt = child.content || '';
+                    const title = child.attrGet('title') || undefined;
+
+                    images.push({
+                        alt: alt,
+                        url: src,
+                        title: title
+                    });
+                }
+            });
+        }
+    });
 
     return images;
 };
