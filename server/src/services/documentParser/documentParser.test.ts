@@ -16,7 +16,7 @@ describe('Document Parser', () => {
 
 	it('should parse a real markdown file correctly', async () => {
 		// Read the test data file
-		const testDataPath = path.join(__dirname, '../../../test_data/session_summary_1.md');
+		const testDataPath = path.join(__dirname, '../../../../test_data/session_summary_1.md');
 		const fileContent = fs.readFileSync(testDataPath);
 
 		const mockFile: Express.Multer.File = {
@@ -87,7 +87,7 @@ describe('Document Parser', () => {
 
 	it('should document the markdown content object structure', async () => {
 		// Read the test data file
-		const testDataPath = path.join(__dirname, '../../../test_data/session_summary_1.md');
+		const testDataPath = path.join(__dirname, '../../../../test_data/session_summary_1.md');
 		const fileContent = fs.readFileSync(testDataPath);
 
 		const mockFile: Express.Multer.File = {
@@ -237,7 +237,7 @@ describe('Document Parser', () => {
 
 	it('should parse frontmatter correctly', async () => {
 		// Read the test file with frontmatter
-		const testDataPath = path.join(__dirname, '../../../test_data/test_with_frontmatter.md');
+		const testDataPath = path.join(__dirname, '../../../../test_data/test_with_frontmatter.md');
 		const fileContent = fs.readFileSync(testDataPath);
 
 		const mockFile: Express.Multer.File = {

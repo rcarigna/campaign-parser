@@ -3,6 +3,7 @@ export enum AllowedMimeType {
     DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     DOC = 'application/msword',
     MARKDOWN = 'text/markdown',
+    PLAIN_TEXT = 'text/plain', // For markdown files that may have this MIME type
 }
 
 export enum AllowedExtension {

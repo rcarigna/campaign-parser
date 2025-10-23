@@ -36,7 +36,7 @@ describe('useFileManager', () => {
 
     it('should reject file with invalid extension', async () => {
         const { result } = renderHook(() => useFileManager());
-        const invalidFile = createMockFile('test.txt', 'text/plain', 1024);
+        const invalidFile = createMockFile('test.txt', 'text/csv', 1024);
 
         act(() => {
             result.current.selectFile(invalidFile);
@@ -80,7 +80,7 @@ describe('useFileManager', () => {
 
     it('should clear only error', () => {
         const { result } = renderHook(() => useFileManager());
-        const invalidFile = createMockFile('test.txt', 'text/plain', 1024);
+        const invalidFile = createMockFile('test.txt', 'text/csv', 1024);
 
         act(() => {
             result.current.selectFile(invalidFile);

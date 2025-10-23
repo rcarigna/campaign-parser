@@ -11,6 +11,7 @@ This is a full-stack web application for document parsing:
 ## Development Guidelines
 
 - Follow TypeScript best practices for type safety
+- Don't reinvent the wheel; leverage existing libraries for common tasks
 - Use proper error handling for file uploads
 - Implement clean separation between client and server code
 - Focus on document parsing accuracy and user experience
