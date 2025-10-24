@@ -12,6 +12,7 @@ import type {
     Link,
     Image
 } from '@obsidian-parser/shared';
+// import { extractEntities } from '../entityExtractor';
 
 type FileParsingResult = {
     content: WordDocumentContent | MarkdownContent;
@@ -128,10 +129,16 @@ export const parseDocument = async (file: Express.Multer.File): Promise<ParsedDo
         const { content, type } = await parseFileContent(file);
         const metadata = createDocumentMetadata(originalname, mimetype, size);
 
+        // Extract entities for markdown documents
+        // const entities = type === DocumentType.MARKDOWN && 'raw' in content
+        //     ? extractEntities(content)
+        //     : undefined;
+
         return {
             filename: originalname,
             type,
             content,
+            // entities,
             metadata
         };
     } catch (error: any) {

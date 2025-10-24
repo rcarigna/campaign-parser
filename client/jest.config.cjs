@@ -28,6 +28,8 @@ module.exports = {
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '^@obsidian-parser/shared(.*)$': '<rootDir>/../shared/src$1',
+    // Handle .js imports in TypeScript source files for Jest
+    '^(.*)\\.js$': '$1',
   },
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',

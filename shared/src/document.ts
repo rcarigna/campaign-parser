@@ -1,4 +1,5 @@
 import { DocumentType } from './fileValidation';
+// import { AnyEntity } from './campaign';
 
 // Document parsing types
 export type DocumentMetadata = {
@@ -47,6 +48,7 @@ export type ParsedDocument = {
     filename: string;
     type: DocumentType;
     content: WordDocumentContent | MarkdownContent;
+    // entities?: AnyEntity[];  // Optional: Extracted campaign entities (NPCs, locations, etc.)
     metadata: DocumentMetadata;
 };
 
