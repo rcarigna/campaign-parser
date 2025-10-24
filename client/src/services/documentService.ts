@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { type SerializedParsedDocument } from '../types/constants';
+import { type SerializedParsedDocumentWithEntities } from '../types/constants';
 
-export const uploadDocument = async (file: File): Promise<SerializedParsedDocument> => {
+export const uploadDocument = async (file: File): Promise<SerializedParsedDocumentWithEntities> => {
     const formData = new FormData();
     formData.append('document', file);
 
     try {
-        const response = await axios.post<SerializedParsedDocument>('/api/parse', formData, {
+        const response = await axios.post<SerializedParsedDocumentWithEntities>('/api/parse', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },

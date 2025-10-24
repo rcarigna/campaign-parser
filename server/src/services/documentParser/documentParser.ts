@@ -1,7 +1,8 @@
 import mammoth from 'mammoth';
 import { marked } from 'marked';
 import matter from 'gray-matter';
-import MarkdownIt from 'markdown-it';
+import { remark } from 'remark';
+import remarkHtml from 'remark-html';
 import { DocumentType, AllowedMimeType } from '@obsidian-parser/shared';
 import type {
     ParsedDocument,
@@ -147,120 +148,80 @@ export const parseDocument = async (file: Express.Multer.File): Promise<ParsedDo
 };
 
 const extractHeadings = (markdown: string): Heading[] => {
-    // Clean up indentation issues - remove leading whitespace from each line
-    const cleanedMarkdown = markdown
-        .split('\n')
-        .map(line => line.replace(/^\s+/, ''))
-        .join('\n');
-
-    const md = new MarkdownIt();
-    const tokens = md.parse(cleanedMarkdown, {});
     const headings: Heading[] = [];
+    const lines = markdown.split('\n');
 
-    tokens.forEach((token, index) => {
-        if (token.type === 'heading_open') {
-            const level = parseInt(token.tag.substring(1)); // h1 -> 1, h2 -> 2, etc.
-            const nextToken = tokens[index + 1];
+    for (const line of lines) {
+        const trimmedLine = line.trim();
+        const match = trimmedLine.match(/^(#{1,6})\s+(.+)$/);
 
-            if (nextToken && nextToken.type === 'inline') {
-                const text = nextToken.content;
-                const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                headings.push({ level, text, id });
-            }
+        if (match) {
+            const level = match[1].length;
+            const text = match[2];
+            const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+            headings.push({ level, text, id });
         }
-    });
+    }
 
     return headings;
 };
 
 const extractLinks = (markdown: string): Link[] => {
-    // Clean up indentation issues - remove leading whitespace from each line
-    const cleanedMarkdown = markdown
-        .split('\n')
-        .map(line => line.replace(/^\s+/, ''))
-        .join('\n');
-
-    const md = new MarkdownIt();
-    const tokens = md.parse(cleanedMarkdown, {});
     const links: Link[] = [];
 
-    // First, detect reference link patterns in the original markdown to maintain type distinction
-    const referenceLinkPattern = /\[([^\]]+)\]\[([^\]]+)\]/g;
-    const referenceLinks: { text: string; ref: string }[] = [];
+    // Inline links: [text](url) or [text](url "title")
+    const inlineLinkPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
     let match;
-    while ((match = referenceLinkPattern.exec(markdown)) !== null) {
-        referenceLinks.push({ text: match[1], ref: match[2] });
+
+    while ((match = inlineLinkPattern.exec(markdown)) !== null) {
+        const text = match[1];
+        const urlAndTitle = match[2];
+
+        links.push({
+            text: text,
+            url: urlAndTitle,
+            type: 'inline' as const
+        });
     }
 
-    // Process all tokens to find links within inline tokens
-    tokens.forEach(token => {
-        if (token.type === 'inline' && token.children) {
-            token.children.forEach((child, index) => {
-                if (child.type === 'link_open') {
-                    const href = child.attrGet('href') || '';
-                    const title = child.attrGet('title');
-                    const nextChild = token.children![index + 1];
+    // Reference links: [text][ref]
+    const referenceLinkPattern = /\[([^\]]+)\]\[([^\]]+)\]/g;
+    while ((match = referenceLinkPattern.exec(markdown)) !== null) {
+        const text = match[1];
+        const ref = match[2];
 
-                    if (nextChild && nextChild.type === 'text') {
-                        const text = nextChild.content;
-
-                        // Check if this was originally a reference link
-                        const isReferenceLink = referenceLinks.some(ref => ref.text === text);
-
-                        if (isReferenceLink) {
-                            const refLink = referenceLinks.find(ref => ref.text === text);
-                            links.push({
-                                text: text,
-                                url: `[reference: ${refLink?.ref}]`,
-                                type: 'reference' as const
-                            });
-                        } else {
-                            // Inline link - reconstruct URL with title if present (for backward compatibility)
-                            const url = title ? `${href} "${title}"` : href;
-                            links.push({
-                                text: text,
-                                url: url,
-                                type: 'inline' as const
-                            });
-                        }
-                    }
-                }
-            });
-        }
-    });
+        links.push({
+            text: text,
+            url: `[reference: ${ref}]`,
+            type: 'reference' as const
+        });
+    }
 
     return links;
 };
 
 const extractImages = (markdown: string): Image[] => {
-    // Clean up indentation issues - remove leading whitespace from each line
-    const cleanedMarkdown = markdown
-        .split('\n')
-        .map(line => line.replace(/^\s+/, ''))
-        .join('\n');
-
-    const md = new MarkdownIt();
-    const tokens = md.parse(cleanedMarkdown, {});
     const images: Image[] = [];
 
-    // Process all tokens to find images within inline tokens
-    tokens.forEach(token => {
-        if (token.type === 'inline' && token.children) {
-            token.children.forEach(child => {
-                if (child.type === 'image') {
-                    const src = child.attrGet('src') || '';
-                    const alt = child.content || '';
-                    const title = child.attrGet('title') || undefined;
+    // Image pattern: ![alt text](url) or ![alt text](url "title")
+    const imagePattern = /!\[([^\]]*)\]\(([^)]+)\)/g;
+    let match;
 
-                    images.push({
-                        alt: alt,
-                        url: src,
-                        title: title
-                    });
-                }
-            });
-        }
-    });
+    while ((match = imagePattern.exec(markdown)) !== null) {
+        const alt = match[1];
+        const urlAndTitle = match[2];
+
+        // Check if there's a title in quotes
+        const titleMatch = urlAndTitle.match(/^([^"]+)(?:\s+"([^"]+)")?$/);
+        const url = titleMatch ? titleMatch[1].trim() : urlAndTitle;
+        const title = titleMatch && titleMatch[2] ? titleMatch[2] : undefined;
+
+        images.push({
+            alt: alt,
+            url: url,
+            title: title
+        });
+    }
 
     return images;
 };

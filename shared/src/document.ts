@@ -69,3 +69,13 @@ export type SerializedDocumentMetadata = {
 export type SerializedParsedDocument = Omit<ParsedDocument, 'metadata'> & {
     metadata: SerializedDocumentMetadata;
 };
+
+// Enhanced API response with entities (separate from core ParsedDocument type)
+// Note: This avoids circular dependencies by keeping entities separate
+export type ParsedDocumentWithEntities = ParsedDocument & {
+    entities?: unknown[];  // Use unknown[] to avoid importing campaign types here
+};
+
+export type SerializedParsedDocumentWithEntities = SerializedParsedDocument & {
+    entities?: unknown[];  // Use unknown[] to avoid circular dependencies
+};

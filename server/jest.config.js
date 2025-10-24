@@ -1,19 +1,16 @@
 module.exports = {
   testEnvironment: 'node',
-  preset: 'ts-jest/presets/default-esm',
-  extensionsToTreatAsEsm: ['.ts'],
+  preset: 'ts-jest',
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   transform: {
-    '^.+\\.ts$': [
-      'ts-jest',
-      {
-        useESM: true,
-      },
-    ],
+    '^.+\\.ts$': 'ts-jest',
   },
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.ts$',
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   moduleNameMapper: {
     '^@obsidian-parser/shared$': '<rootDir>/../shared/src/index.ts',
+    // Handle .js imports in TypeScript source files for Jest
+    '^(.*)\\.js$': '$1',
   },
   collectCoverageFrom: [
     'src/**/*.ts',

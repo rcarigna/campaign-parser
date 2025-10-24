@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
 import { uploadDocument } from '../services';
-import { type SerializedParsedDocument } from '../types/constants';
+import { type SerializedParsedDocumentWithEntities } from '../types/constants';
 
 type UseDocumentProcessorReturn = {
-    parsedData: SerializedParsedDocument | null;
+    parsedData: SerializedParsedDocumentWithEntities | null;
     loading: boolean;
     error: string | null;
     processDocument: (file: File) => Promise<void>;
@@ -12,7 +12,7 @@ type UseDocumentProcessorReturn = {
 };
 
 export const useDocumentProcessor = (): UseDocumentProcessorReturn => {
-    const [parsedData, setParsedData] = useState<SerializedParsedDocument | null>(null);
+    const [parsedData, setParsedData] = useState<SerializedParsedDocumentWithEntities | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
