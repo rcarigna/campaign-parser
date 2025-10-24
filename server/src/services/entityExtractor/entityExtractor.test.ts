@@ -1,5 +1,5 @@
 import { EntityExtractor } from './entityExtractor';
-import { parseDocument } from './documentParser';
+import { parseDocument } from '../documentParser';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
@@ -8,7 +8,7 @@ describe('EntityExtractor', () => {
 
     it('should extract entities from session summary', async () => {
         // Read the test file
-        const testFilePath = resolve(__dirname, '../../../test_data/session_summary_1.md');
+        const testFilePath = resolve(__dirname, '../../../../test_data/session_summary_1.md');
         const fileContent = readFileSync(testFilePath);
 
         // Create a mock file object

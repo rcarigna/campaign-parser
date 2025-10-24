@@ -1,6 +1,6 @@
 import { extractEntities } from './nlpEntityExtractor';
-import { EntityExtractor } from './entityExtractor';
-import { parseDocument } from './documentParser';
+import { EntityExtractor, extractEntitiesRegex } from './entityExtractor';
+import { parseDocument } from '../documentParser';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { AnyEntity } from '@obsidian-parser/shared';
@@ -13,7 +13,7 @@ describe('NLP Entity Extractor vs Regex Extractor', () => {
 
     beforeAll(async () => {
         // Read and parse the test file once for both extractors
-        const testFilePath = resolve(__dirname, '../../../test_data/session_summary_1.md');
+        const testFilePath = resolve(__dirname, '../../../../test_data/session_summary_1.md');
         const fileContent = readFileSync(testFilePath);
         filename = 'session_summary_1.md';
 
