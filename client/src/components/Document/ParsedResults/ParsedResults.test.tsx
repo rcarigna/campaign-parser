@@ -3,7 +3,7 @@ import { ParsedResults } from './ParsedResults';
 import {
   type SerializedParsedDocumentWithEntities,
   DocumentType,
-} from '../../types/constants';
+} from '../../../types/constants';
 
 const mockParsedData: SerializedParsedDocumentWithEntities = {
   filename: 'Test Document.md',

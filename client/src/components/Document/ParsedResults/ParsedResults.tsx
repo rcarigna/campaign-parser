@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { type SerializedParsedDocumentWithEntities } from '../../types/constants';
-import { EntityViewer } from '../EntityViewer';
-import '../EntityViewer/EntityViewer.css';
+import { type SerializedParsedDocumentWithEntities } from '../../../types/constants';
+import { EntityViewer } from '../../Entity/EntityViewer';
+import '../../Entity/EntityViewer/EntityViewer.css';
 
 type ParsedResultsProps = {
   parsedData: SerializedParsedDocumentWithEntities | null;

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EntityEditModal } from './EntityEditModal';
-import { EntityKind } from '../../types/constants';
+import { EntityKind } from '../../../types/constants';
 
 const mockOnClose = jest.fn();
 const mockOnSave = jest.fn();

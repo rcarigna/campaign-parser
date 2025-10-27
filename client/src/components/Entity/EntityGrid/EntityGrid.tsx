@@ -1,5 +1,5 @@
 import { EntityCard } from '../EntityCard';
-import { type AnyEntity, EntityKind } from '../../types/constants';
+import { type AnyEntity, EntityKind } from '../../../types/constants';
 
 type EntityWithId = AnyEntity & {
   id: string;

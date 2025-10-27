@@ -3,7 +3,7 @@ import {
   type SerializedParsedDocumentWithEntities,
   type AnyEntity,
   EntityKind,
-} from '../../types/constants';
+} from '../../../types/constants';
 import { EntityFilters } from '../EntityFilters';
 import { EntityGrid } from '../EntityGrid';
 import { EntityEditModal } from '../EntityEditModal';

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { EntityGrid } from './EntityGrid';
-import { EntityKind } from '../../types/constants';
+import { EntityKind } from '../../../types/constants';
 
 const mockOnEntityClick = jest.fn();
 

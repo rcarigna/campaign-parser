@@ -6,7 +6,7 @@ import {
   LocationType,
   QuestType,
   ItemType,
-} from '../../types/constants';
+} from '../../../types/constants';
 
 type EntityWithId = AnyEntity & {
   id: string;

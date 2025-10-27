@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EntityFilters } from './EntityFilters';
-import { EntityKind } from '../../types/constants';
+import { EntityKind } from '../../../types/constants';
 
 const mockOnFilterChange = jest.fn();
 const mockOnDuplicateToggle = jest.fn();
