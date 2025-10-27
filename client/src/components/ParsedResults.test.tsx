@@ -1,11 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { ParsedResults } from './ParsedResults';
 import {
-  type SerializedParsedDocument,
+  type SerializedParsedDocumentWithEntities,
   DocumentType,
 } from '@obsidian-parser/shared';
 
-const mockParsedData: SerializedParsedDocument = {
+const mockParsedData: SerializedParsedDocumentWithEntities = {
   filename: 'Test Document.md',
   type: DocumentType.MARKDOWN,
   content: {
@@ -22,6 +22,13 @@ const mockParsedData: SerializedParsedDocument = {
     lastModified: '2023-01-01T00:00:00.000Z',
     mimeType: 'text/markdown',
   },
+  entities: [
+    {
+      kind: 'npc',
+      title: 'Test NPC',
+      role: 'warrior',
+    },
+  ],
 };
 
 describe('ParsedResults', () => {
@@ -30,10 +37,22 @@ describe('ParsedResults', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('should render parsed JSON output when parsedData is provided', () => {
+  it('should render parsed results with entity view by default', () => {
     render(<ParsedResults parsedData={mockParsedData} />);
 
-    expect(screen.getByText('Parsed JSON Output')).toBeInTheDocument();
+    expect(screen.getByText('Parsed Results')).toBeInTheDocument();
+    expect(screen.getByText('📋 Entity View')).toBeInTheDocument();
+    expect(screen.getByText('📄 JSON View')).toBeInTheDocument();
+    expect(screen.getByText('📋 Extracted Entities (1)')).toBeInTheDocument();
+    expect(screen.getByText('Test NPC')).toBeInTheDocument();
+  });
+
+  it('should switch to JSON view when toggle is clicked', () => {
+    render(<ParsedResults parsedData={mockParsedData} />);
+
+    const jsonViewButton = screen.getByText('📄 JSON View');
+    fireEvent.click(jsonViewButton);
+
     expect(screen.getByText(/Test Document\.md/)).toBeInTheDocument();
     expect(screen.getByText(/Test Content/)).toBeInTheDocument();
     expect(screen.getByText(/markdown/)).toBeInTheDocument();
@@ -43,15 +62,16 @@ describe('ParsedResults', () => {
   it('should render with correct CSS classes', () => {
     render(<ParsedResults parsedData={mockParsedData} />);
 
-    const resultsDiv = screen.getByText('Parsed JSON Output').parentElement;
-    const jsonOutputDiv = screen.getByText(/Test Document\.md/).parentElement;
-
+    const resultsDiv =
+      screen.getByText('Parsed Results').parentElement?.parentElement;
     expect(resultsDiv).toHaveClass('results');
-    expect(jsonOutputDiv).toHaveClass('json-output');
   });
 
-  it('should format JSON with proper indentation', () => {
+  it('should format JSON with proper indentation when in JSON view', () => {
     render(<ParsedResults parsedData={mockParsedData} />);
+
+    const jsonViewButton = screen.getByText('📄 JSON View');
+    fireEvent.click(jsonViewButton);
 
     const preElement = screen.getByText(/Test Document\.md/);
     expect(preElement.tagName).toBe('PRE');
