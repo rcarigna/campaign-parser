@@ -1,4 +1,4 @@
-import { EntityKind } from '../types/constants';
+import { EntityKind } from '../../types/constants';
 
 type EntityFilterType = 'all' | EntityKind;
 

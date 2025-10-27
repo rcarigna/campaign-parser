@@ -3,7 +3,7 @@ import { EntityViewer } from './EntityViewer';
 import {
   type SerializedParsedDocumentWithEntities,
   DocumentType,
-} from '../types/constants';
+} from '../../types/constants';
 
 const mockParsedData: SerializedParsedDocumentWithEntities = {
   filename: 'test.md',

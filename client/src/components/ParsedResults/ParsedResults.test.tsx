@@ -3,7 +3,7 @@ import { ParsedResults } from './ParsedResults';
 import {
   type SerializedParsedDocumentWithEntities,
   DocumentType,
-} from '@obsidian-parser/shared';
+} from '../../types/constants';
 
 const mockParsedData: SerializedParsedDocumentWithEntities = {
   filename: 'Test Document.md',

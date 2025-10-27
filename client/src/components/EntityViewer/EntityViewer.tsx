@@ -3,10 +3,10 @@ import {
   type SerializedParsedDocumentWithEntities,
   type AnyEntity,
   EntityKind,
-} from '../types/constants';
-import { EntityFilters } from './EntityFilters';
-import { EntityGrid } from './EntityGrid';
-import { EntityEditModal } from './EntityEditModal';
+} from '../../types/constants';
+import { EntityFilters } from '../EntityFilters';
+import { EntityGrid } from '../EntityGrid';
+import { EntityEditModal } from '../EntityEditModal';
 
 type EntityViewerProps = {
   parsedData: SerializedParsedDocumentWithEntities | null;
