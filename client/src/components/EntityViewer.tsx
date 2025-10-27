@@ -1,35 +1,30 @@
 import { useState } from 'react';
-import { type SerializedParsedDocumentWithEntities } from '../types/constants';
+import {
+  type SerializedParsedDocumentWithEntities,
+  type AnyEntity,
+  EntityKind,
+  ItemRarity,
+  LocationType,
+  QuestType,
+  ItemType,
+} from '../types/constants';
 
 type EntityViewerProps = {
   parsedData: SerializedParsedDocumentWithEntities | null;
 };
 
-type EntityType =
-  | 'all'
-  | 'session_summary'
-  | 'npc'
-  | 'location'
-  | 'item'
-  | 'quest';
+type EntityFilterType = 'all' | EntityKind;
 
-type EntityWithId = {
+// Extended entity type with ID for UI purposes
+type EntityWithId = AnyEntity & {
   id: string;
-  kind: string;
-  title: string;
-  [key: string]: any;
-};
-
-type BaseEntity = {
-  kind: string;
-  title: string;
-  [key: string]: any;
+  [key: string]: any; // Allow dynamic field access for editing
 };
 
 export const EntityViewer = ({
   parsedData,
 }: EntityViewerProps): JSX.Element | null => {
-  const [filterType, setFilterType] = useState<EntityType>('all');
+  const [filterType, setFilterType] = useState<EntityFilterType>('all');
   const [selectedEntity, setSelectedEntity] = useState<EntityWithId | null>(
     null
   );
@@ -47,11 +42,11 @@ export const EntityViewer = ({
   // Add IDs to entities for easier management
   const entitiesWithIds: EntityWithId[] = parsedData.entities.map(
     (entity, index) => {
-      const baseEntity = entity as BaseEntity;
+      const anyEntity = entity as AnyEntity;
       return {
-        ...baseEntity,
-        id: `${baseEntity.kind}-${index}`,
-      };
+        ...anyEntity,
+        id: `${anyEntity.kind}-${index}`,
+      } as EntityWithId;
     }
   );
 
@@ -86,35 +81,43 @@ export const EntityViewer = ({
     ? filteredEntities.filter((e) => duplicateIds.has(e.id))
     : filteredEntities;
 
-  const getEntityIcon = (kind: string): string => {
+  const getEntityIcon = (kind: EntityKind): string => {
     switch (kind) {
-      case 'session_summary':
+      case EntityKind.SESSION_SUMMARY:
         return '📜';
-      case 'npc':
+      case EntityKind.NPC:
         return '👤';
-      case 'location':
+      case EntityKind.LOCATION:
         return '🗺️';
-      case 'item':
+      case EntityKind.ITEM:
         return '⚔️';
-      case 'quest':
+      case EntityKind.QUEST:
         return '🎯';
+      case EntityKind.PLAYER:
+        return '🧙';
+      case EntityKind.SESSION_PREP:
+        return '📋';
       default:
         return '📄';
     }
   };
 
-  const getEntityColor = (kind: string): string => {
+  const getEntityColor = (kind: EntityKind): string => {
     switch (kind) {
-      case 'session_summary':
+      case EntityKind.SESSION_SUMMARY:
         return '#4f46e5';
-      case 'npc':
+      case EntityKind.NPC:
         return '#059669';
-      case 'location':
+      case EntityKind.LOCATION:
         return '#dc2626';
-      case 'item':
+      case EntityKind.ITEM:
         return '#d97706';
-      case 'quest':
+      case EntityKind.QUEST:
         return '#7c3aed';
+      case EntityKind.PLAYER:
+        return '#10b981';
+      case EntityKind.SESSION_PREP:
+        return '#6366f1';
       default:
         return '#6b7280';
     }
@@ -124,32 +127,27 @@ export const EntityViewer = ({
     const missing: string[] = [];
 
     switch (entity.kind) {
-      case 'npc':
+      case EntityKind.NPC:
         if (!entity.role) missing.push('role');
-        if (!entity.description) missing.push('description');
         if (!entity.faction) missing.push('faction');
         if (!entity.importance) missing.push('importance');
         break;
-      case 'location':
+      case EntityKind.LOCATION:
         if (!entity.type) missing.push('type');
-        if (!entity.description) missing.push('description');
         if (!entity.region) missing.push('region');
         break;
-      case 'item':
+      case EntityKind.ITEM:
         if (!entity.type) missing.push('type');
         if (!entity.rarity) missing.push('rarity');
-        if (!entity.description) missing.push('description');
         break;
-      case 'quest':
+      case EntityKind.QUEST:
         if (!entity.status) missing.push('status');
-        if (!entity.description) missing.push('description');
         if (!entity.type) missing.push('type');
         break;
     }
 
     return missing;
   };
-
   return (
     <div className='entity-viewer'>
       <div className='entity-header'>
@@ -162,13 +160,15 @@ export const EntityViewer = ({
             <select
               id='type-filter'
               value={filterType}
-              onChange={(e) => setFilterType(e.target.value as EntityType)}
+              onChange={(e) =>
+                setFilterType(e.target.value as EntityFilterType)
+              }
               className='filter-select'
             >
               <option value='all'>All Types ({entitiesWithIds.length})</option>
               {Object.entries(typeCounts).map(([type, count]) => (
                 <option key={type} value={type}>
-                  {getEntityIcon(type)} {type} ({count})
+                  {getEntityIcon(type as EntityKind)} {type} ({count})
                 </option>
               ))}
             </select>
@@ -211,13 +211,13 @@ export const EntityViewer = ({
               <h4 className='entity-title'>{entity.title}</h4>
 
               <div className='entity-details'>
-                {entity.role && (
+                {'role' in entity && entity.role && (
                   <div className='detail-item'>Role: {entity.role}</div>
                 )}
-                {entity.type && (
+                {'type' in entity && entity.type && (
                   <div className='detail-item'>Type: {entity.type}</div>
                 )}
-                {entity.status && (
+                {'status' in entity && entity.status && (
                   <div className='detail-item'>Status: {entity.status}</div>
                 )}
                 {entity.sourceSessions && (
@@ -288,20 +288,17 @@ const EntityEditModal = ({
   };
 
   const getFieldsForType = (
-    kind: string
+    kind: EntityKind
   ): Array<{
     key: string;
     label: string;
     type: string;
     options?: string[];
   }> => {
-    const baseFields = [
-      { key: 'title', label: 'Title', type: 'text' },
-      { key: 'description', label: 'Description', type: 'textarea' },
-    ];
+    const baseFields = [{ key: 'title', label: 'Title', type: 'text' }];
 
     switch (kind) {
-      case 'npc':
+      case EntityKind.NPC:
         return [
           ...baseFields,
           { key: 'role', label: 'Role', type: 'text' },
@@ -316,61 +313,36 @@ const EntityEditModal = ({
           { key: 'class', label: 'Class', type: 'text' },
           { key: 'race', label: 'Race', type: 'text' },
         ];
-      case 'location':
+      case EntityKind.LOCATION:
         return [
           ...baseFields,
           {
             key: 'type',
             label: 'Type',
             type: 'select',
-            options: [
-              'city',
-              'town',
-              'village',
-              'dungeon',
-              'tavern',
-              'shop',
-              'temple',
-              'landmark',
-              'wilderness',
-            ],
+            options: Object.values(LocationType),
           },
           { key: 'region', label: 'Region', type: 'text' },
         ];
-      case 'item':
+      case EntityKind.ITEM:
         return [
           ...baseFields,
           {
             key: 'type',
             label: 'Type',
             type: 'select',
-            options: [
-              'weapon',
-              'armor',
-              'shield',
-              'consumable',
-              'tool',
-              'treasure',
-              'magic_item',
-            ],
+            options: Object.values(ItemType),
           },
           {
             key: 'rarity',
             label: 'Rarity',
             type: 'select',
-            options: [
-              'common',
-              'uncommon',
-              'rare',
-              'very_rare',
-              'legendary',
-              'artifact',
-            ],
+            options: Object.values(ItemRarity),
           },
           { key: 'attunement', label: 'Requires Attunement', type: 'checkbox' },
           { key: 'owner', label: 'Owner', type: 'text' },
         ];
-      case 'quest':
+      case EntityKind.QUEST:
         return [
           ...baseFields,
           {
@@ -383,7 +355,7 @@ const EntityEditModal = ({
             key: 'type',
             label: 'Type',
             type: 'select',
-            options: ['main', 'side', 'personal'],
+            options: Object.values(QuestType),
           },
           { key: 'owner', label: 'Quest Giver', type: 'text' },
           { key: 'faction', label: 'Faction', type: 'text' },
