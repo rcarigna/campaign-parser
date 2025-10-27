@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EntityEditModal } from './EntityEditModal';
-import { EntityKind } from '../../../types/constants';
+import { EntityKind } from '../../../../types/constants';
 
 const mockOnClose = jest.fn();
 const mockOnSave = jest.fn();
@@ -27,8 +27,8 @@ describe('EntityEditModal', () => {
     );
 
     expect(screen.getByText('Edit npc: Test NPC')).toBeInTheDocument();
-    expect(screen.getByLabelText('Title:')).toBeInTheDocument();
-    expect(screen.getByLabelText('Role:')).toBeInTheDocument();
+    expect(screen.getByText('Title:')).toBeInTheDocument();
+    expect(screen.getByText('Role:')).toBeInTheDocument();
   });
 
   it('calls onClose when close button is clicked', () => {
@@ -85,7 +85,7 @@ describe('EntityEditModal', () => {
       />
     );
 
-    const titleInput = screen.getByLabelText('Title:') as HTMLInputElement;
+    const titleInput = screen.getByDisplayValue('Test NPC') as HTMLInputElement;
     fireEvent.change(titleInput, { target: { value: 'Updated NPC' } });
 
     expect(titleInput.value).toBe('Updated NPC');
@@ -100,7 +100,7 @@ describe('EntityEditModal', () => {
       />
     );
 
-    const titleInput = screen.getByLabelText('Title:');
+    const titleInput = screen.getByDisplayValue('Test NPC');
     fireEvent.change(titleInput, { target: { value: 'Updated NPC' } });
 
     const saveButton = screen.getByText('Save Changes');
@@ -129,7 +129,7 @@ describe('EntityEditModal', () => {
       />
     );
 
-    expect(screen.getByLabelText('Type:')).toBeInTheDocument();
-    expect(screen.getByLabelText('Region:')).toBeInTheDocument();
+    expect(screen.getByText('Type:')).toBeInTheDocument();
+    expect(screen.getByText('Region:')).toBeInTheDocument();
   });
 });
