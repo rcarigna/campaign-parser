@@ -10,12 +10,18 @@ type EntityGridProps = {
   entities: EntityWithId[];
   duplicateIds: Set<string>;
   onEntityClick: (entity: EntityWithId) => void;
+  isSelectionMode?: boolean;
+  selectedEntityIds?: Set<string>;
+  onEntitySelect?: (entityId: string, isSelected: boolean) => void;
 };
 
 export const EntityGrid = ({
   entities,
   duplicateIds,
   onEntityClick,
+  isSelectionMode = false,
+  selectedEntityIds = new Set(),
+  onEntitySelect,
 }: EntityGridProps): JSX.Element => {
   const getMissingFields = (entity: EntityWithId): string[] => {
     const missing: string[] = [];
@@ -64,6 +70,13 @@ export const EntityGrid = ({
             isDuplicate={isDuplicate}
             missingFields={missingFields}
             onClick={onEntityClick}
+            isSelectable={isSelectionMode}
+            isSelected={selectedEntityIds.has(entity.id)}
+            onSelect={
+              onEntitySelect
+                ? (isSelected: boolean) => onEntitySelect(entity.id, isSelected)
+                : undefined
+            }
           />
         );
       })}

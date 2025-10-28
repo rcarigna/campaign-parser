@@ -10,6 +10,9 @@ type EntityCardProps = {
   isDuplicate: boolean;
   missingFields: string[];
   onClick: (entity: EntityWithId) => void;
+  isSelectable?: boolean;
+  isSelected?: boolean;
+  onSelect?: (isSelected: boolean) => void;
 };
 
 export const EntityCard = ({
@@ -17,6 +20,9 @@ export const EntityCard = ({
   isDuplicate,
   missingFields,
   onClick,
+  isSelectable = false,
+  isSelected = false,
+  onSelect,
 }: EntityCardProps): JSX.Element => {
   const getEntityIcon = (kind: EntityKind): string => {
     switch (kind) {
@@ -60,13 +66,41 @@ export const EntityCard = ({
     }
   };
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Don't trigger card click if clicking on checkbox
+    const target = e.target as HTMLElement;
+    if (
+      target.tagName !== 'INPUT' ||
+      (target as HTMLInputElement).type !== 'checkbox'
+    ) {
+      onClick(entity);
+    }
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+    if (onSelect) {
+      onSelect(e.target.checked);
+    }
+  };
+
   return (
     <div
-      className={`entity-card ${isDuplicate ? 'duplicate' : ''}`}
+      className={`entity-card ${isDuplicate ? 'duplicate' : ''} ${
+        isSelected ? 'selected' : ''
+      }`}
       style={{ borderLeftColor: getEntityColor(entity.kind) }}
-      onClick={() => onClick(entity)}
+      onClick={handleCardClick}
     >
       <div className='entity-card-header'>
+        {isSelectable && (
+          <input
+            type='checkbox'
+            checked={isSelected}
+            onChange={handleSelectChange}
+            className='entity-select-checkbox'
+          />
+        )}
         <span className='entity-icon'>{getEntityIcon(entity.kind)}</span>
         <span className='entity-type'>{entity.kind}</span>
         {isDuplicate && <span className='duplicate-badge'>DUPE</span>}

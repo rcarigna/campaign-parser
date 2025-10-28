@@ -27,6 +27,10 @@ export const EntityViewer = ({
     null
   );
   const [showDuplicates, setShowDuplicates] = useState(false);
+  const [selectedEntityIds, setSelectedEntityIds] = useState<Set<string>>(
+    new Set()
+  );
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
 
   if (!parsedData?.entities || parsedData.entities.length === 0) {
     return (
@@ -84,6 +88,43 @@ export const EntityViewer = ({
     setSelectedEntity(null);
   };
 
+  const handleEntitySelect = (entityId: string, isSelected: boolean) => {
+    setSelectedEntityIds((prev) => {
+      const newSet = new Set(prev);
+      if (isSelected) {
+        newSet.add(entityId);
+      } else {
+        newSet.delete(entityId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleMarkAsDuplicates = () => {
+    if (selectedEntityIds.size < 2) {
+      alert('Please select at least 2 entities to mark as duplicates');
+      return;
+    }
+
+    const selectedEntities = entitiesWithIds.filter((e) =>
+      selectedEntityIds.has(e.id)
+    );
+    console.log(
+      'Marking as duplicates:',
+      selectedEntities.map((e) => e.title)
+    );
+
+    // TODO: Implement actual duplicate merging logic
+    // For now, just clear the selection
+    setSelectedEntityIds(new Set());
+    setIsSelectionMode(false);
+  };
+
+  const handleCancelSelection = () => {
+    setSelectedEntityIds(new Set());
+    setIsSelectionMode(false);
+  };
+
   return (
     <div className='entity-viewer'>
       <div className='entity-header'>
@@ -100,10 +141,44 @@ export const EntityViewer = ({
         />
       </div>
 
+      {isSelectionMode && (
+        <div className='selection-controls'>
+          <button
+            onClick={handleMarkAsDuplicates}
+            disabled={selectedEntityIds.size < 2}
+            className='btn btn-primary'
+          >
+            Mark {selectedEntityIds.size} as Duplicates
+          </button>
+          <button onClick={handleCancelSelection} className='btn btn-secondary'>
+            Cancel
+          </button>
+        </div>
+      )}
+
+      <div className='entity-actions'>
+        {!isSelectionMode ? (
+          <button
+            onClick={() => setIsSelectionMode(true)}
+            className='btn btn-outline'
+          >
+            Select Duplicates
+          </button>
+        ) : (
+          <p className='selection-help'>
+            Select entities to mark as duplicates. Selected:{' '}
+            {selectedEntityIds.size}
+          </p>
+        )}
+      </div>
+
       <EntityGrid
         entities={displayedEntities}
         duplicateIds={duplicateIds}
         onEntityClick={handleEntityClick}
+        isSelectionMode={isSelectionMode}
+        selectedEntityIds={selectedEntityIds}
+        onEntitySelect={handleEntitySelect}
       />
 
       {selectedEntity && (
