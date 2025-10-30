@@ -593,6 +593,7 @@ npm run build
 
 ## 📚 Documentation
 
+- [`ROADMAP.md`](./ROADMAP.md) - **Project roadmap and future development plans**
 - [`docs/InteractiveCleanupFlow.md`](./docs/InteractiveCleanupFlow.md) - Complete user flow for entity preview and management
 - [`docs/EntityManagementDemo.md`](./docs/EntityManagementDemo.md) - Entity preview system features and capabilities
 - [`docs/CampaignDocumentStructure.md`](./docs/CampaignDocumentStructure.md) - Detailed parsing output documentation  
