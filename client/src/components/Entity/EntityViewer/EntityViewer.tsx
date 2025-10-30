@@ -1,27 +1,20 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast/headless';
-import {
-  type SerializedParsedDocumentWithEntities,
-  type AnyEntity,
-  EntityKind,
-} from '../../../types/constants';
+import { type EntityWithId, EntityKind } from '../../../types/constants';
 import { EntityFilters } from '../EntityFilters';
 import { EntityGrid } from '../EntityGrid';
 import { EntityEditModal } from '../EntityEditModal';
 
 type EntityViewerProps = {
-  parsedData: SerializedParsedDocumentWithEntities | null;
+  entities: EntityWithId[];
+  onEntityDiscard: (entityId: string) => void;
 };
 
 type EntityFilterType = 'all' | EntityKind;
 
-type EntityWithId = AnyEntity & {
-  id: string;
-  [key: string]: any;
-};
-
 export const EntityViewer = ({
-  parsedData,
+  entities,
+  onEntityDiscard,
 }: EntityViewerProps): JSX.Element | null => {
   const [filterType, setFilterType] = useState<EntityFilterType>('all');
   const [selectedEntity, setSelectedEntity] = useState<EntityWithId | null>(
@@ -33,7 +26,7 @@ export const EntityViewer = ({
   );
   const [isSelectionMode, setIsSelectionMode] = useState(false);
 
-  if (!parsedData?.entities || parsedData.entities.length === 0) {
+  if (entities?.length === 0) {
     return (
       <div className='entity-viewer'>
         <h3>Extracted Entities</h3>
@@ -42,23 +35,13 @@ export const EntityViewer = ({
     );
   }
 
-  const entitiesWithIds: EntityWithId[] = parsedData.entities.map(
-    (entity, index) => {
-      const anyEntity = entity as AnyEntity;
-      return {
-        ...anyEntity,
-        id: `${anyEntity.kind}-${index}`,
-      } as EntityWithId;
-    }
-  );
-
   const filteredEntities =
     filterType === 'all'
-      ? entitiesWithIds
-      : entitiesWithIds.filter((entity) => entity.kind === filterType);
+      ? entities
+      : entities.filter((entity) => entity.kind === filterType);
 
   const duplicateGroups = new Map<string, EntityWithId[]>();
-  entitiesWithIds.forEach((entity) => {
+  entities?.forEach((entity) => {
     const key = `${entity.kind}-${entity.title.toLowerCase().trim()}`;
     if (!duplicateGroups.has(key)) {
       duplicateGroups.set(key, []);
@@ -71,7 +54,7 @@ export const EntityViewer = ({
     .flat();
   const duplicateIds = new Set(duplicates.map((d) => d.id));
 
-  const typeCounts = entitiesWithIds.reduce((acc, entity) => {
+  const typeCounts = entities?.reduce((acc, entity) => {
     acc[entity.kind] = (acc[entity.kind] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
@@ -107,7 +90,7 @@ export const EntityViewer = ({
       return;
     }
 
-    const selectedEntities = entitiesWithIds.filter((e) =>
+    const selectedEntities = entities.filter((e) =>
       selectedEntityIds.has(e.id)
     );
 
@@ -130,10 +113,61 @@ export const EntityViewer = ({
     setIsSelectionMode(false);
   };
 
+  const handleEntityDiscard = (entity: EntityWithId) => {
+    // Add confirmation using toast
+    toast(
+      (t) => (
+        <div>
+          <p>Discard "{entity.title}"?</p>
+          <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+            <button
+              onClick={() => {
+                // Call the parent's discard handler
+                onEntityDiscard(entity.id);
+                // Also remove from selection if it was selected
+                setSelectedEntityIds((prev) => {
+                  const newSet = new Set(prev);
+                  newSet.delete(entity.id);
+                  return newSet;
+                });
+                toast.success(`Discarded "${entity.title}"`);
+                toast.dismiss(t.id);
+              }}
+              style={{
+                background: '#ef4444',
+                color: 'white',
+                border: 'none',
+                padding: '4px 8px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
+              Yes, Discard
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              style={{
+                background: '#6b7280',
+                color: 'white',
+                border: 'none',
+                padding: '4px 8px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: Infinity }
+    );
+  };
+
   return (
     <div className='entity-viewer'>
       <div className='entity-header'>
-        <h3>📋 Extracted Entities ({entitiesWithIds.length})</h3>
+        <h3>📋 Extracted Entities ({entities.length})</h3>
 
         <EntityFilters
           filterType={filterType}
@@ -141,7 +175,7 @@ export const EntityViewer = ({
           showDuplicates={showDuplicates}
           onDuplicateToggle={setShowDuplicates}
           typeCounts={typeCounts}
-          totalEntities={entitiesWithIds.length}
+          totalEntities={entities.length}
           totalDuplicates={duplicates.length}
         />
       </div>
@@ -184,6 +218,7 @@ export const EntityViewer = ({
         isSelectionMode={isSelectionMode}
         selectedEntityIds={selectedEntityIds}
         onEntitySelect={handleEntitySelect}
+        onEntityDiscard={handleEntityDiscard}
       />
 
       {selectedEntity && (

@@ -32,7 +32,7 @@ describe('EntityCard', () => {
     expect(screen.getByText('Role: warrior')).toBeInTheDocument();
   });
 
-  it('shows duplicate badge when isDuplicate is true', () => {
+  it('renders duplicate badge when isDuplicate is true', () => {
     render(
       <EntityCard
         entity={mockEntity}
@@ -43,6 +43,63 @@ describe('EntityCard', () => {
     );
 
     expect(screen.getByText('DUPE')).toBeInTheDocument();
+  });
+
+  it('renders discard button when onDiscard handler is provided', () => {
+    const mockOnDiscard = jest.fn();
+
+    render(
+      <EntityCard
+        entity={mockEntity}
+        isDuplicate={false}
+        missingFields={[]}
+        onClick={mockOnClick}
+        onDiscard={mockOnDiscard}
+      />
+    );
+
+    const discardButton = screen.getByRole('button', {
+      name: /discard test npc/i,
+    });
+    expect(discardButton).toBeInTheDocument();
+    expect(discardButton).toHaveTextContent('🗑️');
+  });
+
+  it('calls onDiscard when discard button is clicked', () => {
+    const mockOnDiscard = jest.fn();
+
+    render(
+      <EntityCard
+        entity={mockEntity}
+        isDuplicate={false}
+        missingFields={[]}
+        onClick={mockOnClick}
+        onDiscard={mockOnDiscard}
+      />
+    );
+
+    const discardButton = screen.getByRole('button', {
+      name: /discard test npc/i,
+    });
+    fireEvent.click(discardButton);
+
+    expect(mockOnDiscard).toHaveBeenCalledWith(mockEntity);
+    expect(mockOnClick).not.toHaveBeenCalled(); // Should not trigger card click
+  });
+
+  it('does not render discard button when onDiscard handler is not provided', () => {
+    render(
+      <EntityCard
+        entity={mockEntity}
+        isDuplicate={false}
+        missingFields={[]}
+        onClick={mockOnClick}
+      />
+    );
+
+    expect(
+      screen.queryByRole('button', { name: /discard/i })
+    ).not.toBeInTheDocument();
   });
 
   it('shows missing fields when provided', () => {

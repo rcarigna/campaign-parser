@@ -46,7 +46,11 @@ export const App = (): JSX.Element => {
           onReset={handleReset}
         />
 
-        <ParsedResults parsedData={documentProcessor.parsedData} />
+        <ParsedResults
+          parsedData={documentProcessor.parsedData}
+          entities={documentProcessor.entities}
+          onEntityDiscard={documentProcessor.discardEntity}
+        />
       </main>
 
       {/* Toast notifications */}

@@ -1,9 +1,4 @@
-import { type AnyEntity, EntityKind } from '../../../types/constants';
-
-type EntityWithId = AnyEntity & {
-  id: string;
-  [key: string]: any;
-};
+import { type EntityWithId, EntityKind } from '../../../types/constants';
 
 type EntityCardProps = {
   entity: EntityWithId;
@@ -13,6 +8,7 @@ type EntityCardProps = {
   isSelectable?: boolean;
   isSelected?: boolean;
   onSelect?: (isSelected: boolean) => void;
+  onDiscard?: (entity: EntityWithId) => void;
 };
 
 export const EntityCard = ({
@@ -23,6 +19,7 @@ export const EntityCard = ({
   isSelectable = false,
   isSelected = false,
   onSelect,
+  onDiscard,
 }: EntityCardProps): JSX.Element => {
   const getEntityIcon = (kind: EntityKind): string => {
     switch (kind) {
@@ -86,6 +83,13 @@ export const EntityCard = ({
     }
   };
 
+  const handleDiscardClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDiscard) {
+      onDiscard(entity);
+    }
+  };
+
   return (
     <div
       className={`entity-card ${isDuplicate ? 'duplicate' : ''} ${
@@ -106,6 +110,16 @@ export const EntityCard = ({
         <span className='entity-icon'>{getEntityIcon(entity.kind)}</span>
         <span className='entity-type'>{entity.kind}</span>
         {isDuplicate && <span className='duplicate-badge'>DUPE</span>}
+        {onDiscard && (
+          <button
+            className='entity-discard-btn'
+            onClick={handleDiscardClick}
+            title={`Discard ${entity.title}`}
+            aria-label={`Discard ${entity.title}`}
+          >
+            🗑️
+          </button>
+        )}
       </div>
 
       <h4 className='entity-title'>{entity.title}</h4>
