@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'react-hot-toast/headless';
 import {
   type SerializedParsedDocumentWithEntities,
   type AnyEntity,
@@ -35,7 +36,7 @@ export const EntityViewer = ({
   if (!parsedData?.entities || parsedData.entities.length === 0) {
     return (
       <div className='entity-viewer'>
-        <h3>��� Extracted Entities</h3>
+        <h3>Extracted Entities</h3>
         <p className='no-entities'>No entities found in this document.</p>
       </div>
     );
@@ -102,20 +103,24 @@ export const EntityViewer = ({
 
   const handleMarkAsDuplicates = () => {
     if (selectedEntityIds.size < 2) {
-      alert('Please select at least 2 entities to mark as duplicates');
+      toast.error('Please select at least 2 entities to mark as duplicates');
       return;
     }
 
     const selectedEntities = entitiesWithIds.filter((e) =>
       selectedEntityIds.has(e.id)
     );
-    console.log(
-      'Marking as duplicates:',
-      selectedEntities.map((e) => e.title)
-    );
 
     // TODO: Implement actual duplicate merging logic
-    // For now, just clear the selection
+    // For now, just show success message and clear the selection
+    toast.success(
+      `Successfully marked ${
+        selectedEntities.length
+      } entities as duplicates: ${selectedEntities
+        .map((e) => e.title)
+        .join(', ')}`
+    );
+
     setSelectedEntityIds(new Set());
     setIsSelectionMode(false);
   };

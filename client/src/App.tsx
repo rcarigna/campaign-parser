@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { Toaster } from 'react-hot-toast';
 import './App.css';
 
 // Components
@@ -47,6 +48,33 @@ export const App = (): JSX.Element => {
 
         <ParsedResults parsedData={documentProcessor.parsedData} />
       </main>
+
+      {/* Toast notifications */}
+      <Toaster
+        position='top-right'
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#ffffff',
+            color: '#374151',
+            border: '1px solid #e5e7eb',
+            borderRadius: '8px',
+            fontSize: '14px',
+          },
+          success: {
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#ffffff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#ffffff',
+            },
+          },
+        }}
+      />
     </div>
   );
 };

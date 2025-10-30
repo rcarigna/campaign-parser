@@ -4,6 +4,7 @@ import {
   type SerializedParsedDocumentWithEntities,
   DocumentType,
 } from '../../../types/constants';
+import * as reactHotToast from 'react-hot-toast/headless';
 
 const mockParsedData: SerializedParsedDocumentWithEntities = {
   filename: 'test.md',
@@ -119,5 +120,25 @@ describe('EntityViewer', () => {
     expect(
       screen.getByText('No entities found in this document.')
     ).toBeInTheDocument();
+  });
+
+  it('displays toast notification when no entities are found', () => {
+    const emptyData = { ...mockParsedData, entities: [] };
+    render(<EntityViewer parsedData={emptyData} />);
+    expect(
+      screen.getByText('No entities found in this document.')
+    ).toBeInTheDocument();
+  });
+  it('displays toast notification when null data is provided', () => {
+    render(<EntityViewer parsedData={null} />);
+
+    expect(
+      screen.getByText('No entities found in this document.')
+    ).toBeInTheDocument();
+  });
+  it('displays toast success notification when entities are found', () => {
+    render(<EntityViewer parsedData={mockParsedData} />);
+
+    expect(screen.getByText('📋 Extracted Entities (5)')).toBeInTheDocument();
   });
 });

@@ -17,8 +17,15 @@ const baseFields: FieldConfig[] = [
     { key: 'title', label: 'Title', type: 'text' }
 ];
 
-const npcFields: FieldConfig[] = [
+/**
+ * Compose base fields with entity-specific fields
+ */
+const composeFields = (entitySpecificFields: FieldConfig[]): FieldConfig[] => [
     ...baseFields,
+    ...entitySpecificFields,
+];
+
+const npcSpecificFields: FieldConfig[] = [
     { key: 'role', label: 'Role', type: 'text' },
     { key: 'faction', label: 'Faction', type: 'text' },
     {
@@ -32,8 +39,7 @@ const npcFields: FieldConfig[] = [
     { key: 'race', label: 'Race', type: 'text' },
 ];
 
-const locationFields: FieldConfig[] = [
-    ...baseFields,
+const locationSpecificFields: FieldConfig[] = [
     {
         key: 'type',
         label: 'Type',
@@ -43,8 +49,7 @@ const locationFields: FieldConfig[] = [
     { key: 'region', label: 'Region', type: 'text' },
 ];
 
-const itemFields: FieldConfig[] = [
-    ...baseFields,
+const itemSpecificFields: FieldConfig[] = [
     {
         key: 'type',
         label: 'Type',
@@ -61,8 +66,7 @@ const itemFields: FieldConfig[] = [
     { key: 'owner', label: 'Owner', type: 'text' },
 ];
 
-const questFields: FieldConfig[] = [
-    ...baseFields,
+const questSpecificFields: FieldConfig[] = [
     {
         key: 'status',
         label: 'Status',
@@ -79,22 +83,19 @@ const questFields: FieldConfig[] = [
     { key: 'faction', label: 'Faction', type: 'text' },
 ];
 
-const sessionSummaryFields: FieldConfig[] = [
-    ...baseFields,
+const sessionSummarySpecificFields: FieldConfig[] = [
     { key: 'session_date', label: 'Session Date', type: 'text' },
     { key: 'session_number', label: 'Session Number', type: 'text' },
     { key: 'arc', label: 'Arc', type: 'text' },
     { key: 'status', label: 'Status', type: 'text' },
 ];
 
-const sessionPrepFields: FieldConfig[] = [
-    ...baseFields,
+const sessionPrepSpecificFields: FieldConfig[] = [
     { key: 'session_date', label: 'Session Date', type: 'text' },
     { key: 'prep_notes', label: 'Prep Notes', type: 'textarea' },
 ];
 
-const playerFields: FieldConfig[] = [
-    ...baseFields,
+const playerSpecificFields: FieldConfig[] = [
     { key: 'class', label: 'Class', type: 'text' },
     { key: 'race', label: 'Race', type: 'text' },
     { key: 'level', label: 'Level', type: 'text' },
@@ -107,19 +108,19 @@ const playerFields: FieldConfig[] = [
 export const getFieldsForEntityKind = (kind: EntityKind): FieldConfig[] => {
     switch (kind) {
         case EntityKind.NPC:
-            return npcFields;
+            return composeFields(npcSpecificFields);
         case EntityKind.LOCATION:
-            return locationFields;
+            return composeFields(locationSpecificFields);
         case EntityKind.ITEM:
-            return itemFields;
+            return composeFields(itemSpecificFields);
         case EntityKind.QUEST:
-            return questFields;
+            return composeFields(questSpecificFields);
         case EntityKind.SESSION_SUMMARY:
-            return sessionSummaryFields;
+            return composeFields(sessionSummarySpecificFields);
         case EntityKind.SESSION_PREP:
-            return sessionPrepFields;
+            return composeFields(sessionPrepSpecificFields);
         case EntityKind.PLAYER:
-            return playerFields;
+            return composeFields(playerSpecificFields);
         default:
             return baseFields;
     }

@@ -70,8 +70,10 @@ export const EntityCard = ({
     // Don't trigger card click if clicking on checkbox
     const target = e.target as HTMLElement;
     if (
-      target.tagName !== 'INPUT' ||
-      (target as HTMLInputElement).type !== 'checkbox'
+      !(
+        target.tagName === 'INPUT' &&
+        (target as HTMLInputElement).type === 'checkbox'
+      )
     ) {
       onClick(entity);
     }
