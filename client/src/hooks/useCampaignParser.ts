@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { uploadDocument } from '../services';
 import { type SerializedParsedDocumentWithEntities, type AnyEntity, type EntityWithId } from '../types/constants';
 
-type UseDocumentProcessorReturn = {
+type UseCampaignParserReturn = {
     parsedData: SerializedParsedDocumentWithEntities | null;
     entities: EntityWithId[];
     loading: boolean;
@@ -14,7 +14,7 @@ type UseDocumentProcessorReturn = {
     clearError: () => void;
 };
 
-export const useDocumentProcessor = (): UseDocumentProcessorReturn => {
+export const useCampaignParser = (): UseCampaignParserReturn => {
     const [parsedData, setParsedData] = useState<SerializedParsedDocumentWithEntities | null>(null);
     const [entities, setEntities] = useState<EntityWithId[]>([]);
     const [loading, setLoading] = useState(false);

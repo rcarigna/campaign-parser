@@ -1,2 +1,2 @@
-export * from './useDocumentProcessor';
+export * from './useCampaignParser';
 export * from './useFileManager';

@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { useDocumentProcessor } from './useDocumentProcessor';
+import { useCampaignParser } from './useCampaignParser';
 import { uploadDocument } from '../services';
 import { type SerializedParsedDocument, DocumentType } from '@obsidian-parser/shared';
 
@@ -10,7 +10,7 @@ jest.mock('../services', () => ({
 
 const mockUploadDocument = uploadDocument as jest.MockedFunction<typeof uploadDocument>;
 
-describe('useDocumentProcessor', () => {
+describe('useCampaignParser', () => {
     const mockParsedData: SerializedParsedDocument = {
         filename: 'test.md',
         content: {
@@ -39,7 +39,7 @@ describe('useDocumentProcessor', () => {
     });
 
     it('should initialize with default state', () => {
-        const { result } = renderHook(() => useDocumentProcessor());
+        const { result } = renderHook(() => useCampaignParser());
 
         expect(result.current.parsedData).toBeNull();
         expect(result.current.loading).toBe(false);
@@ -53,7 +53,7 @@ describe('useDocumentProcessor', () => {
         mockUploadDocument.mockResolvedValue(mockParsedData);
         const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
 
-        const { result } = renderHook(() => useDocumentProcessor());
+        const { result } = renderHook(() => useCampaignParser());
 
         await act(async () => {
             await result.current.processDocument(mockFile);
@@ -70,7 +70,7 @@ describe('useDocumentProcessor', () => {
         mockUploadDocument.mockRejectedValue(new Error(errorMessage));
         const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
 
-        const { result } = renderHook(() => useDocumentProcessor());
+        const { result } = renderHook(() => useCampaignParser());
 
         await act(async () => {
             await result.current.processDocument(mockFile);
@@ -86,7 +86,7 @@ describe('useDocumentProcessor', () => {
         mockUploadDocument.mockRejectedValue('String error');
         const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
 
-        const { result } = renderHook(() => useDocumentProcessor());
+        const { result } = renderHook(() => useCampaignParser());
 
         await act(async () => {
             await result.current.processDocument(mockFile);
@@ -101,7 +101,7 @@ describe('useDocumentProcessor', () => {
         );
         const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
 
-        const { result } = renderHook(() => useDocumentProcessor());
+        const { result } = renderHook(() => useCampaignParser());
 
         let processPromise: Promise<void>;
 
@@ -123,7 +123,7 @@ describe('useDocumentProcessor', () => {
     });
 
     it('should clear results', () => {
-        const { result } = renderHook(() => useDocumentProcessor());
+        const { result } = renderHook(() => useCampaignParser());
 
         // Set some initial state
         act(() => {
@@ -142,7 +142,7 @@ describe('useDocumentProcessor', () => {
         mockUploadDocument.mockRejectedValue(new Error('Test error'));
         const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
 
-        const { result } = renderHook(() => useDocumentProcessor());
+        const { result } = renderHook(() => useCampaignParser());
 
         await act(async () => {
             await result.current.processDocument(mockFile);
@@ -168,7 +168,7 @@ describe('useDocumentProcessor', () => {
         mockUploadDocument.mockResolvedValue(parsedDataWithEntities);
         const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
 
-        const { result } = renderHook(() => useDocumentProcessor());
+        const { result } = renderHook(() => useCampaignParser());
 
         await act(async () => {
             await result.current.processDocument(mockFile);
@@ -195,7 +195,7 @@ describe('useDocumentProcessor', () => {
         mockUploadDocument.mockResolvedValue(parsedDataWithEntities);
         const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
 
-        const { result } = renderHook(() => useDocumentProcessor());
+        const { result } = renderHook(() => useCampaignParser());
 
         await act(async () => {
             await result.current.processDocument(mockFile);
@@ -224,7 +224,7 @@ describe('useDocumentProcessor', () => {
         mockUploadDocument.mockResolvedValue(parsedDataWithoutEntities);
         const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
 
-        const { result } = renderHook(() => useDocumentProcessor());
+        const { result } = renderHook(() => useCampaignParser());
 
         await act(async () => {
             await result.current.processDocument(mockFile);
@@ -234,7 +234,7 @@ describe('useDocumentProcessor', () => {
     });
 
     it('should handle restoreEntities when parsedData has no entities', () => {
-        const { result } = renderHook(() => useDocumentProcessor());
+        const { result } = renderHook(() => useCampaignParser());
 
         // Set parsedData without entities
         act(() => {
@@ -254,7 +254,7 @@ describe('useDocumentProcessor', () => {
         mockUploadDocument.mockResolvedValue(parsedDataWithEntities);
         const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
 
-        const { result } = renderHook(() => useDocumentProcessor());
+        const { result } = renderHook(() => useCampaignParser());
 
         await act(async () => {
             await result.current.processDocument(mockFile);

@@ -6,7 +6,7 @@ import './App.css';
 import { Header, FileUpload, ActionButtons, ParsedResults } from './components';
 
 // Hooks
-import { useDocumentProcessor, useFileManager } from './hooks';
+import { useCampaignParser, useFileManager } from './hooks';
 
 // Constants
 import { ALLOWED_EXTENSIONS } from './types/constants';
@@ -14,15 +14,15 @@ import { ALLOWED_EXTENSIONS } from './types/constants';
 // Arrow function component as per guidelines
 export const App = (): JSX.Element => {
   const fileManager = useFileManager();
-  const documentProcessor = useDocumentProcessor();
+  const campaignParser = useCampaignParser();
 
   const handleReset = useCallback((): void => {
     fileManager.clearFile();
-    documentProcessor.clearResults();
-  }, [fileManager, documentProcessor]);
+    campaignParser.clearResults();
+  }, [fileManager, campaignParser]);
 
   // Show file errors or processing errors, prioritizing file errors
-  const displayError = fileManager.error || documentProcessor.error;
+  const displayError = fileManager.error || campaignParser.error;
 
   return (
     <div className='App'>
@@ -41,15 +41,15 @@ export const App = (): JSX.Element => {
 
         <ActionButtons
           selectedFile={fileManager.selectedFile}
-          loading={documentProcessor.loading}
-          onProcess={documentProcessor.processDocument}
+          loading={campaignParser.loading}
+          onProcess={campaignParser.processDocument}
           onReset={handleReset}
         />
 
         <ParsedResults
-          parsedData={documentProcessor.parsedData}
-          entities={documentProcessor.entities}
-          onEntityDiscard={documentProcessor.discardEntity}
+          parsedData={campaignParser.parsedData}
+          entities={campaignParser.entities}
+          onEntityDiscard={campaignParser.discardEntity}
         />
       </main>
 
