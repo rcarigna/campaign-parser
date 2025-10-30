@@ -1,0 +1,3 @@
+
+// Polyfill for punycode in Jest environment
+module.exports = require('punycode');
