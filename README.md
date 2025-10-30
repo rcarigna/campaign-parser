@@ -5,6 +5,13 @@ A modern, full-stack document parsing application designed for D&D campaign mana
 ## 🌟 Features
 
 - **Document Upload**: Drag & drop or click to upload DOC, DOCX, and Markdown files
+- **Interactive Entity Preview & Management**:
+  - **Visual Entity Cards**: Clean, organized display of all extracted entities
+  - **Smart Filtering**: Filter by entity type, view duplicates, search entities
+  - **Missing Field Indicators**: Clear visual warnings for incomplete entity data
+  - **Individual Entity Editing**: Modal-based editing with type-specific field configurations
+  - **Manual Duplicate Selection**: Select multiple entities and mark them as duplicates
+  - **Entity Statistics**: Overview of total entities, duplicates, and type counts
 - **Intelligent Entity Extraction**:
   - **NLP-Powered**: Advanced Natural Language Processing using compromise.js
   - **Regex Fallback**: Traditional pattern-based extraction for comparison
@@ -28,9 +35,11 @@ A modern, full-stack document parsing application designed for D&D campaign mana
 ### Frontend (`/client`)
 
 - **React 18** with TypeScript and modern hooks (useFileManager, useDocumentProcessor)
+- **Interactive Entity Management**: Feature-based component architecture with EntityViewer, EntityGrid, EntityCard
+- **Modular UI Components**: Single-responsibility components with co-located tests and barrel exports
+- **Entity Preview System**: Visual cards, filtering, duplicate detection, and selection capabilities
 - **Vite** for fast development and optimized production builds
 - **Axios** for type-safe API communication
-- **Component Architecture**: Single-responsibility components with comprehensive testing
 - **ES Modules**: Full ES module support throughout the application
 
 ### Backend (`/server`)
@@ -63,10 +72,18 @@ A modern, full-stack document parsing application designed for D&D campaign mana
 │   └── ci-cd.yml         # GitHub Actions workflow
 ├── client/               # React TypeScript frontend
 │   ├── src/
-│   │   ├── components/   # Reusable UI components
-│   │   ├── hooks/        # Custom React hooks
+│   │   ├── components/   # Feature-based UI components
+│   │   │   ├── Document/ # File upload and results display
+│   │   │   ├── Entity/   # Entity preview and management system
+│   │   │   │   ├── EntityViewer/     # Main entity orchestration component
+│   │   │   │   ├── EntityGrid/       # Entity card layout and rendering
+│   │   │   │   ├── EntityCard/       # Individual entity display with selection
+│   │   │   │   ├── EntityFilters/    # Filtering and search controls
+│   │   │   │   └── EntityEditModal/  # Modal-based entity editing
+│   │   │   └── Layout/   # App structure and navigation
+│   │   ├── hooks/        # Custom React hooks for state management
 │   │   ├── services/     # API communication layer
-│   │   ├── types/        # Type definitions and constants
+│   │   ├── types/        # Shared type definitions and constants
 │   │   ├── App.tsx       # Main application component
 │   │   └── main.tsx      # React entry point
 │   ├── jest.config.cjs   # Jest configuration with ES module support
@@ -93,6 +110,60 @@ A modern, full-stack document parsing application designed for D&D campaign mana
 │   ├── package.json      # Shared package configuration
 │   └── tsconfig.json     # TypeScript configuration
 └── package.json          # Root workspace configuration
+```
+
+## 📋 Entity Preview & Management System
+
+### Interactive Entity Interface
+
+The application features a comprehensive entity management interface that transforms raw extracted data into an interactive, user-friendly experience:
+
+#### **EntityViewer Component**
+
+- **Orchestration Hub**: Coordinates filtering, selection, and editing workflows
+- **State Management**: Manages selection mode, duplicate marking, and entity interactions
+- **Statistics Display**: Shows entity counts, duplicate detection, and completion status
+
+#### **Entity Cards Display**
+
+- **Visual Entity Cards**: Each entity displays as an interactive card with:
+  - **Entity Icons & Types**: Visual identification by entity kind (NPC, location, item, quest)
+  - **Parsed Field Display**: Shows successfully extracted information
+  - **Missing Field Indicators**: Clear visual warnings for incomplete data
+  - **Duplicate Detection Badges**: Highlights potential duplicates automatically
+- **Selection Capabilities**: Checkbox-based selection for manual duplicate marking
+- **Individual Actions**: Edit, select for duplicates, or review entity details
+
+#### **Smart Filtering & Organization**
+
+- **Type-based Filtering**: Filter by entity type (NPCs, locations, items, quests, session summaries)
+- **Duplicate View Toggle**: Show only potential duplicates for focused cleanup
+- **Entity Statistics**: Real-time counts of total entities, duplicates, and type distribution
+
+#### **Entity Editing System**
+
+- **Context-Aware Forms**: Dynamic form fields based on entity type
+- **Field Configuration**: Type-specific field sets with proper validation
+- **Dropdown Options**: Predefined values for common fields (status, rarity, importance)
+- **Missing Field Guidance**: Intelligent prompts for required campaign data
+
+#### **Manual Duplicate Management**
+
+- **Selection Mode**: Toggle between normal viewing and duplicate selection
+- **Multi-select Interface**: Select 2+ entities to mark as duplicates manually
+- **Visual Selection State**: Clear feedback on selected entities
+- **Duplicate Workflow**: Guided process for resolving entity duplicates
+
+### Usage Example
+
+```typescript
+// Entity cards automatically display extracted entities with visual indicators
+const entityDisplay = {
+  parsedFields: ["title", "kind", "description"],    // ✅ Green checkmarks
+  missingFields: ["role", "faction"],                // ⚠️ Orange warnings  
+  duplicateStatus: "potential_duplicate",            // 🔄 Duplicate badge
+  actions: ["edit", "select", "discard"]            // 🎯 Available actions
+};
 ```
 
 ## 🧠 Entity Extraction System
@@ -371,10 +442,12 @@ import { marked } from 'marked';          // Reliable HTML conversion
 ### Frontend Stack
 
 - **React 18** with modern hooks and functional components
-- **TypeScript** with strict type checking
+- **Entity Management System**: Comprehensive entity preview, filtering, and editing capabilities
+- **Feature-Based Architecture**: Modular components (EntityViewer, EntityGrid, EntityCard, EntityEditModal)
+- **TypeScript** with strict type checking and shared type definitions
 - **Vite** for fast development and optimized builds
 - **Axios** for type-safe HTTP requests
-- **Jest + React Testing Library** for comprehensive testing
+- **Jest + React Testing Library** for comprehensive testing with 124+ passing tests
 
 ### Backend Stack
 
@@ -502,9 +575,12 @@ npm run build
 
 ## 🏆 Project Highlights
 
-- ✅ **74+ comprehensive tests** with high coverage and entity extraction validation
+- ✅ **Interactive Entity Management** - Complete entity preview, filtering, editing, and duplicate resolution system
+- ✅ **124+ comprehensive tests** with high coverage and entity extraction validation  
+- ✅ **Feature-based Architecture** - Modular components with single responsibility and co-located tests
 - ✅ **Dual-engine entity extraction** with NLP primary + regex fallback
 - ✅ **Zero false positives** with NLP-powered campaign entity recognition
+- ✅ **Visual Entity Interface** - Cards, filtering, selection, and smart duplicate detection
 - ✅ **Functional architecture** throughout both extraction engines
 - ✅ **Professional markdown parsing** with industry-standard libraries
 - ✅ **Shared type system** eliminating duplication
@@ -515,10 +591,12 @@ npm run build
 - ✅ **Developer experience** optimized for VS Code
 - ✅ **Campaign intelligence** specialized for D&D session management
 
-## � Documentation
+## 📚 Documentation
 
-- [`docs/MarkdownContentStructure.md`](./docs/MarkdownContentStructure.md) - Detailed parsing output documentation
-- [`docs/MarkdownLibraryOptions.md`](./docs/MarkdownLibraryOptions.md) - Migration completion summary
+- [`docs/InteractiveCleanupFlow.md`](./docs/InteractiveCleanupFlow.md) - Complete user flow for entity preview and management
+- [`docs/EntityManagementDemo.md`](./docs/EntityManagementDemo.md) - Entity preview system features and capabilities
+- [`docs/CampaignDocumentStructure.md`](./docs/CampaignDocumentStructure.md) - Detailed parsing output documentation  
+- [`docs/EntityExtractionMigration.md`](./docs/EntityExtractionMigration.md) - NLP and library migration summary
 
 ## �📄 License
 
