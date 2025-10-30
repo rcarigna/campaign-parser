@@ -53,5 +53,18 @@
       { "allowExpressions": true, "allowTypedFunctionExpressions": true }
     ],
     "react/no-unescaped-entities": "warn"
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx"
+      ],
+      "rules": {
+        "max-lines-per-function": "off"
+      }
+    }
+  ]
 }
