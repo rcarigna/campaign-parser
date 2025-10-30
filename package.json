@@ -32,7 +32,10 @@
     "test:server": "cd server && npm test",
     "test:watch": "concurrently --kill-others --prefix-colors \"bgGreen.bold,bgYellow.bold\" --prefix \"[CLIENT-TEST],[SERVER-TEST]\" \"npm run test:watch:client\" \"npm run test:watch:server\"",
     "test:watch:client": "cd client && npm test -- --watch",
-    "test:watch:server": "cd server && npm test -- --watch"
+    "test:watch:server": "cd server && npm test -- --watch",
+    "analyze:components": "node tools/analyze-components.js",
+    "lint:size": "npm run analyze:components",
+    "ci:quality": "npm run lint:size && npm run test"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
