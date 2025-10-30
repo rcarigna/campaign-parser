@@ -4,7 +4,6 @@ import {
   type SerializedParsedDocumentWithEntities,
   DocumentType,
 } from '../../../types/constants';
-import * as reactHotToast from 'react-hot-toast/headless';
 
 const mockParsedData: SerializedParsedDocumentWithEntities = {
   filename: 'test.md',
