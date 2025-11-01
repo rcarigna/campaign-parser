@@ -29,16 +29,16 @@
 
 ## Phase 0: Backup
 
-- [ ] Move existing code into `obsidian-parser-vite-express` directory
-- [ ] Ensure it works from there 
+- [X] Move existing code into `obsidian-parser-vite-express` directory
+- [X] Ensure it works from there
 
 ## Phase 1: Foundation Setup 🏗️
 
 ### 1.1 Create Next.js Application
 
-- [ ] Initialize new Next.js app with TypeScript: `npx create-next-app@latest obsidian-parser-nextjs --typescript --tailwind --app --src-dir`
-- [ ] Configure as sibling directory to current workspace
-- [ ] Set up proper `.gitignore` for Next.js
+- [X] Initialize new Next.js app with TypeScript: `npx create-next-app@latest obsidian-parser-nextjs --typescript --tailwind --app --src-dir`
+- [X] Configure as sibling directory to current workspace
+- [X] Set up proper `.gitignore` for Next.js
 - [ ] Configure `next.config.js` for file uploads and API handling
 - [ ] **Install React Compiler**: `npm install babel-plugin-react-compiler`
 - [ ] **Configure React Compiler** in `next.config.js` for automatic memoization
