@@ -39,17 +39,23 @@
 - [X] Initialize new Next.js app with TypeScript: `npx create-next-app@latest obsidian-parser-nextjs --typescript --tailwind --app --src-dir`
 - [X] Configure as sibling directory to current workspace
 - [X] Set up proper `.gitignore` for Next.js
-- [ ] Configure `next.config.js` for file uploads and API handling
-- [ ] **Install React Compiler**: `npm install babel-plugin-react-compiler`
-- [ ] **Configure React Compiler** in `next.config.js` for automatic memoization
+- [X] Configure `next.config.js` for file uploads and API handling
+- [X] **Install React Compiler**: `npm install babel-plugin-react-compiler`
+- [X] **Configure React Compiler** in `next.config.js` for automatic memoization
 
 ### 1.2 Dependency Consolidation
 
-- [ ] Merge all dependencies from client/server/shared packages into single `package.json`
-- [ ] Client deps: `react`, `react-dom`, `axios`, `react-hot-toast`, `@testing-library/*`
-- [ ] Server deps: `compromise`, `cors`, `express` → remove (using Next.js API), `gray-matter`, `mammoth`, `marked`, `multer`
-- [ ] Dev deps: All TypeScript, Jest, ESLint configs consolidated
-- [ ] Remove workspace references (`@obsidian-parser/shared`) since everything is now internal
+- [X] Merge all dependencies from client/server/shared packages into single `package.json`
+- [X] Client deps: `react`, `react-dom`, `axios`, `react-hot-toast`, `@testing-library/*`
+- [X] Server deps: `compromise`, `cors`, ~~`express`~~ → ✅ removed (using Next.js API), `gray-matter`, `mammoth`, `marked`, ~~`multer`~~ → ✅ will use Next.js FormData
+- [X] Dev deps: All TypeScript, Jest, ESLint configs consolidated
+- [X] Remove workspace references (`@obsidian-parser/shared`) since everything is now internal
+
+### 1.2.1 Additional Dependencies Needed
+
+- [X] Add missing testing libraries: `@testing-library/jest-dom`, `@testing-library/user-event`, `identity-obj-proxy`
+- [X] Consider adding: `remark`, `remark-html`, `remark-parse`, `unified` (for advanced markdown processing)
+- [X] Optional: Remove `cors`, `multer`, `nodemon` (not needed in Next.js)
 
 ### 1.3 TypeScript Configuration
 
