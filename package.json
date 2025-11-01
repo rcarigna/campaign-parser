@@ -35,7 +35,8 @@
     "test:watch:server": "cd server && npm test -- --watch",
     "analyze:components": "node tools/analyze-components.js",
     "lint:size": "npm run analyze:components",
-    "ci:quality": "npm run lint:size && npm run test"
+    "ci:quality": "npm run lint:size && npm run test",
+    "nuke": "npm run clean && npm run install:all && npm run build && npm run test"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
