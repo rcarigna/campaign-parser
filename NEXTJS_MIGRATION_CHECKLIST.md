@@ -72,28 +72,46 @@
 
 ### 2.1 Shared Types Integration
 
-- [ ] Move `shared/src/types.ts` → `src/types/index.ts`
-- [ ] Move `shared/src/campaign.ts` → `src/types/campaign.ts`
-- [ ] Move `shared/src/document.ts` → `src/types/document.ts`
-- [ ] Update all imports from `@obsidian-parser/shared` → `@/types`
-- [ ] Ensure all entity types (`NPC`, `Location`, `Item`, etc.) are properly exported
+- [X] Move `shared/src/types.ts` → `src/types/index.ts`
+- [X] Move `shared/src/campaign.ts` → `src/types/campaign.ts`
+- [X] Move `shared/src/document.ts` → `src/types/document.ts`
+- [X] Move `shared/src/fileValidation.ts` → `src/types/fileValidation.ts`
+- [X] Update all imports from `@obsidian-parser/shared` → `@/types`
+- [X] Ensure all entity types (`NPC`, `Location`, `Item`, etc.) are properly exported
+- [X] **Bonus**: Fixed circular dependencies and proper type relationships
 
 ### 2.2 Client Components Migration
 
-- [ ] Move `client/src/components/` → `src/components/`
-- [ ] Update component imports to use Next.js path aliases
-- [ ] Migrate `Document/` components:
-  - [ ] `FileUpload.tsx` - update for Next.js file handling
-  - [ ] `ActionButtons.tsx` - maintain existing functionality
-  - [ ] `ParsedResults.tsx` - update API calls to Next.js routes
-- [ ] Migrate `Entity/` components:
-  - [ ] `EntityViewer/` - preserve recent refactoring work
-  - [ ] `EntityCard/` - maintain selection/display logic
-  - [ ] `EntityGrid/` - keep existing layout system
-  - [ ] `EntityFilters/` - preserve filtering functionality
-- [ ] Migrate `Layout/` components for Next.js layout system
+- [X] **Phase 2.2a: Basic Components** (4/13 complete)
+  - [X] `Header.tsx` - simple layout component
+  - [X] `FileUpload.tsx` - drag/drop functionality with Next.js compatibility
+  - [X] `ActionButtons.tsx` - process/reset controls
+  - [X] `EntityCard.tsx` - entity display with proper type integration
 
-### 2.3 Hooks Migration
+- [X] **Phase 2.2b: Document Components**
+  - [X] `ParsedResults.tsx` - simplified version ready for EntityViewer integration
+
+- [ ] **Phase 2.2c: Entity Components** (5 remaining, complex)
+  - [ ] `EntityFilters.tsx` - type filtering and duplicate toggles
+  - [ ] `EntityGrid.tsx` - entity list display and selection
+  - [ ] `EntityViewer.tsx` - main entity management container (complex hooks)
+  - [ ] `EntityEditModal.tsx` - entity editing functionality
+  - [ ] `DuplicateManager.tsx` - duplicate detection and management
+
+- [X] **Phase 2.2d: Layout Components**
+  - [X] Header component migrated
+  - [X] Notification component verified as unused/empty
+
+### 2.3 Services Layer Migration
+
+- [X] **Document Service Migration**
+  - [X] Moved `documentService.ts` → `src/lib/services/documentService.ts`
+  - [X] Updated imports to use `@/types` path aliases
+  - [X] Maintained axios dependency (working well with Next.js)
+  - [X] Preserved existing error handling patterns
+  - [X] All tests passing with Next.js integration
+
+### 2.4 Hooks Migration
 
 - [ ] Move `client/src/hooks/` → `src/hooks/`
 - [ ] Update `useDocumentProcessor.ts`:
@@ -104,15 +122,6 @@
   - [ ] Adapt file validation for Next.js environment
   - [ ] Maintain existing file type/size checking
 - [ ] Update all hook imports throughout components
-
-### 2.4 Services Layer Migration
-
-- [ ] Move `client/src/services/documentService.ts` → `src/lib/documentService.ts`
-- [ ] Update API endpoints:
-  - [ ] `/api/health` → `/api/health` (Next.js route)
-  - [ ] `/api/parse` → `/api/parse` (Next.js route)
-- [ ] Remove axios dependency in favor of fetch API
-- [ ] Update error handling for Next.js patterns
 
 ---
 
@@ -296,33 +305,68 @@
 
 ---
 
+## 🎯 Current Migration Status
+
+### ✅ Completed Achievements
+
+**Foundation & Types:**
+- ✅ Next.js 16 with React Compiler integration
+- ✅ Complete type system migration from `@obsidian-parser/shared`
+- ✅ Jest configuration fixed for VS Code compatibility
+- ✅ Single package.json with consolidated dependencies
+- ✅ Path aliases working (`@/types`, `@/components`, `@/services`)
+
+**Component Migration Progress (6/13 components):**
+- ✅ Document: FileUpload, ActionButtons, ParsedResults (simplified)
+- ✅ Entity: EntityCard with proper type integration
+- ✅ Layout: Header component
+- ✅ All migrated components have comprehensive tests (35+ passing)
+
+**Services & Infrastructure:**
+- ✅ Document service migrated with axios integration
+- ✅ Testing infrastructure fully functional
+- ✅ React Compiler configured for automatic optimization
+
+### 🔄 In Progress
+
+**Phase 2.2c: Entity Components (5 remaining)**
+- 🔄 EntityFilters (started)
+- ⏳ EntityGrid, EntityViewer, EntityEditModal, DuplicateManager
+
+### 📋 Remaining Work
+
+**Server Migration:**
+- ⏳ Phase 2.4: Convert Express routes to Next.js API routes
+- ⏳ Phase 3: Testing & validation  
+- ⏳ Phase 4: Cleanup & documentation
+
 ## 🎯 Success Criteria
 
 ### Developer Experience Improvements
 
 - ✅ Single `npm run dev` starts everything
-- ✅ Single `npm run build` builds everything
+- ✅ Single `npm run build` builds everything  
 - ✅ No more port conflicts or proxy issues
 - ✅ One package.json to maintain
 - ✅ Simplified testing with single Jest config
-- ✅ Faster development startup time
-- ✅ Hot reload for both frontend and API changes
+- ⏳ Faster development startup time (pending API migration)
+- ⏳ Hot reload for both frontend and API changes (pending API migration)
 
 ### Functionality Preservation
 
-- ✅ All document parsing works identically
-- ✅ Entity extraction maintains same accuracy
-- ✅ UI/UX identical to current application  
-- ✅ Test coverage remains >90%
-- ✅ Performance matches current benchmarks
+- ⏳ All document parsing works identically (pending server migration)
+- ⏳ Entity extraction maintains same accuracy (pending server migration)
+- ⏳ UI/UX identical to current application (pending entity components)
+- ✅ Test coverage remains high (35+ tests passing)
+- ⏳ Performance matches current benchmarks (pending full migration)
 
 ### Infrastructure Simplification
 
 - ✅ Eliminated monorepo complexity
 - ✅ No more build orchestration scripts
-- ✅ Single deployment artifact
-- ✅ Simplified CI/CD pipeline
-- ✅ Reduced configuration files from ~12 to ~3
+- ⏳ Single deployment artifact (pending server migration)
+- ⏳ Simplified CI/CD pipeline (pending completion)
+- ✅ Reduced configuration files significantly
 
 ---
 

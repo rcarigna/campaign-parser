@@ -1,4 +1,4 @@
-import nextJest from 'next/jest';
+const nextJest = require('next/jest');
 
 // Create Jest configuration with Next.js
 const createJestConfig = nextJest({
@@ -94,4 +94,4 @@ const customJestConfig = {
 };
 
 // Export Jest configuration created by Next.js
-export default createJestConfig(customJestConfig);
+module.exports = createJestConfig(customJestConfig);
