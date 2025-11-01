@@ -125,6 +125,23 @@
   cursor: pointer;
 }
 
+.entity-discard-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+  font-size: 14px;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  border-radius: 4px;
+}
+
+.entity-discard-btn:hover {
+  opacity: 1;
+  background: rgba(239, 68, 68, 0.1);
+}
+
 .entity-icon {
   font-size: 18px;
 }

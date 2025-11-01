@@ -1,10 +1,5 @@
 import { EntityCard } from '../EntityCard';
-import { type AnyEntity, EntityKind } from '../../../types/constants';
-
-type EntityWithId = AnyEntity & {
-  id: string;
-  [key: string]: any;
-};
+import { type EntityWithId, EntityKind } from '../../../types/constants';
 
 type EntityGridProps = {
   entities: EntityWithId[];
@@ -13,6 +8,7 @@ type EntityGridProps = {
   isSelectionMode?: boolean;
   selectedEntityIds?: Set<string>;
   onEntitySelect?: (entityId: string, isSelected: boolean) => void;
+  onEntityDiscard?: (entity: EntityWithId) => void;
 };
 
 export const EntityGrid = ({
@@ -22,6 +18,7 @@ export const EntityGrid = ({
   isSelectionMode = false,
   selectedEntityIds = new Set(),
   onEntitySelect,
+  onEntityDiscard,
 }: EntityGridProps): JSX.Element => {
   const getMissingFields = (entity: EntityWithId): string[] => {
     const missing: string[] = [];
@@ -77,6 +74,7 @@ export const EntityGrid = ({
                 ? (isSelected: boolean) => onEntitySelect(entity.id, isSelected)
                 : undefined
             }
+            onDiscard={onEntityDiscard}
           />
         );
       })}

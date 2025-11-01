@@ -2,7 +2,9 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { ParsedResults } from './ParsedResults';
 import {
   type SerializedParsedDocumentWithEntities,
+  type EntityWithId,
   DocumentType,
+  EntityKind,
 } from '../../../types/constants';
 
 const mockParsedData: SerializedParsedDocumentWithEntities = {
@@ -32,13 +34,36 @@ const mockParsedData: SerializedParsedDocumentWithEntities = {
 };
 
 describe('ParsedResults', () => {
+  const mockEntities: EntityWithId[] = [
+    {
+      id: 'npc-0',
+      kind: EntityKind.NPC,
+      title: 'Test NPC',
+      role: 'merchant',
+    },
+  ];
+
+  const mockOnEntityDiscard = jest.fn();
+
   it('should render null when parsedData is null', () => {
-    const { container } = render(<ParsedResults parsedData={null} />);
+    const { container } = render(
+      <ParsedResults
+        parsedData={null}
+        entities={[]}
+        onEntityDiscard={mockOnEntityDiscard}
+      />
+    );
     expect(container.firstChild).toBeNull();
   });
 
   it('should render parsed results with entity view by default', () => {
-    render(<ParsedResults parsedData={mockParsedData} />);
+    render(
+      <ParsedResults
+        parsedData={mockParsedData}
+        entities={mockEntities}
+        onEntityDiscard={mockOnEntityDiscard}
+      />
+    );
 
     expect(screen.getByText('Parsed Results')).toBeInTheDocument();
     expect(screen.getByText('📋 Entity View')).toBeInTheDocument();
@@ -48,7 +73,13 @@ describe('ParsedResults', () => {
   });
 
   it('should switch to JSON view when toggle is clicked', () => {
-    render(<ParsedResults parsedData={mockParsedData} />);
+    render(
+      <ParsedResults
+        parsedData={mockParsedData}
+        entities={mockEntities}
+        onEntityDiscard={mockOnEntityDiscard}
+      />
+    );
 
     const jsonViewButton = screen.getByText('📄 JSON View');
     fireEvent.click(jsonViewButton);
@@ -60,7 +91,13 @@ describe('ParsedResults', () => {
   });
 
   it('should render with correct CSS classes', () => {
-    render(<ParsedResults parsedData={mockParsedData} />);
+    render(
+      <ParsedResults
+        parsedData={mockParsedData}
+        entities={mockEntities}
+        onEntityDiscard={mockOnEntityDiscard}
+      />
+    );
 
     const resultsDiv =
       screen.getByText('Parsed Results').parentElement?.parentElement;
@@ -68,7 +105,13 @@ describe('ParsedResults', () => {
   });
 
   it('should format JSON with proper indentation when in JSON view', () => {
-    render(<ParsedResults parsedData={mockParsedData} />);
+    render(
+      <ParsedResults
+        parsedData={mockParsedData}
+        entities={mockEntities}
+        onEntityDiscard={mockOnEntityDiscard}
+      />
+    );
 
     const jsonViewButton = screen.getByText('📄 JSON View');
     fireEvent.click(jsonViewButton);

@@ -1,12 +1,7 @@
 import { useState } from 'react';
-import { type AnyEntity } from '../../../../types/constants';
+import { type EntityWithId } from '../../../../types/constants';
 import { getFieldsForEntityKind, isFieldRequired } from '../EntityFieldConfig';
 import { FormField } from '../FormField';
-
-type EntityWithId = AnyEntity & {
-  id: string;
-  [key: string]: any;
-};
 
 type EntityEditModalProps = {
   entity: EntityWithId;

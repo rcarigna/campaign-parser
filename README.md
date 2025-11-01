@@ -34,7 +34,7 @@ A modern, full-stack document parsing application designed for D&D campaign mana
 
 ### Frontend (`/client`)
 
-- **React 18** with TypeScript and modern hooks (useFileManager, useDocumentProcessor)
+- **React 18** with TypeScript and modern hooks (useFileManager, useCampaignParser)
 - **Interactive Entity Management**: Feature-based component architecture with EntityViewer, EntityGrid, EntityCard
 - **Modular UI Components**: Single-responsibility components with co-located tests and barrel exports
 - **Entity Preview System**: Visual cards, filtering, duplicate detection, and selection capabilities

@@ -1,39 +1,30 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast/headless';
-import {
-  type SerializedParsedDocumentWithEntities,
-  type AnyEntity,
-  EntityKind,
-} from '../../../types/constants';
+import { type EntityWithId } from '../../../types/constants';
 import { EntityFilters } from '../EntityFilters';
 import { EntityGrid } from '../EntityGrid';
 import { EntityEditModal } from '../EntityEditModal';
+import { useEntityFiltering } from './hooks/useEntityFiltering';
+import { useEntitySelection } from './hooks/useEntitySelection';
 
 type EntityViewerProps = {
-  parsedData: SerializedParsedDocumentWithEntities | null;
-};
-
-type EntityFilterType = 'all' | EntityKind;
-
-type EntityWithId = AnyEntity & {
-  id: string;
-  [key: string]: any;
+  entities: EntityWithId[];
+  onEntityDiscard: (entityId: string) => void;
 };
 
 export const EntityViewer = ({
-  parsedData,
+  entities,
+  onEntityDiscard,
 }: EntityViewerProps): JSX.Element | null => {
-  const [filterType, setFilterType] = useState<EntityFilterType>('all');
   const [selectedEntity, setSelectedEntity] = useState<EntityWithId | null>(
     null
   );
-  const [showDuplicates, setShowDuplicates] = useState(false);
-  const [selectedEntityIds, setSelectedEntityIds] = useState<Set<string>>(
-    new Set()
-  );
-  const [isSelectionMode, setIsSelectionMode] = useState(false);
 
-  if (!parsedData?.entities || parsedData.entities.length === 0) {
+  // Custom hooks for different concerns
+  const filtering = useEntityFiltering(entities);
+  const selection = useEntitySelection();
+
+  if (entities?.length === 0) {
     return (
       <div className='entity-viewer'>
         <h3>Extracted Entities</h3>
@@ -42,129 +33,66 @@ export const EntityViewer = ({
     );
   }
 
-  const entitiesWithIds: EntityWithId[] = parsedData.entities.map(
-    (entity, index) => {
-      const anyEntity = entity as AnyEntity;
-      return {
-        ...anyEntity,
-        id: `${anyEntity.kind}-${index}`,
-      } as EntityWithId;
-    }
-  );
-
-  const filteredEntities =
-    filterType === 'all'
-      ? entitiesWithIds
-      : entitiesWithIds.filter((entity) => entity.kind === filterType);
-
-  const duplicateGroups = new Map<string, EntityWithId[]>();
-  entitiesWithIds.forEach((entity) => {
-    const key = `${entity.kind}-${entity.title.toLowerCase().trim()}`;
-    if (!duplicateGroups.has(key)) {
-      duplicateGroups.set(key, []);
-    }
-    duplicateGroups.get(key)!.push(entity);
-  });
-
-  const duplicates = Array.from(duplicateGroups.values())
-    .filter((group) => group.length > 1)
-    .flat();
-  const duplicateIds = new Set(duplicates.map((d) => d.id));
-
-  const typeCounts = entitiesWithIds.reduce((acc, entity) => {
-    acc[entity.kind] = (acc[entity.kind] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  const displayedEntities = showDuplicates
-    ? filteredEntities.filter((e) => duplicateIds.has(e.id))
-    : filteredEntities;
-
-  const handleEntityClick = (entity: EntityWithId) => {
+  const handleEntityClick = (entity: EntityWithId): void => {
     setSelectedEntity(entity);
   };
 
-  const handleEntitySave = (updatedEntity: EntityWithId) => {
+  const handleEntitySave = (updatedEntity: EntityWithId): void => {
     console.log('Save entity:', updatedEntity);
     setSelectedEntity(null);
   };
 
-  const handleEntitySelect = (entityId: string, isSelected: boolean) => {
-    setSelectedEntityIds((prev) => {
-      const newSet = new Set(prev);
-      if (isSelected) {
-        newSet.add(entityId);
-      } else {
-        newSet.delete(entityId);
-      }
-      return newSet;
+  const handleEntityDiscard = (entity: EntityWithId): void => {
+    // Immediately discard the entity
+    onEntityDiscard(entity.id);
+
+    // Also remove from selection if it was selected
+    selection.clearEntitySelection(entity.id);
+
+    // Show success toast
+    toast.success(`Discarded "${entity.title}" - Undo coming soon!`, {
+      duration: 5000,
     });
-  };
-
-  const handleMarkAsDuplicates = () => {
-    if (selectedEntityIds.size < 2) {
-      toast.error('Please select at least 2 entities to mark as duplicates');
-      return;
-    }
-
-    const selectedEntities = entitiesWithIds.filter((e) =>
-      selectedEntityIds.has(e.id)
-    );
-
-    // TODO: Implement actual duplicate merging logic
-    // For now, just show success message and clear the selection
-    toast.success(
-      `Successfully marked ${
-        selectedEntities.length
-      } entities as duplicates: ${selectedEntities
-        .map((e) => e.title)
-        .join(', ')}`
-    );
-
-    setSelectedEntityIds(new Set());
-    setIsSelectionMode(false);
-  };
-
-  const handleCancelSelection = () => {
-    setSelectedEntityIds(new Set());
-    setIsSelectionMode(false);
   };
 
   return (
     <div className='entity-viewer'>
       <div className='entity-header'>
-        <h3>📋 Extracted Entities ({entitiesWithIds.length})</h3>
+        <h3>📋 Extracted Entities ({entities.length})</h3>
 
         <EntityFilters
-          filterType={filterType}
-          onFilterChange={setFilterType}
-          showDuplicates={showDuplicates}
-          onDuplicateToggle={setShowDuplicates}
-          typeCounts={typeCounts}
-          totalEntities={entitiesWithIds.length}
-          totalDuplicates={duplicates.length}
+          filterType={filtering.filterType}
+          onFilterChange={filtering.setFilterType}
+          showDuplicates={filtering.showDuplicates}
+          onDuplicateToggle={filtering.setShowDuplicates}
+          typeCounts={filtering.typeCounts}
+          totalEntities={entities.length}
+          totalDuplicates={filtering.duplicates.length}
         />
       </div>
 
-      {isSelectionMode && (
+      {selection.isSelectionMode && (
         <div className='selection-controls'>
           <button
-            onClick={handleMarkAsDuplicates}
-            disabled={selectedEntityIds.size < 2}
+            onClick={() => selection.handleMarkAsDuplicates(entities)}
+            disabled={selection.selectedEntityIds.size < 2}
             className='btn btn-primary'
           >
-            Mark {selectedEntityIds.size} as Duplicates
+            Mark {selection.selectedEntityIds.size} as Duplicates
           </button>
-          <button onClick={handleCancelSelection} className='btn btn-secondary'>
+          <button
+            onClick={selection.handleCancelSelection}
+            className='btn btn-secondary'
+          >
             Cancel
           </button>
         </div>
       )}
 
       <div className='entity-actions'>
-        {!isSelectionMode ? (
+        {!selection.isSelectionMode ? (
           <button
-            onClick={() => setIsSelectionMode(true)}
+            onClick={() => selection.setIsSelectionMode(true)}
             className='btn btn-outline'
           >
             Select Duplicates
@@ -172,18 +100,19 @@ export const EntityViewer = ({
         ) : (
           <p className='selection-help'>
             Select entities to mark as duplicates. Selected:{' '}
-            {selectedEntityIds.size}
+            {selection.selectedEntityIds.size}
           </p>
         )}
       </div>
 
       <EntityGrid
-        entities={displayedEntities}
-        duplicateIds={duplicateIds}
+        entities={filtering.filteredEntities}
+        duplicateIds={filtering.duplicateIds}
         onEntityClick={handleEntityClick}
-        isSelectionMode={isSelectionMode}
-        selectedEntityIds={selectedEntityIds}
-        onEntitySelect={handleEntitySelect}
+        isSelectionMode={selection.isSelectionMode}
+        selectedEntityIds={selection.selectedEntityIds}
+        onEntitySelect={selection.handleEntitySelect}
+        onEntityDiscard={handleEntityDiscard}
       />
 
       {selectedEntity && (

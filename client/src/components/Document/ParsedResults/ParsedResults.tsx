@@ -1,14 +1,21 @@
 import { useState } from 'react';
-import { type SerializedParsedDocumentWithEntities } from '../../../types/constants';
+import {
+  type SerializedParsedDocumentWithEntities,
+  type EntityWithId,
+} from '../../../types/constants';
 import { EntityViewer } from '../../Entity/EntityViewer';
 import '../../Entity/EntityViewer/EntityViewer.css';
 
 type ParsedResultsProps = {
   parsedData: SerializedParsedDocumentWithEntities | null;
+  entities: EntityWithId[];
+  onEntityDiscard: (entityId: string) => void;
 };
 
 export const ParsedResults = ({
   parsedData,
+  entities,
+  onEntityDiscard,
 }: ParsedResultsProps): JSX.Element | null => {
   const [view, setView] = useState<'entities' | 'json'>('entities');
 
@@ -37,7 +44,7 @@ export const ParsedResults = ({
       </div>
 
       {view === 'entities' ? (
-        <EntityViewer parsedData={parsedData} />
+        <EntityViewer entities={entities} onEntityDiscard={onEntityDiscard} />
       ) : (
         <div className='json-output'>
           <pre>{JSON.stringify(parsedData, null, 2)}</pre>

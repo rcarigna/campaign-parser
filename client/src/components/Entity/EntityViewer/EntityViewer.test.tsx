@@ -1,61 +1,59 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EntityViewer } from './EntityViewer';
 import {
-  type SerializedParsedDocumentWithEntities,
-  DocumentType,
+  type EntityWithId,
+  EntityKind,
+  LocationType,
+  ItemType,
 } from '../../../types/constants';
 
-const mockParsedData: SerializedParsedDocumentWithEntities = {
-  filename: 'test.md',
-  type: DocumentType.MARKDOWN,
-  metadata: {
-    size: 1000,
-    lastModified: '2024-01-01T00:00:00.000Z',
-    mimeType: 'text/markdown',
+const entities: EntityWithId[] = [
+  {
+    id: 'npc-0',
+    kind: EntityKind.NPC,
+    title: 'Durnan',
+    role: 'barkeep',
+    description: 'Friendly tavern keeper',
+    location: 'Yawning Portal',
   },
-  content: {
-    raw: 'Test content',
-    html: '<p>Test content</p>',
-    text: 'Test content',
-    frontmatter: {},
-    headings: [],
-    links: [],
-    images: [],
+  {
+    id: 'npc-1',
+    kind: EntityKind.NPC,
+    title: 'Durnan', // Duplicate for testing
+    role: 'innkeeper',
   },
-  entities: [
-    {
-      kind: 'npc',
-      title: 'Durnan',
-      role: 'barkeep',
-      description: 'Friendly tavern keeper',
-      location: 'Yawning Portal',
-    },
-    {
-      kind: 'npc',
-      title: 'Durnan', // Duplicate for testing
-      role: 'innkeeper',
-    },
-    {
-      kind: 'location',
-      title: 'Yawning Portal',
-      type: 'tavern',
-    },
-    {
-      kind: 'item',
-      title: 'Magic Sword',
-      type: 'weapon',
-    },
-    {
-      kind: 'quest',
-      title: 'Rescue the Princess',
-      status: 'active',
-    },
-  ],
-};
+  {
+    id: 'location-0',
+    kind: EntityKind.LOCATION,
+    title: 'Yawning Portal',
+    type: LocationType.TAVERN,
+  },
+  {
+    id: 'item-0',
+    kind: EntityKind.ITEM,
+    title: 'Magic Sword',
+    type: ItemType.WEAPON,
+  },
+  {
+    id: 'quest-0',
+    kind: EntityKind.QUEST,
+    title: 'Rescue the Princess',
+    status: 'active',
+  },
+];
+
+// Mock discard handler
+const mockOnEntityDiscard = jest.fn();
 
 describe('EntityViewer', () => {
+  beforeEach(() => {
+    mockOnEntityDiscard.mockClear();
+  });
+
   it('renders entities correctly', () => {
-    render(<EntityViewer parsedData={mockParsedData} />);
+    render(
+      <EntityViewer entities={entities} onEntityDiscard={mockOnEntityDiscard} />
+    );
 
     expect(screen.getByText('📋 Extracted Entities (5)')).toBeInTheDocument();
 
@@ -69,7 +67,9 @@ describe('EntityViewer', () => {
   });
 
   it('filters entities by type', () => {
-    render(<EntityViewer parsedData={mockParsedData} />);
+    render(
+      <EntityViewer entities={entities} onEntityDiscard={mockOnEntityDiscard} />
+    );
 
     const filterSelect = screen.getByLabelText('Filter by type:');
     fireEvent.change(filterSelect, { target: { value: 'npc' } });
@@ -81,7 +81,9 @@ describe('EntityViewer', () => {
   });
 
   it('detects and highlights duplicates', () => {
-    render(<EntityViewer parsedData={mockParsedData} />);
+    render(
+      <EntityViewer entities={entities} onEntityDiscard={mockOnEntityDiscard} />
+    );
 
     // Check for duplicate badges
     const duplicateBadges = screen.getAllByText('DUPE');
@@ -89,14 +91,18 @@ describe('EntityViewer', () => {
   });
 
   it('shows missing fields warnings', () => {
-    render(<EntityViewer parsedData={mockParsedData} />);
+    render(
+      <EntityViewer entities={entities} onEntityDiscard={mockOnEntityDiscard} />
+    );
 
     // Look for missing field indicators
     expect(screen.getAllByText(/Missing:/)).toHaveLength(5); // All entities missing some fields
   });
 
   it('opens edit modal when entity card is clicked', () => {
-    render(<EntityViewer parsedData={mockParsedData} />);
+    render(
+      <EntityViewer entities={entities} onEntityDiscard={mockOnEntityDiscard} />
+    );
 
     const entityCard = screen.getAllByText('Durnan')[0].closest('.entity-card');
     fireEvent.click(entityCard!);
@@ -105,16 +111,9 @@ describe('EntityViewer', () => {
   });
 
   it('handles empty entities', () => {
-    const emptyData = { ...mockParsedData, entities: [] };
-    render(<EntityViewer parsedData={emptyData} />);
-
-    expect(
-      screen.getByText('No entities found in this document.')
-    ).toBeInTheDocument();
-  });
-
-  it('handles null data', () => {
-    render(<EntityViewer parsedData={null} />);
+    render(
+      <EntityViewer entities={[]} onEntityDiscard={mockOnEntityDiscard} />
+    );
 
     expect(
       screen.getByText('No entities found in this document.')
@@ -122,21 +121,17 @@ describe('EntityViewer', () => {
   });
 
   it('displays toast notification when no entities are found', () => {
-    const emptyData = { ...mockParsedData, entities: [] };
-    render(<EntityViewer parsedData={emptyData} />);
-    expect(
-      screen.getByText('No entities found in this document.')
-    ).toBeInTheDocument();
-  });
-  it('displays toast notification when null data is provided', () => {
-    render(<EntityViewer parsedData={null} />);
-
+    render(
+      <EntityViewer entities={[]} onEntityDiscard={mockOnEntityDiscard} />
+    );
     expect(
       screen.getByText('No entities found in this document.')
     ).toBeInTheDocument();
   });
   it('displays toast success notification when entities are found', () => {
-    render(<EntityViewer parsedData={mockParsedData} />);
+    render(
+      <EntityViewer entities={entities} onEntityDiscard={mockOnEntityDiscard} />
+    );
 
     expect(screen.getByText('📋 Extracted Entities (5)')).toBeInTheDocument();
   });
