@@ -1,28 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // 🚀 React Compiler for automatic optimization
-  experimental: {
-    reactCompiler: true,
-  },
+  // 🚀 React Compiler for automatic optimization (will be configured when migrating code)
+  // Note: React Compiler configuration will be added during component migration
 
-  // Alternative: More granular React Compiler control (uncomment if needed)
-  // experimental: {
-  //   reactCompiler: {
-  //     sources: (filename: string) => {
-  //       // Optimize Entity components and hooks specifically
-  //       return filename.includes('src/components/Entity') || 
-  //              filename.includes('src/hooks/useEntity') ||
-  //              filename.includes('src/hooks/useDocumentProcessor');
-  //     }
-  //   }
-  // },
-
-  // 📁 File Upload Configuration
-  api: {
-    bodyParser: {
-      sizeLimit: '10mb', // Match your current server's 10MB limit
-    },
+  // 🏎️ Turbopack configuration (Next.js 16+ default)
+  turbopack: {
+    // Enable Turbopack for faster development builds
   },
 
   // 🌐 CORS and API Headers for document parsing API
@@ -58,6 +42,7 @@ const nextConfig: NextConfig = {
       config.externals.push('compromise');
 
       // For mammoth (Word parsing) - handle Node.js specific modules
+      config.resolve = config.resolve || {};
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
@@ -71,7 +56,7 @@ const nextConfig: NextConfig = {
   // ⚡ Production Optimization
   compress: true,
 
-  // 🚀 Deployment Configuration
+  // 🚀 Deployment Configuration  
   output: process.env.NODE_ENV === 'production' ? 'standalone' : undefined,
 };
 

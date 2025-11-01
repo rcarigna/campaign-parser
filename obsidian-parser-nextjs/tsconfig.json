@@ -1,10 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2020",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
+
+    /* Strict TypeScript settings (from your original project) */
     "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Next.js specific settings */
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -13,13 +21,28 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+
+    /* Source map for debugging */
+    "sourceMap": true,
+
+    /* Next.js plugin */
     "plugins": [
       {
         "name": "next"
       }
     ],
+
+    /* Path aliases for clean imports */
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/services/*": ["./src/lib/services/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/styles/*": ["./src/styles/*"],
+      "@/utils/*": ["./src/lib/utils/*"],
+      "@/app/*": ["./src/app/*"]
     }
   },
   "include": [
