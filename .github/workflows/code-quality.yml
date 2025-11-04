@@ -2,9 +2,9 @@ name: Code Quality Check - Next.js
 
 on:
   pull_request:
-    branches: [main, feat/nextjs-migration]
+    branches: [main, feat/nextjs-migration, feat/nextjs-cutover]
   push:
-    branches: [main, feat/nextjs-migration]
+    branches: [main, feat/nextjs-migration, feat/nextjs-cutover]
 
 jobs:
   code-quality:
@@ -21,23 +21,18 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        working-directory: ./obsidian-parser-nextjs
         run: npm ci
 
       - name: Run ESLint
-        working-directory: ./obsidian-parser-nextjs
         run: npm run lint
 
       - name: Run TypeScript check
-        working-directory: ./obsidian-parser-nextjs
         run: npx tsc --noEmit
 
       - name: Run Tests with Coverage
-        working-directory: ./obsidian-parser-nextjs
         run: npm test -- --coverage --watchAll=false
 
       - name: Check Coverage Thresholds
-        working-directory: ./obsidian-parser-nextjs
         run: |
           echo "📊 Test Coverage Report:"
           npm test -- --coverage --watchAll=false --verbose=false --silent || true
@@ -51,7 +46,7 @@ jobs:
             const path = require('path');
 
             try {
-              const coveragePath = './obsidian-parser-nextjs/coverage/coverage-summary.json';
+              const coveragePath = './coverage/coverage-summary.json';
               
               if (fs.existsSync(coveragePath)) {
                 const coverage = JSON.parse(fs.readFileSync(coveragePath, 'utf8'));
