@@ -9,6 +9,7 @@ type UseCampaignParserReturn = {
     error: string | null;
     processDocument: (file: File) => Promise<void>;
     discardEntity: (entityId: string) => void;
+    mergeEntities: (primaryEntity: EntityWithId, duplicateIds: string[]) => void;
     restoreEntities: () => void;
     clearResults: () => void;
     clearError: () => void;
@@ -60,6 +61,24 @@ export const useCampaignParser = (): UseCampaignParserReturn => {
         setEntities((prev) => prev.filter((entity) => entity.id !== entityId));
     }, []);
 
+    const mergeEntities = useCallback((primaryEntity: EntityWithId, duplicateIds: string[]): void => {
+        setEntities((prev) => {
+            // Remove all entities in duplicateIds list
+            const filtered = prev.filter((entity) => !duplicateIds.includes(entity.id));
+
+            // Update the primary entity (it might have been modified with merged data)
+            const primaryIndex = filtered.findIndex((entity) => entity.id === primaryEntity.id);
+            if (primaryIndex >= 0) {
+                filtered[primaryIndex] = primaryEntity;
+            } else {
+                // If primary entity wasn't in the filtered list, add it
+                filtered.push(primaryEntity);
+            }
+
+            return filtered;
+        });
+    }, []);
+
     const restoreEntities = useCallback((): void => {
         if (!parsedData?.entities) {
             setEntities([]);
@@ -94,6 +113,7 @@ export const useCampaignParser = (): UseCampaignParserReturn => {
         error,
         processDocument,
         discardEntity,
+        mergeEntities,
         restoreEntities,
         clearResults,
         clearError,

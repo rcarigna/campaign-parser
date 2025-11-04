@@ -137,6 +137,7 @@ export default function Home() {
             <EntityViewer
               entities={campaignParser.entities}
               onEntityDiscard={campaignParser.discardEntity}
+              onEntityMerge={campaignParser.mergeEntities}
               parsedData={campaignParser.parsedData}
             />
           </div>

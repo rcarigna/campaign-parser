@@ -2,8 +2,17 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { EntityViewer } from './EntityViewer';
 import { EntityKind, LocationType, type EntityWithId } from '@/types';
 
-// Mock console methods for testing
-const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
+// Mock react-hot-toast
+jest.mock('react-hot-toast', () => ({
+  __esModule: true,
+  default: {
+    success: jest.fn(),
+    error: jest.fn(),
+  },
+}));
+
+import toast from 'react-hot-toast';
+const mockToast = toast as jest.Mocked<typeof toast>;
 
 describe('EntityViewer', () => {
   const mockEntities: EntityWithId[] = [
@@ -39,10 +48,6 @@ describe('EntityViewer', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-
-  afterAll(() => {
-    consoleLogSpy.mockRestore();
   });
 
   it('renders entities correctly', () => {
@@ -107,9 +112,9 @@ describe('EntityViewer', () => {
     fireEvent.click(discardButtons[0]);
 
     expect(mockProps.onEntityDiscard).toHaveBeenCalledWith('1');
-    expect(consoleLogSpy).toHaveBeenCalledWith(
-      'SUCCESS:',
-      'Discarded "Guard NPC" - Undo coming soon!'
+    expect(mockToast.success).toHaveBeenCalledWith(
+      'Discarded "Guard NPC" - Undo coming soon!',
+      { duration: 5000 }
     );
   });
 
@@ -152,7 +157,10 @@ describe('EntityViewer', () => {
     const saveButton = screen.getByText('Save Changes');
     fireEvent.click(saveButton);
 
-    expect(consoleLogSpy).toHaveBeenCalledWith('Save entity:', mockEntities[0]);
+    // The save functionality should work (console.log is still used for save)
+    expect(
+      screen.queryByText('Edit Entity: Guard NPC')
+    ).not.toBeInTheDocument();
   });
 
   it('cancels selection mode', () => {

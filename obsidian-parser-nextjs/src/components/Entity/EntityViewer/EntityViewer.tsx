@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import {
   type EntityWithId,
   type SerializedParsedDocumentWithEntities,
@@ -6,26 +7,21 @@ import {
 import { EntityFilters } from '../EntityFilters';
 import { EntityGrid } from '../EntityGrid';
 import { EntityEditModal } from '../EntityEditModal';
+import { EntityMergeModal } from '../EntityMergeModal';
 import { useEntityFiltering } from './hooks/useEntityFiltering';
 import { useEntitySelection } from './hooks/useEntitySelection';
-
-// Simple toast functionality for Next.js (placeholder)
-const toast = {
-  success: (message: string) => {
-    console.log('SUCCESS:', message);
-    // TODO: Implement proper toast notifications for Next.js
-  },
-};
 
 type EntityViewerProps = {
   entities: EntityWithId[];
   onEntityDiscard: (entityId: string) => void;
+  onEntityMerge?: (primaryEntity: EntityWithId, duplicateIds: string[]) => void;
   parsedData?: SerializedParsedDocumentWithEntities | null;
 };
 
 export const EntityViewer = ({
   entities,
   onEntityDiscard,
+  onEntityMerge,
   parsedData,
 }: EntityViewerProps) => {
   const [selectedEntity, setSelectedEntity] = useState<EntityWithId | null>(
@@ -63,9 +59,38 @@ export const EntityViewer = ({
     selection.clearEntitySelection(entity.id);
 
     // Show success toast
-    toast.success(`Discarded "${entity.title}" - Undo coming soon!`);
+    toast.success(`Discarded "${entity.title}" - Undo coming soon!`, {
+      duration: 5000,
+    });
   };
 
+  const handleEntityMerge = (
+    primaryEntity: EntityWithId,
+    mergedData: Record<string, unknown>
+  ): void => {
+    if (!onEntityMerge || !selection.mergeModalEntities) return;
+
+    // Apply merged data to primary entity
+    const updatedPrimary = { ...primaryEntity, ...mergedData };
+
+    // Get IDs of entities to remove (all selected entities except the primary)
+    const duplicateIds = selection.mergeModalEntities
+      .map((entity) => entity.id)
+      .filter((id) => id !== primaryEntity.id);
+
+    // Call the merge handler
+    onEntityMerge(updatedPrimary, duplicateIds);
+
+    // Clear selection and close modal
+    selection.handleCancelSelection();
+    selection.setMergeModalEntities(null);
+
+    // Show success toast
+    toast.success(
+      `Successfully merged ${selection.mergeModalEntities.length} entities into "${primaryEntity.title}"`,
+      { duration: 5000 }
+    );
+  };
   return (
     <div className='entity-viewer'>
       <div className='entity-header'>
@@ -159,6 +184,14 @@ export const EntityViewer = ({
           entity={selectedEntity}
           onClose={() => setSelectedEntity(null)}
           onSave={handleEntitySave}
+        />
+      )}
+
+      {selection.mergeModalEntities && (
+        <EntityMergeModal
+          entities={selection.mergeModalEntities}
+          onClose={() => selection.setMergeModalEntities(null)}
+          onMerge={handleEntityMerge}
         />
       )}
     </div>

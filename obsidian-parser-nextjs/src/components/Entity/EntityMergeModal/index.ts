@@ -1,0 +1,1 @@
+export { EntityMergeModal } from './EntityMergeModal';
