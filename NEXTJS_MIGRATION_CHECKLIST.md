@@ -91,11 +91,11 @@
 - [X] **Phase 2.2b: Document Components**
   - [X] `ParsedResults.tsx` - simplified version ready for EntityViewer integration
 
-- [ ] **Phase 2.2c: Entity Components** (4 remaining, complex)
-  - [ ] `EntityFilters.tsx` - type filtering and duplicate toggles
+- [ ] **Phase 2.2c: Entity Components** (2 remaining, complex)
+  - [X] `EntityFilters.tsx` - type filtering and duplicate toggles ✅
   - [X] `EntityGrid.tsx` - entity list display and selection ✅
-  - [ ] `EntityViewer.tsx` - main entity management container (complex hooks)
-  - [ ] `EntityEditModal.tsx` - entity editing functionality
+  - [X] `EntityViewer.tsx` - main entity management container ✅ (with hooks)
+  - [X] `EntityEditModal.tsx` - entity editing placeholder ✅
   - [ ] `DuplicateManager.tsx` - duplicate detection and management
 
 - [X] **Phase 2.2d: Layout Components**
@@ -348,11 +348,13 @@
 
 ### 🔄 In Progress
 
-#### Phase 2.2c: Entity Components (4 remaining)
+#### Phase 2.2c: Entity Components (1 remaining!)
 
-- 🔄 EntityFilters (started)
+- ✅ EntityFilters (completed)
 - ✅ EntityGrid (completed with 7 tests)
-- ⏳ EntityViewer, EntityEditModal, DuplicateManager
+- ✅ EntityViewer (completed with 10 tests + hooks)
+- ✅ EntityEditModal (placeholder completed)
+- ⏳ DuplicateManager (final component)
 
 ### 📋 Remaining Work
 
@@ -368,7 +370,7 @@
 - ✅ Express server eliminated
 - ✅ API routes functional (/api/health, /api/parse)
 - ✅ All services migrated
-- ✅ 70 tests passing (updated)
+- ✅ 80 tests passing (EntityViewer migration complete!)
 - ✅ Jest configuration working
 
 ## 🎯 Success Criteria
