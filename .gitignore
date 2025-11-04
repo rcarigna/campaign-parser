@@ -1,31 +1,5 @@
-# Dependencies
-node_modules/
-**/node_modules/
-
-# Build outputs
-dist/
-build/
-**/dist/
-
-# Environment files
+node_modules
+coverage
+dist
 .env
-.env.local
-.env.*.local
-
-# Logs
-*.log
-npm-debug.log*
-
-# Cache directories
-.npm
-.eslintcache
-.vite/
-
-# Coverage (if you add tests later)
-coverage/
-
-# OS files
 .DS_Store
-Thumbs.db
-
-.vscode/

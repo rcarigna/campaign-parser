@@ -1,0 +1,1 @@
+export { ParsedResults } from './ParsedResults';

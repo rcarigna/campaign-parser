@@ -1,44 +1,17 @@
 {
-  "name": "obsidian-parser",
+  "name": "obsidian-parser-workspace",
   "version": "1.0.0",
-  "description": "Full-stack web application for document parsing with React TypeScript frontend and Node.js backend",
   "private": true,
-  "workspaces": [
-    "client",
-    "server",
-    "shared"
-  ],
+  "description": "Workspace for Obsidian Parser - Next.js Migration",
   "scripts": {
-    "install:all": "npm install && npm run install:client && npm run install:server && npm run install:shared",
-    "install:client": "cd client && npm install",
-    "install:server": "cd server && npm install",
-    "install:shared": "cd shared && npm install",
-    "clean": "npm run clean:client && npm run clean:server && npm run clean:shared",
-    "clean:client": "cd client && rm -rf dist node_modules/.vite",
-    "clean:server": "cd server && rm -rf dist",
-    "clean:shared": "cd shared && rm -rf dist",
-    "build:shared": "cd shared && npm run build",
-    "dev": "npm run build:shared && concurrently --kill-others --prefix-colors \"bgBlue.bold,bgMagenta.bold\" --prefix \"[SERVER],[ CLIENT]\" \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:client": "cd client && npm run dev",
-    "dev:server": "cd server && npm run dev",
-    "build": "npm run build:shared && npm run build:client && npm run build:server",
-    "build:client": "cd client && npm run build",
-    "build:server": "cd server && npm run build",
-    "start": "concurrently --kill-others \"npm run start:server\" \"npm run start:client\"",
-    "start:client": "cd client && npm run preview",
-    "start:server": "cd server && npm start",
-    "test": "npm run test:client && npm run test:server",
-    "test:client": "cd client && npm test",
-    "test:server": "cd server && npm test",
-    "test:watch": "concurrently --kill-others --prefix-colors \"bgGreen.bold,bgYellow.bold\" --prefix \"[CLIENT-TEST],[SERVER-TEST]\" \"npm run test:watch:client\" \"npm run test:watch:server\"",
-    "test:watch:client": "cd client && npm test -- --watch",
-    "test:watch:server": "cd server && npm test -- --watch",
-    "analyze:components": "node tools/analyze-components.js",
-    "lint:size": "npm run analyze:components",
-    "ci:quality": "npm run lint:size && npm run test",
-    "nuke": "npm run clean && npm run install:all && npm run build && npm run test"
+    "test": "cd obsidian-parser-nextjs && npm test",
+    "test:watch": "cd obsidian-parser-nextjs && npm test -- --watch",
+    "dev": "cd obsidian-parser-nextjs && npm run dev",
+    "build": "cd obsidian-parser-nextjs && npm run build",
+    "start": "cd obsidian-parser-nextjs && npm start",
+    "lint": "cd obsidian-parser-nextjs && npm run lint"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "jest": "^30.2.0"
   }
 }
