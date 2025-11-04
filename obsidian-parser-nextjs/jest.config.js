@@ -1,4 +1,4 @@
-import nextJest from 'next/jest.js';
+const nextJest = require('next/jest');
 
 // Create Jest configuration with Next.js
 const createJestConfig = nextJest({
@@ -10,7 +10,10 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   // Test environment setup
   testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+  setupFilesAfterEnv: [
+    '<rootDir>/src/setupTests.ts',
+    '<rootDir>/jest.setup.js',
+  ],
 
   // Module name mapping for path aliases and CSS/asset mocking
   moduleNameMapper: {
@@ -60,16 +63,6 @@ const customJestConfig = {
     '<rootDir>/src/**/*.(test|spec).{ts,tsx}',
   ],
 
-  // Transform configuration for TypeScript and ES modules
-  transform: {
-    '^.+\\.(ts|tsx)$': [
-      'ts-jest',
-      {
-        tsconfig: 'tsconfig.json',
-      },
-    ],
-  },
-
   // Module file extensions
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 
@@ -81,10 +74,8 @@ const customJestConfig = {
     '<rootDir>/build/',
   ],
 
-  // Transform ignore patterns for ES modules
-  transformIgnorePatterns: [
-    '/node_modules/(?!(compromise|gray-matter|marked)/)',
-  ],
+  // Transform ignore patterns for ES modules (let Next.js handle marked)
+  transformIgnorePatterns: ['node_modules/(?!(marked)/)'],
 
   // Clear mocks between tests
   clearMocks: true,
@@ -94,4 +85,4 @@ const customJestConfig = {
 };
 
 // Export Jest configuration created by Next.js
-export default createJestConfig(customJestConfig);
+module.exports = createJestConfig(customJestConfig);

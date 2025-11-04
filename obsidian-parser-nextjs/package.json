@@ -52,6 +52,7 @@
     "eslint": "^9.39.0",
     "eslint-config-next": "16.0.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "whatwg-fetch": "^3.6.20"
   }
 }
