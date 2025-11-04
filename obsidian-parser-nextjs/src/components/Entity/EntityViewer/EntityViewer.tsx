@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { type EntityWithId } from '@/types';
+import {
+  type EntityWithId,
+  type SerializedParsedDocumentWithEntities,
+} from '@/types';
 import { EntityFilters } from '../EntityFilters';
 import { EntityGrid } from '../EntityGrid';
 import { EntityEditModal } from '../EntityEditModal';
@@ -17,15 +20,18 @@ const toast = {
 type EntityViewerProps = {
   entities: EntityWithId[];
   onEntityDiscard: (entityId: string) => void;
+  parsedData?: SerializedParsedDocumentWithEntities | null;
 };
 
 export const EntityViewer = ({
   entities,
   onEntityDiscard,
+  parsedData,
 }: EntityViewerProps) => {
   const [selectedEntity, setSelectedEntity] = useState<EntityWithId | null>(
     null
   );
+  const [view, setView] = useState<'entities' | 'json'>('entities');
 
   // Custom hooks for different concerns
   const filtering = useEntityFiltering(entities);
@@ -63,62 +69,90 @@ export const EntityViewer = ({
   return (
     <div className='entity-viewer'>
       <div className='entity-header'>
-        <h3>📋 Extracted Entities ({entities.length})</h3>
+        <div className='entity-title-row'>
+          <h3>📋 Extracted Entities ({entities.length})</h3>
 
-        <EntityFilters
-          filterType={filtering.filterType}
-          onFilterChange={filtering.setFilterType}
-          showDuplicates={filtering.showDuplicates}
-          onDuplicateToggle={filtering.setShowDuplicates}
-          typeCounts={filtering.typeCounts}
-          totalEntities={entities.length}
-          totalDuplicates={filtering.duplicates.length}
-        />
-      </div>
-
-      {selection.isSelectionMode && (
-        <div className='selection-controls'>
-          <button
-            onClick={() => selection.handleMarkAsDuplicates(entities)}
-            disabled={selection.selectedEntityIds.size < 2}
-            className='btn btn-primary'
-          >
-            Mark {selection.selectedEntityIds.size} as Duplicates
-          </button>
-          <button
-            onClick={selection.handleCancelSelection}
-            className='btn btn-secondary'
-          >
-            Cancel
-          </button>
+          {/* View Toggle */}
+          <div className='view-toggle'>
+            <button
+              className={`toggle-btn ${view === 'entities' ? 'active' : ''}`}
+              onClick={() => setView('entities')}
+            >
+              📋 Entity View
+            </button>
+            <button
+              className={`toggle-btn ${view === 'json' ? 'active' : ''}`}
+              onClick={() => setView('json')}
+            >
+              📄 Raw Data
+            </button>
+          </div>
         </div>
-      )}
 
-      <div className='entity-actions'>
-        {!selection.isSelectionMode ? (
-          <button
-            onClick={() => selection.setIsSelectionMode(true)}
-            className='btn btn-outline'
-          >
-            Select Duplicates
-          </button>
-        ) : (
-          <p className='selection-help'>
-            Select entities to mark as duplicates. Selected:{' '}
-            {selection.selectedEntityIds.size}
-          </p>
+        {view === 'entities' && (
+          <EntityFilters
+            filterType={filtering.filterType}
+            onFilterChange={filtering.setFilterType}
+            showDuplicates={filtering.showDuplicates}
+            onDuplicateToggle={filtering.setShowDuplicates}
+            typeCounts={filtering.typeCounts}
+            totalEntities={entities.length}
+            totalDuplicates={filtering.duplicates.length}
+          />
         )}
       </div>
 
-      <EntityGrid
-        entities={filtering.filteredEntities}
-        duplicateIds={filtering.duplicateIds}
-        onEntityClick={handleEntityClick}
-        isSelectionMode={selection.isSelectionMode}
-        selectedEntityIds={selection.selectedEntityIds}
-        onEntitySelect={selection.handleEntitySelect}
-        onEntityDiscard={handleEntityDiscard}
-      />
+      {view === 'entities' ? (
+        <>
+          {selection.isSelectionMode && (
+            <div className='selection-controls'>
+              <button
+                onClick={() => selection.handleMarkAsDuplicates(entities)}
+                disabled={selection.selectedEntityIds.size < 2}
+                className='btn btn-primary'
+              >
+                Mark {selection.selectedEntityIds.size} as Duplicates
+              </button>
+              <button
+                onClick={selection.handleCancelSelection}
+                className='btn btn-secondary'
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+
+          <div className='entity-actions'>
+            {!selection.isSelectionMode ? (
+              <button
+                onClick={() => selection.setIsSelectionMode(true)}
+                className='btn btn-outline'
+              >
+                Select Duplicates
+              </button>
+            ) : (
+              <p className='selection-help'>
+                Select entities to mark as duplicates. Selected:{' '}
+                {selection.selectedEntityIds.size}
+              </p>
+            )}
+          </div>
+
+          <EntityGrid
+            entities={filtering.filteredEntities}
+            duplicateIds={filtering.duplicateIds}
+            onEntityClick={handleEntityClick}
+            isSelectionMode={selection.isSelectionMode}
+            selectedEntityIds={selection.selectedEntityIds}
+            onEntitySelect={selection.handleEntitySelect}
+            onEntityDiscard={handleEntityDiscard}
+          />
+        </>
+      ) : (
+        <div className='json-output'>
+          <pre>{JSON.stringify(parsedData, null, 2)}</pre>
+        </div>
+      )}
 
       {selectedEntity && (
         <EntityEditModal

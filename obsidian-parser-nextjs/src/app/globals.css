@@ -173,6 +173,13 @@ body {
   border-bottom: 2px solid #e2e8f0;
 }
 
+.entity-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
 .entity-header h3 {
   margin: 0;
   color: #1e293b;

@@ -41,7 +41,7 @@ jest.mock('@/types', () => ({
 describe('Home Component', () => {
   it('renders without crashing', () => {
     render(<Home />);
-    expect(screen.getByText('🎲 Campaign Document Parser')).toBeInTheDocument();
+    expect(screen.getByText(/Campaign Document Parser/)).toBeInTheDocument();
   });
 
   it('shows welcome message when no data is available', () => {
