@@ -85,6 +85,7 @@ const nextConfig = {
   },
 
   // Webpack configuration for server-side dependencies
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Handle node modules that need special treatment
     if (isServer) {

@@ -1,5 +1,7 @@
 // Jest setup for Web API polyfills
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { TextDecoder, TextEncoder } = require('util');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('whatwg-fetch');
 
 // Polyfill TextEncoder/TextDecoder
