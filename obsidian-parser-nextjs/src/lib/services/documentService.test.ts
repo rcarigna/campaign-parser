@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { uploadDocument } from './documentService';
-import { type SerializedParsedDocument, DocumentType } from '@/types';
+import { SerializedParsedDocument, DocumentType } from '@/types';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;

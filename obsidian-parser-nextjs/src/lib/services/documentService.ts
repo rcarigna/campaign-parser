@@ -3,7 +3,7 @@ import { type SerializedParsedDocumentWithEntities } from '@/types';
 
 export const uploadDocument = async (file: File): Promise<SerializedParsedDocumentWithEntities> => {
     const formData = new FormData();
-    formData.append('document', file);
+    formData.append('file', file);
 
     try {
         const response = await axios.post<SerializedParsedDocumentWithEntities>('/api/parse', formData, {

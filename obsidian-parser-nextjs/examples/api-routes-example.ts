@@ -55,7 +55,6 @@ export async function POST(request: NextRequest) {
     };
 
     // 🧠 Your existing document parsing logic
-    // @ts-expect-error -- example code 
     const { parseDocument } = await import('@/lib/services/documentParser');
     const parsedDocument = await parseDocument(fileObject);
 

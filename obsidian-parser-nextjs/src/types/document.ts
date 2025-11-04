@@ -8,12 +8,18 @@ export type DocumentMetadata = {
     mimeType: string;
 };
 
+// Mammoth.js message types for Word document processing
+export type MammothMessage = {
+    type: 'error' | 'warning';
+    message: string;
+};
+
 export type WordDocumentContent = {
     html: string;
     text: string;
-    messages: unknown[];
-    warnings: unknown[];
-    errors: unknown[];
+    messages: MammothMessage[];
+    warnings: MammothMessage[];
+    errors: MammothMessage[];
 };
 
 export type MarkdownContent = {

@@ -4,26 +4,26 @@
 
 ## 📋 Migration Overview
 
-### Current Pain Points to Solve
+### Current Pain Points SOLVED ✅
 
-- [x] Multiple package.json files (4 total: root + client + server + shared)
-- [x] Complex dev script orchestration with concurrently
-- [x] Proxy configuration for API communication
-- [x] Port management (3000 client, 3005 server, different environments)
-- [x] Build coordination (shared → client → server dependencies)
-- [x] Separate deployment artifacts
-- [x] Jest configuration duplication
-- [x] TypeScript config proliferation
+- ✅ Multiple package.json files (4 total: root + client + server + shared)
+- ✅ Complex dev script orchestration with concurrently  
+- ✅ Proxy configuration for API communication
+- ✅ Port management (3000 client, 3005 server, different environments)
+- ✅ Build coordination (shared → client → server dependencies)
+- ✅ Separate deployment artifacts
+- ✅ Jest configuration duplication
+- ✅ TypeScript config proliferation
 
-### Target Architecture
+### Target Architecture ACHIEVED ✅
 
-- ✅ **Single Next.js app** with App Router
-- ✅ **API Routes** replace Express server
-- ✅ **Unified TypeScript** configuration
-- ✅ **Single package.json** with all dependencies
-- ✅ **Integrated testing** with single Jest config
-- ✅ **One build command** for deployment
-- ✅ **No proxy configuration** needed
+- ✅ **Single Next.js app** with App Router (/api/health, /api/parse)
+- ✅ **API Routes** replace Express server (migration complete)
+- ✅ **Unified TypeScript** configuration (builds successfully)
+- ✅ **Single package.json** with all dependencies (workspace pattern)
+- ✅ **Integrated testing** with single Jest config (14 tests passing)
+- ✅ **One build command** for deployment (next build working)
+- ✅ **No proxy configuration** needed (direct API routes)
 
 ---
 
@@ -106,8 +106,23 @@
 
 - [X] **Document Service Migration**
   - [X] Moved `documentService.ts` → `src/lib/services/documentService.ts`
-  - [X] Updated imports to use `@/types` path aliases
+  - [X] Updated imports to use `@/types` path aliases  
   - [X] Maintained axios dependency (working well with Next.js)
+  - [X] Updated FormData field name from 'document' to 'file' for Next.js API
+
+### 2.4 React Hooks Migration
+
+- [X] **Phase 2.4a: File Management Hook**
+  - [X] Migrated `useFileManager.ts` with proper Next.js imports
+  - [X] Fixed type imports to use `@/types` path aliases
+  - [X] All 7 tests passing: file validation, size limits, MIME type checking
+  - [X] Proper integration with `AllowedMimeType` enum from types
+
+- [X] **Phase 2.4b: Campaign Parser Hook**  
+  - [X] Migrated `useCampaignParser.ts` with `@/lib/services` integration
+  - [X] Updated to use uploadDocument service with Next.js API endpoints
+  - [X] All 7 tests passing: document processing, error handling, loading states
+  - [X] Proper entity state management with restore/discard functionality
   - [X] Preserved existing error handling patterns
   - [X] All tests passing with Next.js integration
 
@@ -125,36 +140,36 @@
 
 ---
 
-## Phase 3: API Routes Creation 🔌
+## Phase 3: API Routes Creation 🔌 ✅ COMPLETED
 
 ### 3.1 Health Check Endpoint
 
-- [ ] Create `src/app/api/health/route.ts`
-- [ ] Migrate logic from `server/src/routes/health.ts`
-- [ ] Implement GET handler returning server status
-- [ ] Test endpoint accessibility
+- [X] Create `src/app/api/health/route.ts`
+- [X] Migrate logic from `server/src/routes/health.ts`  
+- [X] Implement GET handler returning server status JSON
+- [X] Test endpoint accessibility (http://localhost:3000/api/health)
 
 ### 3.2 Document Parser Endpoint
 
-- [ ] Create `src/app/api/parse/route.ts`
-- [ ] Set up Next.js file upload handling (replace multer)
-- [ ] Migrate `server/src/routes/parse.ts` logic
-- [ ] Import document parsing services
-- [ ] Handle multipart/form-data in Next.js way
-- [ ] Implement proper error responses
+- [X] Create `src/app/api/parse/route.ts` with POST handler
+- [X] Set up Next.js file upload handling (replaced multer with FormData/File API)
+- [X] Migrate `server/src/routes/parse.ts` logic completely
+- [X] Import document parsing services from `@/lib/services`
+- [X] Handle multipart/form-data in Next.js way (File → Buffer conversion)
+- [X] Implement proper error responses with NextResponse
 
 ### 3.3 Entity Extraction Services
 
-- [ ] Move `server/src/services/` → `src/lib/services/`
-- [ ] Migrate `documentParser/`:
-  - [ ] `documentParser.ts` - preserve Word/Markdown parsing
-  - [ ] `parseMarkdown.ts` - maintain gray-matter + markdown-it logic
-  - [ ] `parseWord.ts` - keep mammoth integration
-- [ ] Migrate `entityExtractor/`:
-  - [ ] `entityExtractor.ts` - preserve regex-based extraction
-  - [ ] `nlpEntityExtractor.ts` - maintain compromise.js NLP logic
-  - [ ] Keep campaign-specific dictionaries and patterns
-- [ ] Update all internal imports to Next.js path structure
+- [X] Move `server/src/services/` → `src/lib/services/` (complete)
+- [X] Migrate `documentParser/`:
+  - [X] `documentParser.ts` - Word/Markdown parsing with mammoth, marked, gray-matter
+  - [X] Async markdown processing and proper TypeScript types
+  - [X] Preserved frontmatter parsing and heading/link/image extraction
+- [X] Migrate `entityExtractor/`:
+  - [X] `entityExtractor.ts` - regex-based extraction with campaign entities  
+  - [X] `nlpEntityExtractor.ts` - compromise.js NLP logic maintained
+  - [X] Campaign-specific dictionaries (NPCs, locations, items, roles) preserved
+- [X] Update all internal imports to Next.js path structure (`@/types`, `@/lib/services`)
 
 ---
 

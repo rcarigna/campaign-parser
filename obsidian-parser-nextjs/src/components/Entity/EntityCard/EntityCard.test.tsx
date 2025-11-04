@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EntityCard } from './EntityCard';
-import { EntityKind, LocationType, type EntityWithId } from '@/types';
+import { EntityKind, LocationType, EntityWithId } from '@/types';
 
 const mockEntity: EntityWithId = {
   id: 'test-id',
