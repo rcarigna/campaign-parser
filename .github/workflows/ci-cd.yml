@@ -2,7 +2,7 @@ name: CI/CD Pipeline - Next.js
 
 on:
   push:
-    branches: [main, develop, feat/nextjs-migration]
+    branches: [main, develop, feat/nextjs-migration, feat/nextjs-cutover]
   pull_request:
     branches: [main]
 
@@ -30,25 +30,21 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        working-directory: ./obsidian-parser-nextjs
         run: npm ci
 
       - name: Run ESLint
-        working-directory: ./obsidian-parser-nextjs
         run: npm run lint
 
       - name: Run TypeScript check
-        working-directory: ./obsidian-parser-nextjs
         run: npx tsc --noEmit
 
       - name: Run all tests with coverage
-        working-directory: ./obsidian-parser-nextjs
         run: npm test -- --coverage --watchAll=false
 
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          file: ./obsidian-parser-nextjs/coverage/lcov.info
+          file: ./coverage/lcov.info
           flags: nextjs
           name: nextjs-coverage
 
@@ -67,18 +63,16 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        working-directory: ./obsidian-parser-nextjs
         run: npm ci
 
       - name: Build Next.js application
-        working-directory: ./obsidian-parser-nextjs
         run: npm run build
 
       - name: Upload Next.js build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-build
-          path: ./obsidian-parser-nextjs/.next/
+          path: ./.next/
 
   security-scan:
     runs-on: ubuntu-latest
@@ -94,11 +88,9 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        working-directory: ./obsidian-parser-nextjs
         run: npm ci
 
       - name: Run npm audit
-        working-directory: ./obsidian-parser-nextjs
         run: npm audit --audit-level=high
         continue-on-error: true
 
@@ -106,7 +98,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
-          scan-ref: './obsidian-parser-nextjs'
+          scan-ref: '.'
           format: 'table'
 
   deployment-check:
@@ -124,17 +116,15 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        working-directory: ./obsidian-parser-nextjs
         run: npm ci
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: nextjs-build
-          path: ./obsidian-parser-nextjs/.next/
+          path: ./.next/
 
       - name: Test production build
-        working-directory: ./obsidian-parser-nextjs
         run: |
           npm run build
           timeout 10s npm start || echo "Production server started successfully"
