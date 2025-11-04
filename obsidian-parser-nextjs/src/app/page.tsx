@@ -3,6 +3,7 @@
 import { Header, FileUpload, ActionButtons, EntityViewer } from '@/components';
 import { useCampaignParser, useFileManager } from '@/hooks';
 import { ALLOWED_EXTENSIONS } from '@/types';
+import { toast } from 'react-hot-toast';
 
 export default function Home() {
   const campaignParser = useCampaignParser();
@@ -16,7 +17,7 @@ export default function Home() {
     try {
       await campaignParser.processDocument(file);
     } catch (error) {
-      console.error('Processing failed:', error);
+      toast.error(`Processing failed: ${error}`);
     }
   };
 

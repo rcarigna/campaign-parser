@@ -58,6 +58,7 @@ export const FileUpload = ({
       >
         <input
           type='file'
+          role='button'
           id='file-input'
           accept={allowedExtensions.join(',')}
           onChange={handleFileChange}
