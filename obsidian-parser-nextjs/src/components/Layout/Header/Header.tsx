@@ -5,9 +5,9 @@ type HeaderProps = {
 
 export const Header = ({ title, subtitle }: HeaderProps) => {
   return (
-    <header>
-      <h1>{title}</h1>
-      <p>{subtitle}</p>
-    </header>
+    <>
+      <h1 className='text-3xl font-bold text-gray-900 mb-2'>{title}</h1>
+      <p className='text-gray-600 mb-8'>{subtitle}</p>
+    </>
   );
 };
