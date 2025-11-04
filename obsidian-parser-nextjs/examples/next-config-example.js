@@ -21,9 +21,10 @@ const nextConfig = {
     // File upload limits (matching current server configuration)
     maxFileSize: 10 * 1024 * 1024, // 10MB in bytes
     allowedFileTypes: ['.doc', '.docx', '.md'],
-    corsOrigin: process.env.NODE_ENV === 'production' 
-      ? process.env.PRODUCTION_URL 
-      : 'http://localhost:3000',
+    corsOrigin:
+      process.env.NODE_ENV === 'production'
+        ? process.env.PRODUCTION_URL
+        : 'http://localhost:3000',
   },
 
   // Public runtime config (available on client-side)
@@ -32,7 +33,7 @@ const nextConfig = {
     maxFileSize: 10 * 1024 * 1024, // 10MB
     allowedMimeTypes: [
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
-      'application/msword', // .doc  
+      'application/msword', // .doc
       'text/markdown', // .md
       'text/plain', // .txt (if you want to support)
     ],
@@ -47,9 +48,10 @@ const nextConfig = {
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
-            value: process.env.NODE_ENV === 'production' 
-              ? process.env.PRODUCTION_URL || '*'
-              : 'http://localhost:3000',
+            value:
+              process.env.NODE_ENV === 'production'
+                ? process.env.PRODUCTION_URL || '*'
+                : 'http://localhost:3000',
           },
           {
             key: 'Access-Control-Allow-Methods',
@@ -92,7 +94,7 @@ const nextConfig = {
       // For compromise (NLP library) - ensure it works in serverless
       config.externals = config.externals || [];
       config.externals.push({
-        'compromise': 'commonjs compromise',
+        compromise: 'commonjs compromise',
       });
 
       // For mammoth (Word document parsing)
