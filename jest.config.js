@@ -29,6 +29,9 @@ const customJestConfig = {
     '^@/utils/(.*)$': '<rootDir>/src/lib/utils/$1',
     '^@/app/(.*)$': '<rootDir>/src/app/$1',
 
+    // Module mocks for ESM packages
+    '^marked$': '<rootDir>/__mocks__/marked.js',
+
     // CSS and asset mocking
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
@@ -80,8 +83,8 @@ const customJestConfig = {
     '<rootDir>/build/',
   ],
 
-  // Transform ignore patterns for ES modules (let Next.js handle marked)
-  transformIgnorePatterns: ['node_modules/(?!(marked)/)'],
+  // Transform ignore patterns - back to default for node_modules
+  transformIgnorePatterns: ['node_modules/(?!.*)'],
 
   // Clear mocks between tests
   clearMocks: true,
