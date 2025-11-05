@@ -5,15 +5,19 @@ These templates define how entities are exported from the Campaign Document Pars
 ## Available Templates
 
 ### 🧑‍🎭 NPCs (`npc.md`)
+
 Exports NPC entities with:
+
 - Standard D&D character information (race, class, CR)
 - Faction and role associations
 - Relationship tracking
 - Quest connections
 - Session references
 
-### 🗺️ Locations (`location.md`) 
+### 🗺️ Locations (`location.md`)
+
 Exports Location entities with:
+
 - Regional organization
 - Faction presence tracking
 - Points of interest
@@ -21,7 +25,9 @@ Exports Location entities with:
 - Secrets and hooks
 
 ### 💎 Items (`item.md`)
+
 Exports Item entities with:
+
 - D&D mechanics (rarity, attunement)
 - Ownership tracking
 - Mechanical effects
@@ -29,7 +35,9 @@ Exports Item entities with:
 - Campaign references
 
 ### 📜 Quests (`quest.md`)
+
 Exports Quest entities with:
+
 - Status and progress tracking
 - Quest giver and faction ties
 - Step-by-step breakdown
@@ -37,7 +45,9 @@ Exports Quest entities with:
 - Related entity links
 
 ### 📘 Session Summaries (`session-summary.md`)
+
 Exports Session Summary entities with:
+
 - Session metadata (date, number, arc)
 - Brief and full summaries
 - Consequences and foreshadowing
@@ -46,19 +56,23 @@ Exports Session Summary entities with:
 ## Template Features
 
 ### Handlebars Templating
+
 - `{{field}}` - Direct field substitution
 - `{{field || 'default'}}` - Default values for optional fields
 - `{{#if field}}...{{/if}}` - Conditional sections
 - `{{#each array}}...{{/each}}` - Array iteration
 
 ### Obsidian Integration
+
 - **Frontmatter**: YAML metadata for Obsidian properties
 - **Tags**: Automatic tagging for organization
 - **Links**: `[[Entity Name]]` wikilinks for connections
 - **Dataview**: Comments for future Dataview queries
 
 ### Campaign Structure
+
 Templates are designed to integrate with common D&D campaign organization:
+
 - NPCs go to `02_World/NPCs/`
 - Locations go to `02_World/Locations/`
 - Items go to `02_World/Items/`
@@ -68,6 +82,7 @@ Templates are designed to integrate with common D&D campaign organization:
 ## Usage
 
 The export system will:
+
 1. Select appropriate template based on entity kind
 2. Populate template with entity data using Handlebars
 3. Generate clean filename from entity title
@@ -77,6 +92,7 @@ The export system will:
 ## Customization
 
 Templates can be modified to match your specific:
+
 - Frontmatter schema
 - Section organization  
 - Tagging system
