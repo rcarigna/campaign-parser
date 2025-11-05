@@ -2,14 +2,15 @@
 
 This module contains the **core template processing system** for converting campaign entities to Obsidian-compatible markdown files using Handlebars templates.
 
-## Clean Architecture Module
+## Shared Utility Module
 
-As a **core domain module**, the template engine:
+As a **shared utility module**, the template engine:
 
 - Contains **pure template processing logic**
 - Has **no external dependencies** (beyond Handlebars)
 - Provides **stateless, deterministic functions**
-- Is **consumed by services layer** for export orchestration
+- Is **safe for both client and server** environments
+- Is **consumed directly by API routes** for export functionality
 
 ## Directory Structure
 
@@ -48,15 +49,20 @@ import { processEntities } from '@/lib/templateEngine';
 const files = await processEntities(entities: AnyEntity[]);
 ```
 
-### Integration with Services
+### Integration with API Routes
 
-The template engine is **consumed by the export service**:
+The template engine is **consumed directly by API routes**:
 
 ```typescript
-// Export service orchestrates template processing
-import { exportEntities } from '@/lib/services/exportService';
-const result = await exportEntities(entities);
-// Uses templateEngine internally for markdown generation
+// API route handles business logic directly
+// app/api/export/route.ts
+import { initializeTemplates, processEntities } from '@/lib/templateEngine';
+
+export const POST = async (request: NextRequest) => {
+  await initializeTemplates();
+  const processedFiles = await processEntities(entities);
+  // Business logic embedded in API route (Next.js native pattern)
+};
 ```
 
 ## Configuration
@@ -71,6 +77,6 @@ const result = await exportEntities(entities);
 - ✅ **Functional template engine** - Pure functions with TypeScript
 - ✅ **Handlebars templates** - All entity types with proper syntax
 - ✅ **Template testing** - Comprehensive test coverage
-- ✅ **Export service integration** - Services layer consumption
-- ⏳ **API endpoint** - `/api/export` endpoint creation
+- ✅ **API endpoint integration** - Used directly in `/api/export` route
+- ✅ **Simplified architecture** - No intermediate service layer
 - ⏳ **UI integration** - Export button and options dialog

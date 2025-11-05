@@ -89,33 +89,35 @@ npm start
 - **TypeScript**: Full type safety across client and server
 - **Tailwind CSS**: Responsive, modern UI design
 
-### API Routes
+### API Routes (Server-Side Business Logic)
 
 - **`/api/health`**: System health check endpoint
 - **`/api/parse`**: Document processing and entity extraction
-- **`/api/export`**: Obsidian-formatted entity export with ZIP generation
+- **`/api/export`**: Obsidian-formatted entity export (business logic embedded)
 
-### Clean Architecture Structure
+### Simplified Next.js Architecture
 
 ```tree
 src/
 ├── app/                    # Next.js App Router
-│   ├── api/               # API routes (health, parse, export)
+│   ├── api/               # 🚀 API routes with embedded business logic
+│   │   ├── export/        #    Export entities to Obsidian format
+│   │   ├── health/        #    System health check
+│   │   └── parse/         #    Document parsing & entity extraction
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Main application
+├── client/                # 🌐 Client-side HTTP utilities
+│   └── api.ts            #    Simple axios calls to API routes
 ├── components/            # React components
 │   ├── Document/          # File upload & parsing UI
 │   ├── Entity/            # Entity management & deduplication
 │   └── Layout/            # Application layout
 ├── hooks/                 # Custom React hooks
-├── lib/                   # Clean Architecture modules
-│   ├── documentParser/    # 🎯 Core: Document processing
-│   ├── entityExtractor/   # 🎯 Core: Entity extraction
-│   ├── templateEngine/    # 🎯 Core: Template processing
-│   │   └── templates/     #    Handlebars templates
-│   └── services/          # 🔧 Services: Orchestration
-│       ├── documentService.ts  # HTTP client
-│       └── exportService.ts    # Export coordination
+├── lib/                   # 🎯 Shared utilities (client + server safe)
+│   ├── documentParser/    # Core: Document processing
+│   ├── entityExtractor/   # Core: Entity extraction
+│   └── templateEngine/    # Core: Template processing & Handlebars
+│       └── templates/     #   Template files for each entity type
 └── types/                 # TypeScript definitions
 
 __mocks__/                 # Test fixtures and example data
@@ -128,7 +130,7 @@ __mocks__/                 # Test fixtures and example data
 
 ## 🧪 Testing
 
-Comprehensive test suite with 93 tests covering all functionality:
+Comprehensive test suite with 96 tests covering all functionality:
 
 ```bash
 # Run all tests
@@ -141,12 +143,7 @@ npm run test:coverage
 npm run test:watch
 ```
 
-**Test Coverage**:
-
-- Statements: 77.58%
-- Lines: 79.15%
-- Functions: 72.61%
-- Branches: 66.45%
+**Test Coverage**: 96 tests passing with comprehensive coverage across all architectural layers
 
 ### Test Categories
 

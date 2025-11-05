@@ -2,16 +2,6 @@ import axios from 'axios';
 import { type SerializedParsedDocumentWithEntities, type AnyEntity } from '@/types';
 
 /**
- * Client-side HTTP utilities for API communication.
- * These functions run in the browser and make HTTP calls to API routes.
- * 
- * ARCHITECTURAL NOTE:
- * - These are NOT services - they are HTTP clients
- * - Services handle business logic on the server side
- * - Clients handle HTTP communication from browser to server
- */
-
-/**
  * Upload and parse a document via the /api/parse endpoint
  */
 export const uploadDocument = async (file: File): Promise<SerializedParsedDocumentWithEntities> => {

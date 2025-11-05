@@ -14,17 +14,19 @@ jest.mock('next/server', () => ({
     },
 }));
 
+// Mock the template engine
+jest.mock('@/lib/templateEngine', () => ({
+    initializeTemplates: jest.fn(),
+    processEntities: jest.fn(),
+}));
+
 import { POST } from './route';
-import { exportEntities } from '@/lib/services/exportService';
+import { initializeTemplates, processEntities } from '@/lib/templateEngine';
 import { EntityWithId, EntityKind } from '@/types';
 import type { NextRequest } from 'next/server';
 
-// Mock the exportService
-jest.mock('@/lib/services/exportService', () => ({
-    exportEntities: jest.fn(),
-}));
-
-const mockExportEntities = exportEntities as jest.MockedFunction<typeof exportEntities>;
+const mockInitializeTemplates = initializeTemplates as jest.MockedFunction<typeof initializeTemplates>;
+const mockProcessEntities = processEntities as jest.MockedFunction<typeof processEntities>;
 
 describe('/api/export', () => {
     beforeEach(() => {
@@ -45,32 +47,17 @@ describe('/api/export', () => {
         importance: 'minor'
     };
 
-    const mockExportResult = {
-        files: [
-            {
-                filename: 'Test NPC.md',
-                content: '# Test NPC\n\nA guard in the city watch.',
-                vaultPath: '02_World/NPCs',
-                fullPath: '02_World/NPCs/Test NPC.md',
-                kind: 'npc'
-            }
-        ],
-        metadata: {
-            exportDate: '2024-01-01T00:00:00.000Z',
-            totalEntities: 1,
-            entityCounts: { npc: 1 },
-            vaultStructure: {
-                'Campaign Vault': {
-                    '02_World': {
-                        'NPCs': 'Character files with relationships and stats'
-                    }
-                }
-            }
+    const mockProcessedFiles = [
+        {
+            filename: 'Test NPC.md',
+            content: '# Test NPC\n\nA guard in the city watch.',
+            kind: 'npc'
         }
-    };
+    ];
 
     it('should export entities successfully', async () => {
-        mockExportEntities.mockResolvedValue(mockExportResult);
+        mockInitializeTemplates.mockResolvedValue(undefined);
+        mockProcessEntities.mockResolvedValue(mockProcessedFiles);
 
         const mockRequest = {
             json: jest.fn().mockResolvedValue({ entities: [mockEntity] })
@@ -81,9 +68,12 @@ describe('/api/export', () => {
 
         expect(response.status).toBe(200);
         expect(result.success).toBe(true);
-        expect(result.files).toEqual(mockExportResult.files);
-        expect(result.metadata).toEqual(mockExportResult.metadata);
-        expect(mockExportEntities).toHaveBeenCalledWith([mockEntity]);
+        expect(result.files).toHaveLength(1);
+        expect(result.files[0].filename).toBe('Test NPC.md');
+        expect(result.files[0].vaultPath).toBe('02_World/NPCs');
+        expect(result.metadata.totalEntities).toBe(1);
+        expect(mockInitializeTemplates).toHaveBeenCalled();
+        expect(mockProcessEntities).toHaveBeenCalledWith([mockEntity]);
     });
 
     it('should handle invalid request body', async () => {
@@ -96,7 +86,7 @@ describe('/api/export', () => {
 
         expect(response.status).toBe(400);
         expect(result.error).toBe('Invalid request: entities must be an array');
-        expect(mockExportEntities).not.toHaveBeenCalled();
+        expect(mockProcessEntities).not.toHaveBeenCalled();
     });
 
     it('should handle missing entities field', async () => {
@@ -125,9 +115,10 @@ describe('/api/export', () => {
         expect(result.error).toContain('Invalid entity at index 0');
     });
 
-    it('should handle export service errors', async () => {
+    it('should handle template processing errors', async () => {
         const errorMessage = 'Template processing failed';
-        mockExportEntities.mockRejectedValue(new Error(errorMessage));
+        mockInitializeTemplates.mockResolvedValue(undefined);
+        mockProcessEntities.mockRejectedValue(new Error(errorMessage));
 
         const mockRequest = {
             json: jest.fn().mockResolvedValue({ entities: [mockEntity] })
@@ -142,7 +133,8 @@ describe('/api/export', () => {
     });
 
     it('should handle unknown errors', async () => {
-        mockExportEntities.mockRejectedValue('String error');
+        mockInitializeTemplates.mockResolvedValue(undefined);
+        mockProcessEntities.mockRejectedValue('String error');
 
         const mockRequest = {
             json: jest.fn().mockResolvedValue({ entities: [mockEntity] })

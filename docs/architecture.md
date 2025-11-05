@@ -85,30 +85,28 @@ src/
 ├── hooks/                 # Custom React hooks
 │   ├── useCampaignParser.ts  # Document processing state
 │   └── useFileManager.ts     # File validation & upload
-├── lib/                   # 🎯 Clean Architecture Modules
-│   ├── documentParser/    # 🎯 CORE: Document processing
+├── client/                # � Client HTTP utilities
+│   └── api.ts            # Simple axios calls to API routes
+├── lib/                   # 🎯 Shared utilities (client + server safe)
+│   ├── documentParser/    # Core: Document processing
 │   │   ├── documentParser.ts  # Word/Markdown parsing
 │   │   └── index.ts           # Module exports
-│   ├── entityExtractor/   # 🎯 CORE: Entity extraction  
+│   ├── entityExtractor/   # Core: Entity extraction  
 │   │   ├── entityExtractor.ts     # NLP + regex processing
 │   │   ├── nlpEntityExtractor.ts  # Alternative NLP engine
 │   │   └── index.ts               # Module exports
-│   ├── templateEngine/    # 🎯 CORE: Template processing
-│   │   ├── templates/     # Handlebars templates
-│   │   │   ├── npc.md         # NPC entity template
-│   │   │   ├── location.md    # Location entity template
-│   │   │   ├── item.md        # Item entity template
-│   │   │   ├── quest.md       # Quest entity template
-│   │   │   └── session-summary.md # Session template
-│   │   ├── templateEngine.ts  # Template compilation & processing
-│   │   ├── templateEngine.test.ts # Template tests
-│   │   ├── obsidian_vault_tree.txt # Vault structure reference
-│   │   ├── README.md          # Template documentation
-│   │   └── index.ts           # Module exports
-│   └── services/          # 🔧 SERVICES: Orchestration & External
-│       ├── documentService.ts # HTTP client for API calls (client-safe)
-│       ├── exportService.ts   # Export orchestration (server-only)
-│       └── index.ts           # Client-safe exports only
+│   └── templateEngine/    # Core: Template processing
+│       ├── templates/     # Handlebars templates
+│       │   ├── npc.md         # NPC entity template
+│       │   ├── location.md    # Location entity template
+│       │   ├── item.md        # Item entity template
+│       │   ├── quest.md       # Quest entity template
+│       │   └── session-summary.md # Session template
+│       ├── templateEngine.ts  # Template compilation & processing
+│       ├── templateEngine.test.ts # Template tests
+│       ├── obsidian_vault_tree.txt # Vault structure reference
+│       ├── README.md          # Template documentation
+│       └── index.ts           # Module exports
 └── types/                 # TypeScript definitions
     ├── campaign.ts        # Entity type definitions
     ├── document.ts        # Document structure types
@@ -123,51 +121,65 @@ __mocks__/                 # Test fixtures and example data
 
 ### Architecture Principles
 
-**🎯 Core Modules** (Inner Layer):
+**🎯 Shared Utilities** (src/lib/):
 
 - **Pure domain logic**: No external dependencies
+- **Client + Server safe**: Can be imported anywhere
 - **Stateless functions**: Deterministic, testable operations
 - **documentParser**: File format processing (Word/Markdown → structured data)
 - **entityExtractor**: NLP/regex entity detection (text → entities)
 - **templateEngine**: Template processing (entities → markdown)
 
-**🔧 Services** (Outer Layer):
+**🌐 Client HTTP Layer** (src/client/):
 
-- **External integration**: API calls, network operations  
-- **Orchestration**: Coordinate multiple core modules
-- **Client/Server separation**: Proper Next.js environment handling
-- **documentService**: HTTP client for `/api/parse` (client-safe)
-- **exportService**: Export workflow coordination (server-only)
+- **Browser-only code**: Simple HTTP utilities using axios
+- **API communication**: Calls to Next.js API routes
+- **No business logic**: Pure transport layer
 
-### Client/Server Separation
+**🚀 Server Business Logic** (src/app/api/):
 
-**Next.js Environment Constraints:**
+- **API routes contain business logic**: Next.js native pattern
+- **Direct import of utilities**: No service layer needed
+- **Server-only code**: Full Node.js access
 
-- **Client Components**: Cannot import Node.js modules (`fs`, `path`, etc.)
-- **Server Components/API Routes**: Full Node.js access
+### Simplified Next.js Architecture
+
+**Next.js Native Patterns:**
+
+- **API routes ARE the server**: No separate service layer needed
+- **Client HTTP utilities**: Simple, focused transport layer
+- **Shared utilities**: Pure functions safe for both environments
 - **Build Process**: Turbopack validates all import chains
 
 **Implementation Strategy:**
 
 ```typescript
-// ❌ Problem: Client imports server-only code
-import { exportEntities } from '@/lib/services'; // Contains templateEngine (fs/promises)
+// ✅ Client-side: Simple HTTP calls
+// client/api.ts
+import axios from 'axios';
+export const exportEntities = async (entities) => 
+  axios.post('/api/export', { entities });
 
-// ✅ Solution: Separate client-safe vs server-only exports
-// services/index.ts - Client-safe exports only
-export * from './documentService';  // HTTP client (browser-compatible)
-// Note: exportService imported directly in API routes
+// ✅ Server-side: Business logic in API routes
+// app/api/export/route.ts  
+import { initializeTemplates, processEntities } from '@/lib/templateEngine';
+export const POST = async (request) => {
+  await initializeTemplates();
+  const processedFiles = await processEntities(entities);
+  // Business logic lives here, not in separate services
+};
 
-// api/export/route.ts - Server-only imports
-import { exportEntities } from '@/lib/services/exportService'; // Direct import
+// ✅ Shared utilities: Pure functions
+// lib/templateEngine/templateEngine.ts
+export const processEntity = (entity) => { /* pure function */ };
 ```
 
 **Benefits:**
 
-- **Build Safety**: Prevents Node.js imports in client bundles
-- **Clear Boundaries**: Explicit client vs server code separation  
-- **Performance**: Smaller client bundles without server code
-- **Type Safety**: Import errors caught at build time
+- **Next.js Native**: Follows framework conventions
+- **Reduced Complexity**: 50% less architectural overhead
+- **Clear Boundaries**: Client transport vs server business logic  
+- **Type Safety**: Simpler import chains, fewer errors
 
 ## Component Architecture
 

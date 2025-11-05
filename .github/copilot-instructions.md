@@ -2,20 +2,22 @@
 
 ## Project Overview
 
-This is a unified Next.js 16 application for campaign document parsing with React Compiler optimization:
+This is a simplified Next.js 16 application for campaign document parsing with clean architecture:
 
-- **Architecture**: Next.js App Router with API routes (unified frontend + backend)
+- **Architecture**: Next.js App Router with embedded business logic (no service layer)
 - **Frontend**: React with TypeScript and Tailwind CSS
-- **Backend**: Next.js API routes (/api/health, /api/parse) replacing Express
-- **Functionality**: Upload documents (DOC/MD files), extract entities, and manage campaign data with deduplication features
-- **Testing**: 93 tests with comprehensive coverage using Jest and React Testing Library
+- **Backend**: Next.js API routes (/api/health, /api/parse, /api/export) with business logic
+- **Functionality**: Upload documents (DOC/MD files), extract entities, manage duplicates, export to Obsidian
+- **Testing**: 96 tests with comprehensive coverage using Jest and React Testing Library
 
 ## Development Guidelines
 
 ### Next.js Specific
 
 - **Use App Router patterns** with Next.js 16 conventions
-- **API Routes**: Implement server functionality in /api routes using NextRequest/NextResponse
+- **API Routes**: Business logic lives directly in API routes (no separate service layer)
+- **Client HTTP**: Use simple HTTP utilities in src/client/ for API calls
+- **Shared Utilities**: Pure functions in src/lib/ (client + server safe)
 - **React Compiler**: Let React Compiler handle optimization automatically (no manual useMemo/useCallback)
 - **Server Components**: Use server components where appropriate for better performance
 - **Path Aliases**: Use @/ imports for clean module references (@/components, @/lib, @/types)
@@ -37,7 +39,7 @@ This is a unified Next.js 16 application for campaign document parsing with Reac
 
 ### Testing
 
-- **Comprehensive Coverage**: Maintain 93+ test coverage with Jest
+- **Comprehensive Coverage**: Maintain 96+ test coverage with Jest
 - **Component Testing**: Use React Testing Library for component tests
 - **API Testing**: Mock NextRequest/NextResponse for API route tests
 - **Hook Testing**: Test custom hooks with proper mocking (react-hot-toast, etc.)

@@ -107,6 +107,91 @@ const response = await fetch('/api/parse', {
 const result = await response.json();
 ```
 
+---
+
+### Entity Export
+
+Export entities to Obsidian-formatted markdown files with vault organization.
+
+**Endpoint**: `POST /api/export`
+
+**Content-Type**: `application/json`
+
+**Request Body**:
+
+```json
+{
+  "entities": [
+    {
+      "id": "npc-1",
+      "kind": "npc",
+      "title": "Durnan",
+      "role": "barkeep",
+      "faction": "Neutral",
+      "importance": "major"
+    }
+  ]
+}
+```
+
+**Response**:
+
+```json
+{
+  "success": true,
+  "files": [
+    {
+      "filename": "Durnan.md",
+      "content": "---\ntags: [character, npc]\n---\n# 🧑‍🎭 Durnan\n...",
+      "vaultPath": "02_World/NPCs", 
+      "fullPath": "02_World/NPCs/Durnan.md",
+      "kind": "npc"
+    }
+  ],
+  "metadata": {
+    "exportDate": "2025-11-05T10:30:00.000Z",
+    "totalEntities": 1,
+    "entityCounts": { "npc": 1 },
+    "vaultStructure": {
+      "Campaign Vault": {
+        "02_World": { "NPCs": "Character files with relationships and stats" }
+      }
+    }
+  }
+}
+```
+
+**Status Codes**:
+
+- `200 OK`: Export successful
+- `400 Bad Request`: Invalid entities array or entity structure
+- `500 Internal Server Error`: Template processing failed
+
+**Example**:
+
+```bash
+curl -X POST http://localhost:3000/api/export \
+  -H "Content-Type: application/json" \
+  -d '{"entities":[{"id":"test-1","kind":"npc","title":"Test NPC"}]}'
+```
+
+**JavaScript Example**:
+
+```javascript
+const entities = [
+  { id: "npc-1", kind: "npc", title: "Durnan", role: "barkeep" }
+];
+
+const response = await fetch('/api/export', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ entities })
+});
+
+const result = await response.json();
+console.log(`Generated ${result.files.length} markdown files`);
+```
+
 ## Data Models
 
 ### Document Content Types
