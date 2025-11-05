@@ -15,7 +15,7 @@ describe('entityValidation (Zod-based)', () => {
         it('should validate a complete NPC successfully', () => {
             const validNPC = {
                 id: 'npc-1',
-                kind: EntityKind.NPC,
+                kind: 'npc' as const,
                 title: 'Test NPC',
                 character_name: 'Merchant Bob',
                 role: 'Merchant',
@@ -25,7 +25,7 @@ describe('entityValidation (Zod-based)', () => {
 
             const result = validateEntity(validNPC);
             expect(result.success).toBe(true);
-            if (result.success && result.data.kind === EntityKind.NPC) {
+            if (result.success && result.data.kind === 'npc') {
                 expect(result.data.character_name).toBe('Merchant Bob');
             }
         });
@@ -33,7 +33,7 @@ describe('entityValidation (Zod-based)', () => {
         it('should reject invalid entity with detailed errors', () => {
             const invalidNPC = {
                 id: 'npc-1',
-                kind: EntityKind.NPC,
+                kind: 'npc' as const,
                 title: '', // Invalid: empty title
                 character_name: 'Test NPC',
                 // Missing required fields: role, faction, importance
@@ -51,7 +51,7 @@ describe('entityValidation (Zod-based)', () => {
         it('should return empty array for complete entity', () => {
             const completeNPC = {
                 id: 'npc-1',
-                kind: EntityKind.NPC,
+                kind: 'npc' as const,
                 title: 'Test NPC',
                 character_name: 'Merchant Bob',
                 role: 'Merchant',
