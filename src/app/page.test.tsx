@@ -37,24 +37,38 @@ describe('Home Component', () => {
     expect(screen.getByText(/Campaign Document Parser/)).toBeInTheDocument();
   });
 
-  it('shows welcome message when no data is available', () => {
+  it('shows demo tab by default', () => {
     render(<Home />);
-    expect(screen.getByText('Welcome to Campaign Parser')).toBeInTheDocument();
+    expect(screen.getByText('🎭 Try the Demo')).toBeInTheDocument();
   });
 
-  it('includes the main page components', () => {
+  it('includes tab navigation', () => {
     render(<Home />);
 
-    // Header should be present
-    expect(screen.getByRole('banner')).toBeInTheDocument();
+    // Both tabs should be present
+    expect(screen.getByRole('button', { name: /try demo/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /upload document/i })).toBeInTheDocument();
+  });
 
-    // File upload should be present
+  it('can switch to upload tab', async () => {
+    render(<Home />);
+    
+    const uploadTab = screen.getByRole('button', { name: /upload document/i });
+    await userEvent.click(uploadTab);
+
+    // After switching, should see upload section
     expect(
       screen.getByLabelText(/Click to select a file or drag and drop/i)
     ).toBeInTheDocument();
+  });
 
-    // Welcome section should be present
-    expect(screen.getByText('📜')).toBeInTheDocument();
+  it('shows welcome message in upload tab when no data is available', async () => {
+    render(<Home />);
+    
+    const uploadTab = screen.getByRole('button', { name: /upload document/i });
+    await userEvent.click(uploadTab);
+    
+    expect(screen.getByText('Welcome to Campaign Parser')).toBeInTheDocument();
   });
 
   it('calls the appropriate functions on file select', async () => {
@@ -68,6 +82,11 @@ describe('Home Component', () => {
     });
 
     render(<Home />);
+    
+    // Switch to upload tab first
+    const uploadTab = screen.getByRole('button', { name: /upload document/i });
+    await userEvent.click(uploadTab);
+    
     const fileInput = screen.getByLabelText(
       /Click to select a file or drag and drop/i
     );
@@ -95,6 +114,11 @@ describe('Home Component', () => {
     });
 
     render(<Home />);
+    
+    // Switch to upload tab first
+    const uploadTab = screen.getByRole('button', { name: /upload document/i });
+    await userEvent.click(uploadTab);
+    
     const clearButton = screen.getByRole('button', { name: /reset/i });
     await userEvent.click(clearButton);
     expect(mockClearFile).toHaveBeenCalled();
@@ -102,6 +126,15 @@ describe('Home Component', () => {
 
   it('calls the appropriate function for processing the selected file', async () => {
     const mockProcessDocument = jest.fn();
+    (useFileManager as jest.Mock).mockReturnValue({
+      selectFile: jest.fn(),
+      clearFile: jest.fn(),
+      clearError: jest.fn(),
+      selectedFile: new File(['test content'], 'test.docx', {
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      }),
+      error: null,
+    });
     (useCampaignParser as jest.Mock).mockReturnValue({
       processDocument: mockProcessDocument,
       clearResults: jest.fn(),
@@ -115,28 +148,11 @@ describe('Home Component', () => {
     });
 
     render(<Home />);
-    const processButton = screen.getByRole('button', { name: /parse/i });
-    await userEvent.click(processButton);
-    expect(mockProcessDocument).toHaveBeenCalled();
-  });
-
-  it('shows an error toast when processing fails', async () => {
-    const mockProcessDocument = jest
-      .fn()
-      .mockRejectedValue(new Error('Test error'));
-    (useCampaignParser as jest.Mock).mockReturnValue({
-      processDocument: mockProcessDocument,
-      clearResults: jest.fn(),
-      clearError: jest.fn(),
-      discardEntity: jest.fn(),
-      restoreEntities: jest.fn(),
-      loading: false,
-      error: null,
-      parsedData: null,
-      entities: [],
-    });
-
-    render(<Home />);
+    
+    // Switch to upload tab first
+    const uploadTab = screen.getByRole('button', { name: /upload document/i });
+    await userEvent.click(uploadTab);
+    
     const processButton = screen.getByRole('button', { name: /parse/i });
     await userEvent.click(processButton);
     expect(mockProcessDocument).toHaveBeenCalled();

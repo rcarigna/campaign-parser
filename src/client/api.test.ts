@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { uploadDocument, exportEntities } from './api';
+import { uploadDocument, exportEntities, loadDemoData } from './api';
 import { type SerializedParsedDocumentWithEntities, type AnyEntity, EntityKind, DocumentType } from '@/types';
 
 // Mock axios
@@ -78,6 +78,68 @@ describe('API Client', () => {
             mockedAxios.isAxiosError.mockReturnValue(false);
 
             await expect(uploadDocument(mockFile)).rejects.toThrow('An unexpected error occurred');
+        });
+    });
+
+    describe('loadDemoData', () => {
+        const mockDemoData = {
+            filename: 'session_summary_1.md',
+            type: DocumentType.MARKDOWN,
+            content: {
+                raw: '# Test Session',
+                html: '<h1>Test Session</h1>',
+                text: 'Test Session',
+                frontmatter: {},
+                headings: [],
+                links: [],
+                images: []
+            },
+            entities: [],
+            metadata: { size: 12345, lastModified: '2024-01-01T00:00:00Z', mimeType: 'text/markdown' },
+            rawMarkdown: '# Test Session\n\nThis is a test.'
+        };
+
+        it('should successfully load demo data', async () => {
+            mockedAxios.get.mockResolvedValue({ data: mockDemoData });
+
+            const result = await loadDemoData();
+
+            expect(mockedAxios.get).toHaveBeenCalledWith('/api/demo');
+            expect(result).toEqual(mockDemoData);
+        });
+
+        it('should handle axios error with response data', async () => {
+            const axiosError = {
+                isAxiosError: true,
+                response: {
+                    data: {
+                        error: 'Demo data not found'
+                    }
+                }
+            };
+            mockedAxios.get.mockRejectedValue(axiosError);
+            mockedAxios.isAxiosError.mockReturnValue(true);
+
+            await expect(loadDemoData()).rejects.toThrow('Demo data not found');
+        });
+
+        it('should handle axios error without response data', async () => {
+            const axiosError = {
+                isAxiosError: true,
+                response: {}
+            };
+            mockedAxios.get.mockRejectedValue(axiosError);
+            mockedAxios.isAxiosError.mockReturnValue(true);
+
+            await expect(loadDemoData()).rejects.toThrow('Failed to load demo data');
+        });
+
+        it('should handle non-axios errors', async () => {
+            const genericError = new Error('Network error');
+            mockedAxios.get.mockRejectedValue(genericError);
+            mockedAxios.isAxiosError.mockReturnValue(false);
+
+            await expect(loadDemoData()).rejects.toThrow('An unexpected error occurred');
         });
     });
 

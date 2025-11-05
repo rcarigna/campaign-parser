@@ -2,3 +2,4 @@
 export * from './Document';
 export * from './Entity';
 export * from './Layout';
+export * from './Demo';
