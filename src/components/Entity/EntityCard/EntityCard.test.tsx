@@ -152,4 +152,139 @@ describe('EntityCard', () => {
     expect(screen.getByText('🗺️')).toBeInTheDocument();
     expect(screen.getByText('Type: dungeon')).toBeInTheDocument();
   });
+
+  it('renders session summary entity with correct icon', () => {
+    const sessionSummaryEntity: EntityWithId = {
+      id: 'session-1',
+      kind: EntityKind.SESSION_SUMMARY,
+      title: 'Session 1 Summary',
+    };
+
+    render(
+      <EntityCard
+        entity={sessionSummaryEntity}
+        isDuplicate={false}
+        missingFields={[]}
+        onClick={mockOnClick}
+      />
+    );
+
+    expect(screen.getByText('📜')).toBeInTheDocument();
+    expect(screen.getByText(sessionSummaryEntity.title)).toBeInTheDocument();
+  });
+
+  it('renders checkbox when isSelectable is true', () => {
+    const mockOnSelect = jest.fn();
+
+    render(
+      <EntityCard
+        entity={mockEntity}
+        isDuplicate={false}
+        missingFields={[]}
+        onClick={mockOnClick}
+        isSelectable={true}
+        isSelected={false}
+        onSelect={mockOnSelect}
+      />
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).toBeInTheDocument();
+    expect(checkbox).not.toBeChecked();
+  });
+
+  it('renders checked checkbox when isSelected is true', () => {
+    const mockOnSelect = jest.fn();
+
+    render(
+      <EntityCard
+        entity={mockEntity}
+        isDuplicate={false}
+        missingFields={[]}
+        onClick={mockOnClick}
+        isSelectable={true}
+        isSelected={true}
+        onSelect={mockOnSelect}
+      />
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).toBeChecked();
+  });
+
+  it('calls onSelect when checkbox is changed', () => {
+    const mockOnSelect = jest.fn();
+
+    render(
+      <EntityCard
+        entity={mockEntity}
+        isDuplicate={false}
+        missingFields={[]}
+        onClick={mockOnClick}
+        isSelectable={true}
+        isSelected={false}
+        onSelect={mockOnSelect}
+      />
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+    fireEvent.click(checkbox);
+
+    expect(mockOnSelect).toHaveBeenCalledWith(true);
+    expect(mockOnClick).not.toHaveBeenCalled(); // Should not trigger card click
+  });
+
+  it('does not call onClick when checkbox is clicked', () => {
+    const mockOnSelect = jest.fn();
+
+    render(
+      <EntityCard
+        entity={mockEntity}
+        isDuplicate={false}
+        missingFields={[]}
+        onClick={mockOnClick}
+        isSelectable={true}
+        isSelected={false}
+        onSelect={mockOnSelect}
+      />
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+    fireEvent.click(checkbox);
+
+    expect(mockOnClick).not.toHaveBeenCalled();
+  });
+
+  it('renders entity with source sessions', () => {
+    const entityWithSessions: EntityWithId = {
+      ...mockEntity,
+      sourceSessions: [1, 2],
+    };
+
+    render(
+      <EntityCard
+        entity={entityWithSessions}
+        isDuplicate={false}
+        missingFields={[]}
+        onClick={mockOnClick}
+      />
+    );
+
+    expect(screen.getByText(/Sessions: 1, 2/)).toBeInTheDocument();
+  });
+
+  it('applies correct CSS classes based on props', () => {
+    render(
+      <EntityCard
+        entity={mockEntity}
+        isDuplicate={true}
+        missingFields={[]}
+        onClick={mockOnClick}
+        isSelected={true}
+      />
+    );
+
+    const card = screen.getByText('Test NPC').closest('.entity-card');
+    expect(card).toHaveClass('entity-card', 'duplicate', 'selected');
+  });
 });
