@@ -66,7 +66,9 @@ describe('EntityGrid', () => {
     render(<EntityGrid {...mockProps} entities={[incompleteEntity]} />);
 
     expect(screen.getByText('Missing:')).toBeInTheDocument();
-    expect(screen.getByText('role, faction, importance')).toBeInTheDocument();
+    expect(
+      screen.getByText('character_name, role, faction')
+    ).toBeInTheDocument();
   });
 
   it('handles selection mode correctly', () => {

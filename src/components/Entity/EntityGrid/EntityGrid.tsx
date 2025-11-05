@@ -1,5 +1,6 @@
 import { EntityCard } from '../EntityCard';
-import { type EntityWithId, EntityKind } from '@/types';
+import { type EntityWithId } from '@/types';
+import { getMissingFields } from '../entityValidation';
 
 type EntityGridProps = {
   entities: EntityWithId[];
@@ -20,32 +21,6 @@ export const EntityGrid = ({
   onEntitySelect,
   onEntityDiscard,
 }: EntityGridProps) => {
-  const getMissingFields = (entity: EntityWithId): string[] => {
-    const missing: string[] = [];
-
-    switch (entity.kind) {
-      case EntityKind.NPC:
-        if (!entity.role) missing.push('role');
-        if (!entity.faction) missing.push('faction');
-        if (!entity.importance) missing.push('importance');
-        break;
-      case EntityKind.LOCATION:
-        if (!entity.type) missing.push('type');
-        if (!entity.region) missing.push('region');
-        break;
-      case EntityKind.ITEM:
-        if (!entity.type) missing.push('type');
-        if (!entity.rarity) missing.push('rarity');
-        break;
-      case EntityKind.QUEST:
-        if (!entity.status) missing.push('status');
-        if (!entity.type) missing.push('type');
-        break;
-    }
-
-    return missing;
-  };
-
   if (entities.length === 0) {
     return (
       <div className='no-results'>
