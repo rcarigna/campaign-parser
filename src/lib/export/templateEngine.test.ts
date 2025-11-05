@@ -1,5 +1,5 @@
 import { initializeTemplates, processEntity } from './templateEngine';
-import { exportService } from './exportService';
+import { exportEntities, type OrganizedFile } from '../services/exportService';
 import { EntityKind, LocationType } from '@/types';
 import type { NPC, AnyEntity } from '@/types';
 
@@ -64,7 +64,7 @@ describe('Export Service', () => {
             { kind: EntityKind.ITEM, title: 'Test Item' }
         ];
 
-        const result = await exportService.exportEntities(entities);
+        const result = await exportEntities(entities);
 
         expect(result.files).toHaveLength(3);
         expect(result.metadata.totalEntities).toBe(3);
@@ -73,7 +73,7 @@ describe('Export Service', () => {
         expect(result.metadata.entityCounts.item).toBe(1);
 
         // Check vault organization
-        const npcFile = result.files.find((f) => f.kind === 'npc');
+        const npcFile = result.files.find((f: OrganizedFile) => f.kind === 'npc');
         expect(npcFile?.vaultPath).toBe('02_World/NPCs');
         expect(npcFile?.fullPath).toBe('02_World/NPCs/Test NPC.md');
     });
@@ -98,7 +98,7 @@ describe('Integration with Session Data', () => {
             }
         ];
 
-        const result = await exportService.exportEntities(sessionEntities);
+        const result = await exportEntities(sessionEntities);
 
         expect(result.files).toHaveLength(2);
 
