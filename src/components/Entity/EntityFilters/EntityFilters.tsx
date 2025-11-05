@@ -1,4 +1,5 @@
 import { EntityKind } from '@/types';
+import { getEntityIcon } from '../entityUtils';
 
 type EntityFilterType = 'all' | EntityKind;
 
@@ -21,27 +22,6 @@ export const EntityFilters = ({
   totalEntities,
   totalDuplicates,
 }: EntityFiltersProps) => {
-  const getEntityIcon = (kind: EntityKind): string => {
-    switch (kind) {
-      case EntityKind.SESSION_SUMMARY:
-        return '📜';
-      case EntityKind.NPC:
-        return '👤';
-      case EntityKind.LOCATION:
-        return '🗺️';
-      case EntityKind.ITEM:
-        return '⚔️';
-      case EntityKind.QUEST:
-        return '🎯';
-      case EntityKind.PLAYER:
-        return '🧙';
-      case EntityKind.SESSION_PREP:
-        return '📋';
-      default:
-        return '📄';
-    }
-  };
-
   return (
     <div className='entity-controls'>
       <div className='filter-group'>
