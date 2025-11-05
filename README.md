@@ -8,6 +8,14 @@ Transform your campaign notes, session summaries, and world-building documents i
 
 ## 🌟 Features
 
+### 🎭 Interactive Demo
+
+- **Try Before You Upload**: Load example session notes with one click
+- **Real Campaign Data**: Pre-loaded D&D session from the Waterdeep campaign
+- **Live Markdown Preview**: Toggle between formatted and raw markdown views
+- **Entity Showcase**: See automatic extraction of NPCs, locations, items, and quests
+- **Full Feature Access**: Test all parser capabilities with example data
+
 ### 📄 Document Processing
 
 - **Multi-format Support**: Upload Word documents (.docx) or Markdown files (.md)
@@ -15,7 +23,7 @@ Transform your campaign notes, session summaries, and world-building documents i
 - **Smart Content Extraction**: Headings, links, images, and structured content parsing
 - **Real-time Processing**: Instant feedback with upload progress and error handling
 
-### 🎭 Entity Management
+### ✨ Entity Management
 
 - **Intelligent Extraction**: Dual-layer entity detection using NLP + regex patterns
 - **Campaign Entities**: NPCs, Locations, Items, Factions, Events, and more
@@ -205,7 +213,23 @@ Our comprehensive documentation covers every aspect of the system:
 
 ## 📖 Usage Guide
 
-### 1. Upload Documents
+### 🎭 Try the Demo (Recommended for First-Time Users)
+
+**Start here to see the parser in action!**
+
+1. **Open the application** and click the **"🎭 Try Demo"** tab
+2. **Click "Load Example Session"** to load a pre-configured D&D campaign session
+3. **View the session notes** in both formatted and raw markdown
+4. **Explore extracted entities** - NPCs, locations, items automatically identified
+5. **Test features** like filtering, editing, merging duplicates, and Obsidian export
+
+The demo uses a real session note from the `__mocks__` directory, showcasing how the parser handles:
+- **NPCs**: Durnan, Volothamp Geddarm, Yagra, and more
+- **Locations**: Yawning Portal, Waterdeep, Undermountain
+- **Items**: Ancestral Blade
+- **Quests**: Finding Floon Blagmaar
+
+### 1. Upload Your Own Documents
 
 - Drag & drop or click to upload Word/Markdown files
 - Supported formats: `.docx`, `.md`

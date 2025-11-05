@@ -7,6 +7,7 @@ Welcome to the comprehensive documentation for the Campaign Document Parser - a 
 ### 🚀 Getting Started
 
 - [Quick Start Guide](../README.md#quick-start) - Set up and run the application
+- [Demo Feature Guide](./demo-feature.md) - 🎭 Interactive demo with example session notes
 - [Architecture Overview](./architecture.md) - Technical architecture and Clean Architecture design
 - [Clean Architecture Migration](./clean-architecture-migration.md) - 🆕 Module reorganization details
 
@@ -46,6 +47,7 @@ Welcome to the comprehensive documentation for the Campaign Document Parser - a 
 
 - **183 Tests** with comprehensive coverage using **real D&D campaign data**
 - **Next.js 16** with React Compiler
+- **Interactive Demo** with real campaign data
 - **Dual Entity Extraction** (NLP + Regex) validated against authentic session content
 - **Complete Deduplication System**
 - **Real Data Testing** with 7,220 characters of actual campaign session
