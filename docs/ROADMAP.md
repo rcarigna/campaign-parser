@@ -9,35 +9,52 @@
 
 ---
 
-## 🎯 **Phase 1: Enhanced Entity Management (Current Focus)**
+## 🎯 **Phase 1: Core Workflow Completion (Current Focus)**
 
-### **🚀 Priority 1: Export Functionality**
+### **🚀 Priority 1: Complete Import → Dedupe → Clean → Export Pipeline**
 
-- [x] **Obsidian Template System** - Handlebars-based templates for each entity type
-- [x] **Vault Structure Analysis** - Reference target Obsidian folder organization
-- [x] **Export Module Architecture** - Clean separation of templates, config, and services
-- [ ] **Obsidian Export API** - Generate ZIP with organized markdown files
-- [ ] **JSON Export** - Download all entities as structured JSON
-- [ ] **CSV Export** - Spreadsheet-compatible format for campaign notes
+- [x] **Document Import** - Upload and parse .docx and .md files
+- [x] **Entity Extraction** - NLP-based entity identification and classification
+- [x] **Zod Validation** - Type-safe entity schemas with proper validation
+- [x] **Duplicate Detection** - Identify similar entities across documents
+- [x] **Entity Management** - View, edit, merge, and discard entities
+- [x] **Obsidian Template System** - Handlebars-based templates for export
+- [ ] **Export API Implementation** - `/api/export` endpoint with ZIP generation
+- [ ] **Export UI Integration** - Frontend export buttons and progress indicators
+- [ ] **Export Format Options** - JSON, CSV, and Obsidian markdown bundles
 - [ ] **Filtered Export** - Export only selected entity types or importance levels
 
-**User Story**: *"After cleaning up my entities, I want to export them to use in Roll20, Obsidian, or my own campaign management system."*
+**User Story**: *"I upload my session notes, clean up the detected entities by merging duplicates and fixing missing fields, then export a clean, organized campaign reference for use in Obsidian or Roll20."*
 
-**Current Status**: Template system complete with 5 entity types (NPC, Location, Item, Quest, Session Summary). Templates use Handlebars syntax with proper frontmatter and Obsidian wiki-link compatibility.
+**Current Status**: Core pipeline is 90% complete. Entity extraction, validation, and deduplication are working. Need to finish export implementation and UI integration.
 
-### **⚡ Priority 2: Advanced Entity Manipulation**
+### **⚡ Priority 2: Workflow Polish & User Experience**
 
-- [ ] **Bulk Edit Mode** - Select multiple entities and edit common fields
-- [ ] **Entity Relationships** - Link NPCs to locations, items to owners, quests to NPCs
-- [ ] **Entity Templates** - Quick-create entities with pre-filled D&D fields
-- [ ] **Entity History** - Track changes and allow undo operations
+- [ ] **Export Progress Indicators** - Show progress during ZIP file generation
+- [ ] **Export Preview** - Preview generated files before download
+- [ ] **Export History** - Track and re-download previous exports
+- [ ] **Bulk Entity Operations** - Select multiple entities for merge/delete/edit
+- [ ] **Entity Validation UI** - Clear indicators for incomplete entities
+- [ ] **Undo/Redo System** - Allow users to reverse entity operations
+- [ ] **Keyboard Shortcuts** - Power user efficiency for common operations
 
-**User Story**: *"I want to quickly establish that 'Tavern Owner Bob' works at 'The Prancing Pony' and owns the 'Magic Ale Recipe' without editing each entity individually."*
+**User Story**: *"The core workflow works great, but I want better visual feedback, faster bulk operations, and the ability to undo mistakes while cleaning up my entities."*
 
-### **🔍 Priority 3: Enhanced Search & Filter**
+### **🔧 Priority 3: Static Schema Improvements**
+
+- [ ] **Enhanced Validation Rules** - Better field validation for current entity types
+- [ ] **Entity Field Completion** - Smart suggestions for missing fields
+- [ ] **Entity Templates** - Quick-create entities with pre-filled D&D fields  
+- [ ] **Entity Relationships** - Simple linking between related entities
+- [ ] **Custom Field Support** - Add custom fields to existing entity types
+
+**User Story**: *"I want better validation and smart completion for the existing NPC, Location, Item, Quest, Player, Session Summary, and Session Prep entity types before we add new entity types."*
+
+### **🔍 Priority 4: Enhanced Search & Filter**
 
 - [ ] **Full-text Search** - Search across all entity fields, not just names
 - [ ] **Advanced Filters** - Combine multiple filter criteria (type + importance + campaign)
+- [ ] **Filter Presets** - Quick filters for common scenarios (incomplete entities, duplicates)
 - [ ] **Saved Searches** - Store frequently used filter combinations
 - [ ] **Entity Statistics** - Show counts, distributions, campaign analytics
 
@@ -45,7 +62,21 @@
 
 ---
 
-## 🔬 **Phase 2: Intelligence Improvements**
+## 🔬 **Phase 2: Advanced Entity System**
+
+### **🧬 Schema-Driven Entity System**
+
+- [ ] **Entity Schema Management** - Define and customize entity schemas with Zod validation
+- [ ] **Dynamic Entity Cards** - Generate entity card UI based on schema definitions
+- [ ] **Schema Versioning** - Track and migrate entity schemas across updates
+- [ ] **Custom Entity Types** - Users can define their own entity types beyond the default 7
+- [ ] **Field Type Library** - Rich field types (enum, date, number, relationship, array)
+- [ ] **Conditional Fields** - Show/hide fields based on other field values
+- [ ] **Schema Templates** - Pre-built schemas for common RPG systems (D&D, Pathfinder, etc.)
+
+**User Story**: *"After mastering the core workflow, I want to customize entity types for my specific campaign needs - adding Spell entities, Monster stat blocks, or custom faction tracking."*
+
+## 🔬 **Phase 3: Intelligence Improvements**
 
 ### **🧠 Smarter Extraction**
 
@@ -115,37 +146,41 @@
 
 ### **Phase 1 Milestones (Next 2-4 weeks)**
 
-#### **Milestone 1.1: Export System**
+#### **Milestone 1.1: Complete Export Pipeline**
 
 - [x] Obsidian template system with Handlebars
 - [x] Vault structure reference and organization
-- [ ] `/api/export` endpoint implementation
+- [x] Zod validation system for entities
+- [ ] `/api/export` endpoint implementation  
 - [ ] ZIP file generation with organized folders
 - [ ] JSON export with full entity data
-- [ ] CSV export for spreadsheet compatibility  
+- [ ] CSV export for spreadsheet compatibility
+- [ ] Export UI integration with progress indicators
 - [ ] Export filtering by entity type and importance
-- [ ] Download progress indicators
 
-#### **Milestone 1.2: Bulk Operations**
+#### **Milestone 1.2: Enhanced Entity Management**
 
-- Multi-select entity interface
-- Bulk edit modal for common fields
-- Bulk delete with confirmation
-- Bulk duplicate marking
+- [ ] Entity validation UI with clear missing field indicators
+- [ ] Bulk selection and operations (merge, delete, edit)
+- [ ] Improved duplicate detection and merging workflow
+- [ ] Entity completion suggestions and validation feedback
+- [ ] Undo/redo system for entity operations
 
-#### **Milestone 1.3: Entity Relationships**  
+#### **Milestone 1.3: Workflow Polish**
 
-- Relationship data model and storage
-- UI for creating/editing relationships
-- Relationship display in entity cards
-- Relationship-aware export formats
+- [ ] Export preview before download
+- [ ] Export history and re-download capabilities
+- [ ] Keyboard shortcuts for power users
+- [ ] Performance optimization for large entity sets
+- [ ] Better error handling and user feedback
 
 ### **Success Metrics**
 
-- **User Engagement**: Export feature usage rate > 60%
-- **Efficiency**: Average time to clean campaign entities < 10 minutes
-- **Quality**: User-reported entity accuracy > 85%
-- **Satisfaction**: Feature request completion rate > 80%
+- **Core Workflow Completion**: Users successfully complete import → clean → export > 80%
+- **Export Adoption**: Export feature usage rate > 70% of active users
+- **Efficiency**: Average time to clean and export campaign entities < 15 minutes
+- **Quality**: User-reported entity accuracy > 90% (improved validation)
+- **User Satisfaction**: Complete workflow satisfaction rating > 4.5/5
 
 ---
 
@@ -156,6 +191,50 @@
 - **JSON**: Developer-friendly, preserves full data structure
 - **CSV**: Spreadsheet-compatible, flattened entity fields  
 - **Campaign Bundle**: ZIP with multiple formats + original documents
+
+### **Dynamic Schema Architecture**
+
+```typescript
+// Schema definition format
+type EntitySchema = {
+  id: string;
+  name: string;
+  version: number;
+  fields: SchemaField[];
+  icon: string;
+  color: string;
+  requiredFields: string[];
+}
+
+type SchemaField = {
+  id: string;
+  name: string;
+  type: 'text' | 'number' | 'enum' | 'boolean' | 'date' | 'array' | 'relationship';
+  options?: {
+    enumValues?: string[];
+    min?: number;
+    max?: number;
+    relationshipType?: string;
+    arrayItemType?: 'text' | 'number' | 'enum';
+    placeholder?: string;
+    helpText?: string;
+  };
+  validation?: {
+    required: boolean;
+    pattern?: string;
+    customValidator?: string;
+  };
+  conditional?: {
+    showWhen: string; // Field ID
+    equals: any; // Value that triggers showing this field
+  };
+}
+
+// Runtime schema to Zod conversion
+const generateZodSchema = (schema: EntitySchema) => {
+  // Dynamically build Zod validation based on schema definition
+}
+```
 
 ### **Entity Relationship Model**
 
@@ -181,11 +260,21 @@ type EntityRelationship = {
 
 ## 💡 **Research & Experimentation**
 
+### **Schema System Implementation**
+
+- [ ] **Visual Schema Editor** - Drag-and-drop interface for building entity schemas
+- [ ] **Schema Marketplace** - Community sharing of custom entity schemas
+- [ ] **Schema Inheritance** - Base schemas that can be extended (BaseNPC → SpecificNPC)
+- [ ] **Migration Engine** - Automatic data migration when schemas change
+- [ ] **Schema Validation UI** - Real-time validation feedback in entity forms
+- [ ] **Computed Fields** - Fields calculated from other fields (e.g., "Full Name" = "First Name" + "Last Name")
+
 ### **AI/ML Opportunities**
 
 - [ ] **GPT Integration** - Use LLM for better entity extraction and relationship detection
 - [ ] **Vector Similarity** - Better duplicate detection using embeddings
 - [ ] **Campaign Analysis** - Automated insights about campaign themes and progression
+- [ ] **Smart Schema Suggestions** - AI-powered field suggestions when creating schemas
 
 ### **Community Features**
 
