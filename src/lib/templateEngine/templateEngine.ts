@@ -13,7 +13,7 @@ let helpersRegistered = false;
 export const initializeTemplates = async (): Promise<void> => {
     if (templateCache.size > 0) return; // Already initialized
 
-    const templatesPath = join(process.cwd(), 'src', 'lib', 'export', 'templates');
+    const templatesPath = join(process.cwd(), 'src', 'lib', 'templateEngine', 'templates');
     const templateFiles = [
         'npc.md',
         'location.md',

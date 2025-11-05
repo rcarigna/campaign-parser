@@ -56,14 +56,16 @@ graph TD
 - **ESLint**: Code quality and consistency
 - **TypeScript Compiler**: Static type checking
 
-## Directory Structure
+## Clean Architecture Structure
+
+Following **Clean Architecture** principles with clear separation between core domain logic and external concerns:
 
 ```tree
 src/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API routes (replaces Express)
 │   │   ├── health/        # Health check endpoint
-│   │   ├── parse/         # Document processing endpoint
+│   │   ├── parse/         # Document processing endpoint  
 │   │   └── export/        # Obsidian export endpoint
 │   ├── layout.tsx         # Root layout component
 │   └── page.tsx           # Main application page
@@ -83,32 +85,56 @@ src/
 ├── hooks/                 # Custom React hooks
 │   ├── useCampaignParser.ts  # Document processing state
 │   └── useFileManager.ts     # File validation & upload
-├── lib/                   # Server-side utilities
-│   ├── export/            # Obsidian export system
-│   │   ├── templates/     # Handlebars templates for entities
+├── lib/                   # 🎯 Clean Architecture Modules
+│   ├── documentParser/    # 🎯 CORE: Document processing
+│   │   ├── documentParser.ts  # Word/Markdown parsing
+│   │   └── index.ts           # Module exports
+│   ├── entityExtractor/   # 🎯 CORE: Entity extraction  
+│   │   ├── entityExtractor.ts     # NLP + regex processing
+│   │   ├── nlpEntityExtractor.ts  # Alternative NLP engine
+│   │   └── index.ts               # Module exports
+│   ├── templateEngine/    # 🎯 CORE: Template processing
+│   │   ├── templates/     # Handlebars templates
 │   │   │   ├── npc.md         # NPC entity template
 │   │   │   ├── location.md    # Location entity template
 │   │   │   ├── item.md        # Item entity template
 │   │   │   ├── quest.md       # Quest entity template
-│   │   │   └── session-summary.md # Session summary template
-│   │   ├── obsidian_vault_tree.txt # Target vault structure
-│   │   ├── exportService.ts   # Export orchestration
-│   │   ├── templateEngine.ts  # Handlebars processing
-│   │   └── zipGenerator.ts    # Archive creation
-│   └── services/          # Business logic
-│       ├── documentParser/    # Document processing
-│       ├── entityExtractor/   # Entity extraction
-│       └── documentService.ts # HTTP client
+│   │   │   └── session-summary.md # Session template
+│   │   ├── templateEngine.ts  # Template compilation & processing
+│   │   ├── templateEngine.test.ts # Template tests
+│   │   ├── obsidian_vault_tree.txt # Vault structure reference
+│   │   ├── README.md          # Template documentation
+│   │   └── index.ts           # Module exports
+│   └── services/          # 🔧 SERVICES: Orchestration & External
+│       ├── documentService.ts # HTTP client for API calls
+│       ├── exportService.ts   # Export orchestration
+│       └── index.ts           # Services exports
 └── types/                 # TypeScript definitions
     ├── campaign.ts        # Entity type definitions
     ├── document.ts        # Document structure types
     └── index.ts           # Unified exports
 
 __mocks__/                 # Test fixtures and example data
+├── expected_obsidian_output/      # Template validation outputs
 ├── session_summary_1_rawdata.json    # Raw extracted entities
-├── session_summary_1_manual_deduped.json # Manually deduplicated data
+├── session_summary_1_manual_deduped.json # Deduplicated data  
 └── session_summary_1.md              # Example parsed document
 ```
+
+### Architecture Principles
+
+**🎯 Core Modules** (Inner Layer):
+- **Pure domain logic**: No external dependencies
+- **Stateless functions**: Deterministic, testable operations
+- **documentParser**: File format processing (Word/Markdown → structured data)
+- **entityExtractor**: NLP/regex entity detection (text → entities)
+- **templateEngine**: Template processing (entities → markdown)
+
+**🔧 Services** (Outer Layer):
+- **External integration**: API calls, network operations  
+- **Orchestration**: Coordinate multiple core modules
+- **documentService**: HTTP client for `/api/parse`
+- **exportService**: Export workflow coordination
 
 ## Component Architecture
 

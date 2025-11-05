@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { parseDocument } from '@/lib/services/documentParser';
-import { extractEntitiesRegex } from '@/lib/services/entityExtractor';
+import { parseDocument } from '@/lib/documentParser';
+import { extractEntitiesRegex } from '@/lib/entityExtractor';
 import { DocumentType } from '@/types';
 
 export async function POST(request: NextRequest) {

@@ -256,15 +256,15 @@ function extractNPCsRegex(text: string): NPC[] {
 
 ```typescript
 // Primary NLP extraction (recommended)
-import { extractEntities } from '@/lib/services/entityExtractor';
+import { extractEntities } from '@/lib/entityExtractor';
 const entities = extractEntities(content: string): AnyEntity[];
 
 // Fallback regex extraction
-import { extractEntitiesRegex } from '@/lib/services/entityExtractor'; 
+import { extractEntitiesRegex } from '@/lib/entityExtractor'; 
 const entities = extractEntitiesRegex(content: string, filename?: string): AnyEntity[];
 
 // Unified document processing (includes both engines)
-import { parseDocument } from '@/lib/services/documentService';
+import { parseDocument } from '@/lib/documentParser';
 const result = await parseDocument(buffer: Buffer, filename: string);
 ```
 

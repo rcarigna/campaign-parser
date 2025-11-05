@@ -1,4 +1,4 @@
-import { initializeTemplates, processEntities } from '../export/templateEngine';
+import { initializeTemplates, processEntities } from '../templateEngine';
 import type { AnyEntity } from '@/types';
 
 /**

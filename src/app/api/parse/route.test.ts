@@ -23,8 +23,8 @@ jest.mock('next/server', () => ({
     },
 }));
 
-import { parseDocument } from '@/lib/services/documentParser';
-import { extractEntitiesRegex } from '@/lib/services/entityExtractor';
+import { parseDocument } from '@/lib/documentParser';
+import { extractEntitiesRegex } from '@/lib/entityExtractor';
 import { DocumentType, type EntityKind, type NPC } from '@/types';
 import { POST } from './route';
 
@@ -33,8 +33,8 @@ type MockNextRequest = {
     formData: () => Promise<{ get: (key: string) => File | null }>;
 };
 
-jest.mock('@/lib/services/documentParser');
-jest.mock('@/lib/services/entityExtractor');
+jest.mock('@/lib/documentParser');
+jest.mock('@/lib/entityExtractor');
 
 const mockParseDocument = parseDocument as jest.MockedFunction<typeof parseDocument>;
 const mockExtractEntitiesRegex = extractEntitiesRegex as jest.MockedFunction<typeof extractEntitiesRegex>;

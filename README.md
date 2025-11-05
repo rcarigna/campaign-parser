@@ -95,12 +95,12 @@ npm start
 - **`/api/parse`**: Document processing and entity extraction
 - **`/api/export`**: Obsidian-formatted entity export with ZIP generation
 
-### File Structure
+### Clean Architecture Structure
 
 ```tree
 src/
 ├── app/                    # Next.js App Router
-│   ├── api/               # API routes (replaces Express server)
+│   ├── api/               # API routes (health, parse, export)
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Main application
 ├── components/            # React components
@@ -108,16 +108,20 @@ src/
 │   ├── Entity/            # Entity management & deduplication
 │   └── Layout/            # Application layout
 ├── hooks/                 # Custom React hooks
-├── lib/                   # Server-side utilities
-│   ├── export/            # Obsidian export system
-│   │   ├── templates/     # Handlebars templates for entities
-│   │   └── obsidian_vault_tree.txt # Target vault structure
-│   └── services/          # Document parsing & entity extraction
+├── lib/                   # Clean Architecture modules
+│   ├── documentParser/    # 🎯 Core: Document processing
+│   ├── entityExtractor/   # 🎯 Core: Entity extraction
+│   ├── templateEngine/    # 🎯 Core: Template processing
+│   │   └── templates/     #    Handlebars templates
+│   └── services/          # 🔧 Services: Orchestration
+│       ├── documentService.ts  # HTTP client
+│       └── exportService.ts    # Export coordination
 └── types/                 # TypeScript definitions
 
 __mocks__/                 # Test fixtures and example data
-├── session_summary_*.json # Campaign session data examples
-└── session_summary_*.md   # Parsed document examples
+├── expected_obsidian_output/  # Expected template outputs
+├── session_summary_*.json     # Campaign session data
+└── session_summary_*.md       # Example documents
 ```
 
 ---
