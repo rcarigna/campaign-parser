@@ -5,6 +5,7 @@ This module contains the **core template processing system** for converting camp
 ## Clean Architecture Module
 
 As a **core domain module**, the template engine:
+
 - Contains **pure template processing logic**
 - Has **no external dependencies** (beyond Handlebars)
 - Provides **stateless, deterministic functions**

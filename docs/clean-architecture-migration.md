@@ -37,6 +37,7 @@ src/lib/
 ### 🎯 Core Modules (Inner Layer)
 
 **Characteristics:**
+
 - **Pure domain logic** - No external dependencies
 - **Stateless functions** - Deterministic, testable operations  
 - **No network calls** - Self-contained processing
@@ -65,6 +66,7 @@ src/lib/
 ### 🔧 Services (Outer Layer)
 
 **Characteristics:**
+
 - **Infrastructure concerns** - API calls, network operations
 - **Orchestration logic** - Coordinates multiple core modules
 - **External integrations** - HTTP clients, database access
@@ -107,6 +109,7 @@ graph TD
 ```
 
 **Key Rules:**
+
 - ✅ **Services** can depend on **Core Modules**
 - ❌ **Core Modules** cannot depend on **Services**  
 - ✅ **Core Modules** can depend on other **Core Modules**
@@ -117,11 +120,13 @@ graph TD
 ### 1. **Clear Separation of Concerns**
 
 **Before:**
+
 - Mixed abstraction levels in single directory
 - Unclear dependencies between modules
 - Infrastructure and domain logic intermingled
 
 **After:**
+
 - **Core modules**: Pure domain logic, easily testable
 - **Services**: Infrastructure and orchestration concerns
 - **Clear boundaries**: Dependency direction enforced
@@ -129,17 +134,20 @@ graph TD
 ### 2. **Improved Testability**
 
 **Core Modules:**
+
 - **Unit tests**: Test pure functions in isolation
 - **No mocks needed**: No external dependencies to mock
 - **Deterministic**: Same input always produces same output
 
 **Services:**
+
 - **Integration tests**: Test with mocked core modules
 - **Clear interfaces**: Well-defined boundaries for mocking
 
 ### 3. **Better Reusability**
 
 **Core Modules:**
+
 - Can be **extracted** to separate packages if needed
 - **Framework agnostic**: Work in any JavaScript environment
 - **Composable**: Mix and match for different use cases
@@ -147,6 +155,7 @@ graph TD
 ### 4. **Simplified Import Paths**
 
 **Before:**
+
 ```typescript
 import { parseDocument } from '@/lib/services/documentParser';
 import { extractEntitiesRegex } from '@/lib/services/entityExtractor';  
@@ -154,6 +163,7 @@ import { templateEngine } from '@/lib/export/templateEngine';
 ```
 
 **After:**
+
 ```typescript
 import { parseDocument } from '@/lib/documentParser';
 import { extractEntitiesRegex } from '@/lib/entityExtractor';
@@ -174,6 +184,7 @@ import { processEntity } from '@/lib/templateEngine';
 ### Import Path Updates
 
 **Updated Files:**
+
 - `src/app/api/parse/route.ts` - API route imports
 - `src/app/api/parse/route.test.ts` - Test mocks
 - `src/lib/services/exportService.ts` - Service dependencies
@@ -238,6 +249,7 @@ src/lib/
 ### Package Boundaries
 
 **Potential npm packages:**
+
 - `@campaign-parser/document-parser` - Core document processing
 - `@campaign-parser/entity-extractor` - NLP entity detection
 - `@campaign-parser/obsidian-templates` - Template engine
@@ -245,6 +257,7 @@ src/lib/
 ### Framework Migration
 
 **Clean Architecture benefits:**
+
 - **Easy framework changes** - Core logic independent of Next.js
 - **Portable modules** - Can move to Electron, CLI, or other environments
 - **Technology upgrades** - Infrastructure changes don't affect core logic

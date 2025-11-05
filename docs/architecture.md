@@ -124,6 +124,7 @@ __mocks__/                 # Test fixtures and example data
 ### Architecture Principles
 
 **🎯 Core Modules** (Inner Layer):
+
 - **Pure domain logic**: No external dependencies
 - **Stateless functions**: Deterministic, testable operations
 - **documentParser**: File format processing (Word/Markdown → structured data)
@@ -131,6 +132,7 @@ __mocks__/                 # Test fixtures and example data
 - **templateEngine**: Template processing (entities → markdown)
 
 **🔧 Services** (Outer Layer):
+
 - **External integration**: API calls, network operations  
 - **Orchestration**: Coordinate multiple core modules
 - **documentService**: HTTP client for `/api/parse`
