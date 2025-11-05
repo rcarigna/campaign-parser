@@ -1,8 +1,8 @@
 # GitHub Pages Jekyll Configuration
 title: Campaign Document Parser Documentation
 description: Comprehensive documentation for the campaign document parser system
-url: https://YOUR_USERNAME.github.io
-baseurl: /obsidian-parser
+url: https://rcarigna.github.io
+baseurl: /campaign-parser
 
 # Build settings
 markdown: kramdown
