@@ -15,6 +15,7 @@ Welcome to the comprehensive documentation for the Campaign Document Parser - a 
 - [Entity Extraction System](./entity-extraction.md) - How intelligent entity detection works
 - [API Reference](./api-reference.md) - Complete API endpoint documentation
 - [Deployment Guide](./deployment.md) - Deploy to Vercel, Netlify, or other platforms
+- [Project Roadmap](./ROADMAP.md) - Feature roadmap and development priorities
 
 ### 🎭 Entity Management
 

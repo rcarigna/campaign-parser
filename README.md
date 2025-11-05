@@ -147,8 +147,9 @@ Our comprehensive documentation covers every aspect of the system:
 - **[📋 Architecture Overview](docs/architecture.md)** - Technical system design, stack details, and mermaid diagrams
 - **[🧠 Entity Extraction](docs/entity-extraction.md)** - Dual-engine NLP and regex processing system
 - **[🔀 Deduplication Guide](docs/deduplication-guide.md)** - Complete merge workflow and UI component guide
-- **[🔌 API Reference](docs/api-reference.md)** - Full REST API documentation with examples
-- **[🤝 Contributing Guidelines](CONTRIBUTING.md)** - Development setup, coding standards, and community guidelines
+- **[🔌 API Reference](docs/api-reference)** - Full REST API documentation with examples
+- **[🗺️ Project Roadmap](docs/ROADMAP)** - Feature roadmap and development priorities
+- **[🤝 Contributing Guidelines](CONTRIBUTING)** - Development setup, coding standards, and community guidelines
 
 ### 🎯 GitHub Integration
 

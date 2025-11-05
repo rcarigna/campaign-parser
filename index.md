@@ -18,6 +18,7 @@ title: Campaign Document Parser
 - **[🔀 Deduplication Guide](docs/deduplication-guide)** - Complete merge workflow and UI component guide
 - **[🔌 API Reference](docs/api-reference)** - Full REST API documentation with examples
 - **[🚀 Deployment Guide](docs/deployment)** - Deploy to Vercel, Netlify, or other platforms
+- **[🗺️ Project Roadmap](docs/ROADMAP)** - Feature roadmap and development priorities
 
 ### 🤝 Community & Contributing
 

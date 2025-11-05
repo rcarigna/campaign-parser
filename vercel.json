@@ -1,4 +1,11 @@
 {
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "[!main]*": true
+    }
+  },
+  "ignoreCommand": "bash scripts/ignore-build.sh",
   "functions": {
     "app/api/**": {
       "memory": 1024,
