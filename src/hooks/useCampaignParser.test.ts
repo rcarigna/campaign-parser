@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useCampaignParser } from './useCampaignParser';
 import { uploadDocument } from '@/client/api';
-import { SerializedParsedDocument, DocumentType } from '@/types';
+import { SerializedParsedDocument, DocumentType, Player, Location, EntityKind } from '@/types';
 
 // Mock the client API
 jest.mock('@/client/api', () => ({
@@ -122,13 +122,18 @@ describe('useCampaignParser', () => {
         expect(result.current.loading).toBe(false);
     });
 
-    it('should clear results', () => {
+    it('should clear results', async () => {
+        mockUploadDocument.mockResolvedValue(mockParsedData);
+        const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
+
         const { result } = renderHook(() => useCampaignParser());
 
-        // Set some initial state
-        act(() => {
-            result.current.processDocument(new File(['test'], 'test.md'));
+        // Set some initial state by processing a document
+        await act(async () => {
+            await result.current.processDocument(mockFile);
         });
+
+        expect(result.current.parsedData).toEqual(mockParsedData);
 
         act(() => {
             result.current.clearResults();
@@ -156,6 +161,228 @@ describe('useCampaignParser', () => {
 
         expect(result.current.error).toBeNull();
         expect(result.current.parsedData).toBeNull();
+    });
+
+    it('should create entities with IDs when parsedData has entities', async () => {
+        const mockParsedDataWithEntities = {
+            ...mockParsedData,
+            entities: [
+                { kind: EntityKind.PLAYER, title: 'pc', character_name: 'Test Character' } as Player,
+                { kind: EntityKind.LOCATION, title: 'location', name: 'Test Location' } as Location
+            ]
+        };
+
+        mockUploadDocument.mockResolvedValue(mockParsedDataWithEntities);
+        const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
+
+        const { result } = renderHook(() => useCampaignParser());
+
+        await act(async () => {
+            await result.current.processDocument(mockFile);
+        });
+
+        expect(result.current.entities).toHaveLength(2);
+        expect(result.current.entities[0]).toEqual({
+            kind: EntityKind.PLAYER,
+            title: 'pc',
+            character_name: 'Test Character',
+            id: 'player-0'
+        });
+        expect(result.current.entities[1]).toEqual({
+            kind: EntityKind.LOCATION,
+            title: 'location',
+            name: 'Test Location',
+            id: 'location-1'
+        });
+    });
+
+    it('should discard entity by ID', async () => {
+        const mockParsedDataWithEntities = {
+            ...mockParsedData,
+            entities: [
+                { kind: EntityKind.PLAYER, title: 'pc', character_name: 'Character 1' } as Player,
+                { kind: EntityKind.PLAYER, title: 'pc', character_name: 'Character 2' } as Player,
+                { kind: EntityKind.LOCATION, title: 'location', name: 'Location 1' } as Location
+            ]
+        };
+
+        mockUploadDocument.mockResolvedValue(mockParsedDataWithEntities);
+        const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
+
+        const { result } = renderHook(() => useCampaignParser());
+
+        // Process document to set initial entities
+        await act(async () => {
+            await result.current.processDocument(mockFile);
+        });
+
+        expect(result.current.entities).toHaveLength(3);
+
+        act(() => {
+            result.current.discardEntity('player-1');
+        });
+
+        expect(result.current.entities).toHaveLength(2);
+        expect(result.current.entities.find(e => e.id === 'player-1')).toBeUndefined();
+        expect(result.current.entities.find(e => e.id === 'player-0')).toBeDefined();
+        expect(result.current.entities.find(e => e.id === 'location-2')).toBeDefined();
+    });
+
+    it('should merge entities correctly', async () => {
+        const mockParsedDataWithEntities = {
+            ...mockParsedData,
+            entities: [
+                { kind: EntityKind.PLAYER, title: 'Primary Character', character_name: 'Primary Character' } as Player,
+                { kind: EntityKind.PLAYER, title: 'Duplicate 1', character_name: 'Duplicate 1' } as Player,
+                { kind: EntityKind.PLAYER, title: 'Duplicate 2', character_name: 'Duplicate 2' } as Player,
+                { kind: EntityKind.LOCATION, title: 'Location 1' } as Location
+            ]
+        };
+
+        mockUploadDocument.mockResolvedValue(mockParsedDataWithEntities);
+        const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
+
+        const { result } = renderHook(() => useCampaignParser());
+
+        // Process document to set initial entities
+        await act(async () => {
+            await result.current.processDocument(mockFile);
+        });
+
+        expect(result.current.entities).toHaveLength(4);
+
+        const mergedPrimaryEntity = {
+            kind: EntityKind.PLAYER,
+            title: 'Merged Character',
+            character_name: 'Merged Character',
+            id: 'player-0'
+        };
+
+        act(() => {
+            result.current.mergeEntities(mergedPrimaryEntity, ['player-1', 'player-2']);
+        });
+
+        expect(result.current.entities).toHaveLength(2);
+        expect(result.current.entities.find(e => e.id === 'player-0')).toEqual(mergedPrimaryEntity);
+        expect(result.current.entities.find(e => e.id === 'player-1')).toBeUndefined();
+        expect(result.current.entities.find(e => e.id === 'player-2')).toBeUndefined();
+        expect(result.current.entities.find(e => e.id === 'location-3')).toBeDefined();
+    });
+
+    it('should handle merging when primary entity is not in current entities', async () => {
+        const mockParsedDataWithEntities = {
+            ...mockParsedData,
+            entities: [
+                { kind: EntityKind.PLAYER, title: 'Duplicate 1', character_name: 'Duplicate 1' } as Player,
+                { kind: EntityKind.PLAYER, title: 'Duplicate 2', character_name: 'Duplicate 2' } as Player
+            ]
+        };
+
+        mockUploadDocument.mockResolvedValue(mockParsedDataWithEntities);
+        const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
+
+        const { result } = renderHook(() => useCampaignParser());
+
+        // Process document to set initial entities
+        await act(async () => {
+            await result.current.processDocument(mockFile);
+        });
+
+        expect(result.current.entities).toHaveLength(2);
+
+        const newPrimaryEntity = {
+            kind: EntityKind.PLAYER,
+            title: 'New Primary',
+            character_name: 'New Primary',
+            id: 'character-0'
+        };
+
+        act(() => {
+            result.current.mergeEntities(newPrimaryEntity, ['player-0', 'player-1']);
+        });
+
+        expect(result.current.entities).toHaveLength(1);
+        expect(result.current.entities[0]).toEqual(newPrimaryEntity);
+    });
+
+    it('should restore entities from parsed data', async () => {
+        const mockParsedDataWithEntities = {
+            ...mockParsedData,
+            entities: [
+                { kind: EntityKind.PLAYER, title: 'Character 1', character_name: 'Character 1' } as Player,
+                { kind: EntityKind.LOCATION, title: 'Location 0', name: 'Location 0' } as Location
+            ]
+        };
+
+        mockUploadDocument.mockResolvedValue(mockParsedDataWithEntities);
+        const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
+
+        const { result } = renderHook(() => useCampaignParser());
+
+        // Process document to set initial entities
+        await act(async () => {
+            await result.current.processDocument(mockFile);
+        });
+
+        // Wait for entities to be set via useEffect
+        expect(result.current.entities).toHaveLength(2);
+        expect(result.current.entities[0].id).toBe('player-0');
+        expect(result.current.entities[1].id).toBe('location-1');
+
+        // Modify entities
+        act(() => {
+            result.current.discardEntity('player-0');
+        });
+
+        expect(result.current.entities).toHaveLength(1);
+        expect(result.current.entities[0].id).toBe('location-1');
+
+        // Restore entities
+        act(() => {
+            result.current.restoreEntities();
+        });
+
+        expect(result.current.entities).toHaveLength(2);
+        expect(result.current.entities[0]).toEqual({
+            kind: EntityKind.PLAYER,
+            title: 'Character 1',
+            character_name: 'Character 1',
+            id: 'player-0'
+        });
+        expect(result.current.entities[1]).toEqual({
+            kind: EntityKind.LOCATION,
+            title: 'Location 0',
+            name: 'Location 0',
+            id: 'location-1'
+        });
+    });
+
+    it('should handle restore entities when no parsed data exists', () => {
+        const { result } = renderHook(() => useCampaignParser());
+
+        act(() => {
+            result.current.restoreEntities();
+        });
+
+        expect(result.current.entities).toEqual([]);
+    });
+
+    it('should handle restore entities when parsed data has no entities', async () => {
+        mockUploadDocument.mockResolvedValue(mockParsedData); // mockParsedData has no entities
+        const mockFile = new File(['test'], 'test.md', { type: 'text/markdown' });
+
+        const { result } = renderHook(() => useCampaignParser());
+
+        // Process document with no entities
+        await act(async () => {
+            await result.current.processDocument(mockFile);
+        });
+
+        act(() => {
+            result.current.restoreEntities();
+        });
+
+        expect(result.current.entities).toEqual([]);
     });
     // Entity-related tests will be added once entity types are fully stabilized
 });
