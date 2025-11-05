@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation
+    url: https://github.com/YOUR_USERNAME/obsidian-parser/blob/main/docs/README.md
+    about: Browse our comprehensive documentation
+  - name: 💬 Discussions
+    url: https://github.com/YOUR_USERNAME/obsidian-parser/discussions
+    about: Ask questions, share ideas, or discuss the project
+  - name: 🆘 Support
+    url: https://github.com/YOUR_USERNAME/obsidian-parser/discussions/categories/q-a
+    about: Get help with setup, usage, or troubleshooting

@@ -1,0 +1,42 @@
+# GitHub Pages Jekyll Configuration
+title: Campaign Document Parser Documentation
+description: Comprehensive documentation for the campaign document parser system
+url: https://YOUR_USERNAME.github.io
+baseurl: /obsidian-parser
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Include additional files in the build
+include:
+  - README.md
+  - CONTRIBUTING.md
+
+# Exclude files from processing
+exclude:
+  - node_modules/
+  - .github/
+  - coverage/
+  - archive-monorepo/
+  - examples/
+
+# Navigation structure
+header_pages:
+  - README.md
+  - docs/README.md
+  - docs/architecture.md
+  - docs/entity-extraction.md
+  - docs/deduplication-guide.md
+  - docs/api-reference.md
+  - CONTRIBUTING.md
+
+# Enable mermaid diagrams
+mermaid:
+  enable: true

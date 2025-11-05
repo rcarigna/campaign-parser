@@ -138,6 +138,27 @@ npm run test:watch
 
 ---
 
+## 📖 Documentation
+
+Our comprehensive documentation covers every aspect of the system:
+
+### 📚 Core Documentation
+
+- **[📋 Architecture Overview](docs/architecture.md)** - Technical system design, stack details, and mermaid diagrams
+- **[🧠 Entity Extraction](docs/entity-extraction.md)** - Dual-engine NLP and regex processing system
+- **[🔀 Deduplication Guide](docs/deduplication-guide.md)** - Complete merge workflow and UI component guide
+- **[🔌 API Reference](docs/api-reference.md)** - Full REST API documentation with examples
+- **[🤝 Contributing Guidelines](CONTRIBUTING.md)** - Development setup, coding standards, and community guidelines
+
+### 🎯 GitHub Integration
+
+- **[🐛 Bug Reports](.github/ISSUE_TEMPLATE/bug_report.yml)** - Structured issue templates
+- **[✨ Feature Requests](.github/ISSUE_TEMPLATE/feature_request.yml)** - Enhancement proposals
+- **[💬 Discussions](https://github.com/YOUR_USERNAME/obsidian-parser/discussions)** - Community questions and ideas
+- **[📋 Pull Request Template](.github/pull_request_template.md)** - Standardized contribution process
+
+---
+
 ## 📖 Usage Guide
 
 ### 1. Upload Documents
