@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { uploadDocument } from '@/lib/services';
+import { uploadDocument } from '@/lib/clients';
 import { type SerializedParsedDocumentWithEntities, type AnyEntity, type EntityWithId } from '@/types';
 
 type UseCampaignParserReturn = {

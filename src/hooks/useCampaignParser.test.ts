@@ -1,10 +1,10 @@
 import { renderHook, act } from '@testing-library/react';
 import { useCampaignParser } from './useCampaignParser';
-import { uploadDocument } from '@/lib/services';
+import { uploadDocument } from '@/lib/clients';
 import { SerializedParsedDocument, DocumentType } from '@/types';
 
-// Mock the uploadDocument service
-jest.mock('@/lib/services', () => ({
+// Mock the uploadDocument client
+jest.mock('@/lib/clients', () => ({
     uploadDocument: jest.fn(),
 }));
 
