@@ -262,6 +262,47 @@ src/lib/
 - **Portable modules** - Can move to Electron, CLI, or other environments
 - **Technology upgrades** - Infrastructure changes don't affect core logic
 
+## Post-Migration Fix: Client/Server Separation
+
+### Issue Discovered
+
+After the Clean Architecture migration, a **Next.js build error** occurred:
+
+```bash
+Error: Module not found: Can't resolve 'fs/promises'
+Import chain: templateEngine.ts → exportService.ts → services/index.ts → useCampaignParser.ts → page.tsx
+```
+
+**Root Cause**: Client-side React components were importing server-only code through the services barrel export.
+
+### Solution Applied
+
+**Services Index Separation**:
+
+```typescript
+// Before: services/index.ts (caused client/server mixing)
+export * from './documentService';
+export * from './exportService';  // ❌ Contains Node.js dependencies
+
+// After: services/index.ts (client-safe only)
+export * from './documentService';  // ✅ HTTP client, browser-compatible
+// export * from './exportService';  // ❌ Commented out - server-only
+
+// Usage in API routes: Direct import
+import { exportEntities } from '@/lib/services/exportService';
+```
+
+**Benefits of Fix**:
+
+- ✅ **Build Success**: No more Node.js imports in client bundles
+- ✅ **Clear Boundaries**: Explicit client vs server separation
+- ✅ **Type Safety**: Import errors caught at build time  
+- ✅ **Performance**: Smaller client bundles
+
+### Architecture Lesson
+
+**Clean Architecture Principle Validated**: Proper dependency separation prevents cross-boundary contamination. The services layer must carefully manage what it exposes to different environments (client vs server).
+
 ---
 
-*This reorganization establishes a solid foundation for long-term maintainability and extensibility while preserving all existing functionality.*
+*This reorganization establishes a solid foundation for long-term maintainability and extensibility while preserving all existing functionality and ensuring proper Next.js client/server separation.*

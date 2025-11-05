@@ -1,2 +1,6 @@
+// Client-safe exports (no Node.js dependencies)
 export * from './documentService';
-export * from './exportService';
+
+// Server-only exports (contain Node.js dependencies)
+// Note: Import exportService directly where needed in API routes
+// export * from './exportService';

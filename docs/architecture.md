@@ -106,9 +106,9 @@ src/
 │   │   ├── README.md          # Template documentation
 │   │   └── index.ts           # Module exports
 │   └── services/          # 🔧 SERVICES: Orchestration & External
-│       ├── documentService.ts # HTTP client for API calls
-│       ├── exportService.ts   # Export orchestration
-│       └── index.ts           # Services exports
+│       ├── documentService.ts # HTTP client for API calls (client-safe)
+│       ├── exportService.ts   # Export orchestration (server-only)
+│       └── index.ts           # Client-safe exports only
 └── types/                 # TypeScript definitions
     ├── campaign.ts        # Entity type definitions
     ├── document.ts        # Document structure types
@@ -135,8 +135,39 @@ __mocks__/                 # Test fixtures and example data
 
 - **External integration**: API calls, network operations  
 - **Orchestration**: Coordinate multiple core modules
-- **documentService**: HTTP client for `/api/parse`
-- **exportService**: Export workflow coordination
+- **Client/Server separation**: Proper Next.js environment handling
+- **documentService**: HTTP client for `/api/parse` (client-safe)
+- **exportService**: Export workflow coordination (server-only)
+
+### Client/Server Separation
+
+**Next.js Environment Constraints:**
+
+- **Client Components**: Cannot import Node.js modules (`fs`, `path`, etc.)
+- **Server Components/API Routes**: Full Node.js access
+- **Build Process**: Turbopack validates all import chains
+
+**Implementation Strategy:**
+
+```typescript
+// ❌ Problem: Client imports server-only code
+import { exportEntities } from '@/lib/services'; // Contains templateEngine (fs/promises)
+
+// ✅ Solution: Separate client-safe vs server-only exports
+// services/index.ts - Client-safe exports only
+export * from './documentService';  // HTTP client (browser-compatible)
+// Note: exportService imported directly in API routes
+
+// api/export/route.ts - Server-only imports
+import { exportEntities } from '@/lib/services/exportService'; // Direct import
+```
+
+**Benefits:**
+
+- **Build Safety**: Prevents Node.js imports in client bundles
+- **Clear Boundaries**: Explicit client vs server code separation  
+- **Performance**: Smaller client bundles without server code
+- **Type Safety**: Import errors caught at build time
 
 ## Component Architecture
 
