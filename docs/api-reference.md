@@ -114,7 +114,7 @@ const result = await response.json();
 #### Markdown Content
 
 ```typescript
-interface MarkdownContent {
+type MarkdownContent = {
   raw: string;              // Original markdown text
   html: string;             // Converted HTML
   text: string;             // Plain text (frontmatter stripped)
@@ -128,7 +128,7 @@ interface MarkdownContent {
 #### Word Content
 
 ```typescript
-interface WordContent {
+type WordContent = {
   raw: string;              // Extracted text content
   html: string;             // Converted HTML
   text: string;             // Plain text
@@ -141,7 +141,7 @@ interface WordContent {
 #### Base Entity
 
 ```typescript
-interface BaseEntity {
+type BaseEntity = {
   kind: EntityKind;
   title: string;
   sourceSessions?: number[];
@@ -151,7 +151,7 @@ interface BaseEntity {
 #### NPC Entity
 
 ```typescript
-interface NPC extends BaseEntity {
+type NPC = BaseEntity & {
   kind: "npc";
   role?: string;            // "barkeep", "guard", "noble"
   faction?: string;         // "Zhentarim", "Harpers"
@@ -166,7 +166,7 @@ interface NPC extends BaseEntity {
 #### Location Entity
 
 ```typescript
-interface Location extends BaseEntity {
+type Location = BaseEntity & {
   kind: "location";
   type?: string;           // "tavern", "city", "dungeon"
   region?: string;         // Broader geographical area
@@ -177,7 +177,7 @@ interface Location extends BaseEntity {
 #### Item Entity
 
 ```typescript
-interface Item extends BaseEntity {
+type Item = BaseEntity & {
   kind: "item";
   type?: string;           // "weapon", "armor", "consumable"
   rarity?: "common" | "uncommon" | "rare" | "very_rare" | "legendary" | "artifact";
@@ -190,7 +190,7 @@ interface Item extends BaseEntity {
 #### Quest Entity
 
 ```typescript
-interface Quest extends BaseEntity {
+type Quest = BaseEntity & {
   kind: "quest";
   status: "active" | "completed" | "failed" | "available";
   type?: "main" | "side" | "personal";
@@ -203,7 +203,7 @@ interface Quest extends BaseEntity {
 #### Session Summary Entity
 
 ```typescript
-interface SessionSummary extends BaseEntity {
+type SessionSummary = BaseEntity & {
   kind: "session_summary";
   session_number?: number;
   brief_synopsis?: string;
@@ -217,7 +217,7 @@ interface SessionSummary extends BaseEntity {
 #### Heading
 
 ```typescript
-interface Heading {
+type Heading = {
   level: number;           // 1-6 (# to ######)
   text: string;           // Heading text content
   id: string;             // URL-friendly slug
@@ -227,7 +227,7 @@ interface Heading {
 #### Link
 
 ```typescript
-interface Link {
+type Link = {
   text: string;           // Display text
   url: string;            // Destination URL
   title?: string;         // Optional title attribute
@@ -237,7 +237,7 @@ interface Link {
 #### Image
 
 ```typescript
-interface Image {
+type Image = {
   alt: string;            // Alt text
   url: string;            // Image URL
   title?: string;         // Optional title
@@ -247,7 +247,7 @@ interface Image {
 #### Document Metadata
 
 ```typescript
-interface DocumentMetadata {
+type DocumentMetadata = {
   size: number;           // File size in bytes
   mimeType: string;       // MIME type
   lastModified: Date;     // Processing timestamp

@@ -38,5 +38,11 @@ header_pages:
   - CONTRIBUTING.md
 
 # Enable mermaid diagrams
-mermaid:
-  enable: true
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Add mermaid support
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge

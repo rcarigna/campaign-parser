@@ -158,32 +158,32 @@ Response: {
 ### Core Entity Types
 
 ```typescript
-interface BaseEntity {
+type BaseEntity = {
   kind: EntityKind;
   title: string;
   sourceSessions?: number[];
 }
 
-interface NPC extends BaseEntity {
+type NPC = BaseEntity & {
   kind: "npc";
   role?: string;
   faction?: string;
   importance?: "minor" | "supporting" | "major";
 }
 
-interface Location extends BaseEntity {
+type Location = BaseEntity & {
   kind: "location";
   type?: string;
   region?: string;
 }
 
-interface Item extends BaseEntity {
+type Item = BaseEntity & {
   kind: "item";
   type?: string;
   rarity?: "common" | "uncommon" | "rare" | "very_rare" | "legendary";
 }
 
-interface Quest extends BaseEntity {
+type Quest = BaseEntity & {
   kind: "quest";
   status: "active" | "completed" | "failed" | "available";
   type?: "main" | "side" | "personal";
@@ -193,22 +193,18 @@ interface Quest extends BaseEntity {
 ### Document Structure
 
 ```typescript
-interface ParsedDocument {
+type ParsedDocument = {
   filename: string;
   type: DocumentType;
   content: MarkdownContent | WordContent;
   entities: AnyEntity[];
-  metadata: DocumentMetadata;
 }
 
-interface MarkdownContent {
-  raw: string;
-  html: string;
-  text: string;
-  frontmatter: Record<string, any>;
+type MarkdownContent = {
+  frontmatter?: Record<string, any>;
+  markdown: string;
   headings: Heading[];
   links: Link[];
-  images: Image[];
 }
 ```
 

@@ -129,7 +129,8 @@ Then create a Pull Request on GitHub with:
 
 ```typescript
 // ✅ Good: Use strict typing
-interface EntityProps {
+```typescript
+type EntityProps = {
   entity: AnyEntity;
   onEdit: (entity: AnyEntity) => void;
   isSelected?: boolean;
