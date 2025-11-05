@@ -9,24 +9,28 @@ Transform your campaign notes, session summaries, and world-building documents i
 ## 🌟 Features
 
 ### 📄 Document Processing
+
 - **Multi-format Support**: Upload Word documents (.docx) or Markdown files (.md)
 - **Frontmatter Parsing**: Automatic YAML frontmatter extraction and processing  
 - **Smart Content Extraction**: Headings, links, images, and structured content parsing
 - **Real-time Processing**: Instant feedback with upload progress and error handling
 
 ### 🎭 Entity Management
+
 - **Intelligent Extraction**: Dual-layer entity detection using NLP + regex patterns
 - **Campaign Entities**: NPCs, Locations, Items, Factions, Events, and more
 - **Interactive Management**: View, edit, filter, and organize extracted entities
 - **Smart Deduplication**: Advanced duplicate detection with merge workflow
 
 ### 🔄 Deduplication System
+
 - **Duplicate Detection**: Automatic identification of similar entities across documents
 - **Merge Interface**: Visual comparison and field-by-field merging
 - **Preview Mode**: See merged results before confirming changes
 - **Bulk Operations**: Efficient handling of multiple duplicates
 
 ### 🔍 Advanced Filtering
+
 - **Entity Types**: Filter by NPCs, Locations, Items, Factions, Events
 - **Search**: Real-time text search across all entity fields
 - **Importance Levels**: Major, minor, background entity classification
@@ -37,6 +41,7 @@ Transform your campaign notes, session summaries, and world-building documents i
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+ (20.x recommended)
 - npm, yarn, or pnpm
 
@@ -71,17 +76,20 @@ npm start
 ## 🏗️ Architecture
 
 ### Modern Next.js Stack
+
 - **Next.js 16**: App Router with React Server Components
 - **React Compiler**: Automatic optimization for complex entity operations
 - **TypeScript**: Full type safety across client and server
 - **Tailwind CSS**: Responsive, modern UI design
 
 ### API Routes
+
 - **`/api/health`**: System health check endpoint
 - **`/api/parse`**: Document processing and entity extraction
 
 ### File Structure
-```
+
+```plaintext
 src/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API routes (replaces Express server)
@@ -114,13 +122,15 @@ npm run test:coverage
 npm run test:watch
 ```
 
-**Test Coverage**: 
+**Test Coverage**:
+
 - Statements: 77.58%
-- Lines: 79.15% 
+- Lines: 79.15%
 - Functions: 72.61%
 - Branches: 66.45%
 
 ### Test Categories
+
 - **Component Tests**: UI components with user interactions
 - **Hook Tests**: Custom React hooks with mock integrations
 - **API Tests**: Next.js API routes with request/response validation
@@ -131,24 +141,28 @@ npm run test:watch
 ## 📖 Usage Guide
 
 ### 1. Upload Documents
+
 - Drag & drop or click to upload Word/Markdown files
 - Supported formats: `.docx`, `.md`
 - File size limit: 10MB per file
 - Real-time validation and progress feedback
 
 ### 2. Review Extracted Entities  
+
 - Automatically extracted NPCs, locations, items, and more
 - Filter by entity type and importance level
 - Search across all entity fields
 - Edit individual entities with form validation
 
 ### 3. Manage Duplicates
+
 - Review entities marked as potential duplicates
 - Select primary entity and merge fields from duplicates
 - Preview merged results before confirming
 - Toast notifications for user feedback
 
 ### 4. Export & Integration
+
 - Clean, deduplicated entity database
 - Ready for integration with campaign management tools
 - Structured data suitable for further processing
@@ -189,12 +203,14 @@ const nextConfig = {
 ## 🛠️ Development
 
 ### Code Quality
+
 - **ESLint**: Comprehensive linting rules
 - **TypeScript**: Strict type checking
 - **Jest**: Unit and integration testing
 - **React Testing Library**: Component testing best practices
 
 ### Available Scripts
+
 ```bash
 npm run dev          # Development server
 npm run build        # Production build  
@@ -206,6 +222,7 @@ npm run test:coverage # Coverage report
 ```
 
 ### Hot Reload
+
 - **Frontend**: Instant React component updates
 - **Backend**: API route changes reload automatically
 - **Types**: TypeScript changes update across app
@@ -215,6 +232,7 @@ npm run test:coverage # Coverage report
 ## 🚀 Deployment
 
 ### Vercel (Recommended)
+
 ```bash
 # Install Vercel CLI
 npm i -g vercel
@@ -224,12 +242,14 @@ vercel --prod
 ```
 
 ### Manual Production Build
+
 ```bash
 npm run build
 npm start
 ```
 
 ### Docker (Optional)
+
 ```dockerfile
 FROM node:20-alpine
 WORKDIR /app
@@ -246,12 +266,14 @@ CMD ["npm", "start"]
 ## 📊 Performance
 
 ### Benchmarks
+
 - **Cold Start**: < 5 seconds
 - **File Upload**: < 2 seconds for typical campaign documents
 - **Entity Extraction**: ~500ms for 10-page documents
 - **UI Responsiveness**: 60 FPS with React Compiler optimization
 
 ### Optimization Features
+
 - **React Compiler**: Automatic memoization for entity operations
 - **Next.js Optimization**: Built-in code splitting and asset optimization
 - **Efficient Algorithms**: Smart duplicate detection with minimal false positives
@@ -260,7 +282,8 @@ CMD ["npm", "start"]
 
 ## 🤝 Contributing
 
-### Development Setup
+### Getting Started
+
 1. Fork the repository
 2. Create feature branch: `git checkout -b feat/amazing-feature`
 3. Run tests: `npm test`
@@ -269,6 +292,7 @@ CMD ["npm", "start"]
 6. Open Pull Request
 
 ### Code Standards
+
 - Follow TypeScript strict mode
 - Write tests for new features
 - Maintain >70% test coverage
