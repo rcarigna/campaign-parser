@@ -197,7 +197,7 @@ describe('EntityMergeModal', () => {
 
 ### File Organization
 
-```plaintext
+```tree
 src/
 ├── components/           # React components
 │   ├── Entity/          # Entity-related components

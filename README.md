@@ -97,7 +97,7 @@ npm start
 
 ### File Structure
 
-```plaintext
+```tree
 src/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API routes (replaces Express server)

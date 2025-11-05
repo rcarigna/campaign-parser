@@ -36,25 +36,25 @@ function detectDuplicates(entities: AnyEntity[]): DuplicateGroup[] {
 
 **Exact Name Matches**:
 
-```plaintext
+```tree
 "Durnan" and "Durnan" → 100% match
 ```
 
 **Fuzzy Name Matching**:
 
-```plaintext
+```tree
 "Volothamp Geddarm" and "Volo" → 85% match (known alias)
 ```
 
 **Same Type + Similar Context**:
 
-```plaintext
+```tree
 Both NPCs with role "barkeep" at "Yawning Portal" → High likelihood
 ```
 
 **Cross-Session Consistency**:
 
-```plaintext
+```tree
 Same entity mentioned across multiple sessions with slight variations
 ```
 
