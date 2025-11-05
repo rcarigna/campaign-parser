@@ -1,18 +1,15 @@
 # GitHub Pages Jekyll Configuration
 title: Campaign Document Parser Documentation
 description: Comprehensive documentation for the campaign document parser system
-url: https://rcarigna.github.io
-baseurl: /campaign-parser
 
 # Build settings
 markdown: kramdown
 highlighter: rouge
-theme: minima
 
-# Plugins
-plugins:
-  - jekyll-feed
-  - jekyll-sitemap
+# Kramdown configuration for GitHub Flavored Markdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
 
 # Include additional files in the build
 include:
@@ -26,23 +23,3 @@ exclude:
   - coverage/
   - archive-monorepo/
   - examples/
-
-# Navigation structure
-header_pages:
-  - README.md
-  - docs/README.md
-  - docs/architecture.md
-  - docs/entity-extraction.md
-  - docs/deduplication-guide.md
-  - docs/api-reference.md
-  - CONTRIBUTING.md
-
-# Enable mermaid diagrams
-plugins:
-  - jekyll-feed
-  - jekyll-sitemap
-
-# Add mermaid support
-kramdown:
-  input: GFM
-  syntax_highlighter: rouge
