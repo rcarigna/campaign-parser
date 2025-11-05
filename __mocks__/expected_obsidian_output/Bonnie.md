@@ -10,7 +10,7 @@ location: "Yawning Portal"
 
 # 🧑‍🎭 Bonnie
 
-**Faction:** 
+**Faction:**
 **Role:** barmaid
 **Status:** alive
 **Location:** Yawning Portal
@@ -18,18 +18,21 @@ location: "Yawning Portal"
 ---
 
 ## 🧩 Summary
+
 Friendly barmaid at the Yawning Portal tavern who shows particular interest in the adventurers.
 
 ---
 
 ## 🧠 Description
-- **Appearance:** 
+
+- **Appearance:**
 - **Personality / Voice:**
 - **Goals / Secrets:**
 
 ---
 
 ## 🧶 Relationships
+
 - **Allies:**
 - **Enemies:**
 - **Ties to PCs:** Spent time with Cat Amcathra after the troll fight
@@ -41,6 +44,7 @@ Friendly barmaid at the Yawning Portal tavern who shows particular interest in t
 ---
 
 ## 🧩 Quest Connections
-*Referenced in Sessions: 1*
+
+Referenced in Sessions: 1
 
 <!-- Links to related entities will be generated automatically -->

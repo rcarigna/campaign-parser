@@ -10,21 +10,24 @@ status: "known"
 
 **Region:** Waterdeep
 **Type:** tavern
-**Faction Presence:** 
+**Faction Presence:**
 
 ---
 
 ## 🌍 Description
+
 A tavern located in the Dock Ward of Waterdeep where Floon Blagmaar was last seen.
 
 ---
 
 ## 🧠 Points of Interest
+
 - Last known location of Floon Blagmaar
 
 ---
 
 ## 🧩 Key NPCs
+
 - Floon Blagmaar (last seen here)
 
 ---
@@ -34,9 +37,11 @@ A tavern located in the Dock Ward of Waterdeep where Floon Blagmaar was last see
 ---
 
 ## ⚙️ Relevant Quests
-*Referenced in Sessions: 1*
+
+Referenced in Sessions: 1
 
 **Related Quests:**
+
 - [[Find his missing friend Floon]]
 
 <!-- Links to related quests will be generated automatically -->

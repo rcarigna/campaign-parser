@@ -10,7 +10,7 @@ location: "Yawning Portal"
 
 # 🧑‍🎭 Durnan
 
-**Faction:** 
+**Faction:**
 **Role:** barkeep
 **Status:** alive
 **Location:** Yawning Portal
@@ -18,18 +18,21 @@ location: "Yawning Portal"
 ---
 
 ## 🧩 Summary
+
 Proprietor and barkeep of the famous Yawning Portal tavern in Waterdeep.
 
 ---
 
 ## 🧠 Description
-- **Appearance:** 
+
+- **Appearance:**
 - **Personality / Voice:**
 - **Goals / Secrets:**
 
 ---
 
 ## 🧶 Relationships
+
 - **Allies:**
 - **Enemies:**
 - **Ties to PCs:**
@@ -41,6 +44,7 @@ Proprietor and barkeep of the famous Yawning Portal tavern in Waterdeep.
 ---
 
 ## 🧩 Quest Connections
-*Referenced in Sessions: 1*
+
+Referenced in Sessions: 1
 
 <!-- Links to related entities will be generated automatically -->
