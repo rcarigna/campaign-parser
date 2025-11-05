@@ -102,7 +102,6 @@ describe('entityValidation (Zod-based)', () => {
                 // Missing: type, region
             };
 
-            // @ts-expect-error Testing with incomplete entity
             const missing = getMissingFields(incompleteLocation);
             expect(missing).toContain('type');
             expect(missing).toContain('region');
