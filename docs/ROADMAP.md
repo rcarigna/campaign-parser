@@ -12,12 +12,17 @@
 ## 🎯 **Phase 1: Enhanced Entity Management (Current Focus)**
 
 ### **🚀 Priority 1: Export Functionality**
+- [x] **Obsidian Template System** - Handlebars-based templates for each entity type
+- [x] **Vault Structure Analysis** - Reference target Obsidian folder organization
+- [x] **Export Module Architecture** - Clean separation of templates, config, and services
+- [ ] **Obsidian Export API** - Generate ZIP with organized markdown files
 - [ ] **JSON Export** - Download all entities as structured JSON
 - [ ] **CSV Export** - Spreadsheet-compatible format for campaign notes
 - [ ] **Filtered Export** - Export only selected entity types or importance levels
-- [ ] **Campaign Export** - Bundle all documents + entities into single export
 
 **User Story**: *"After cleaning up my entities, I want to export them to use in Roll20, Obsidian, or my own campaign management system."*
+
+**Current Status**: Template system complete with 5 entity types (NPC, Location, Item, Quest, Session Summary). Templates use Handlebars syntax with proper frontmatter and Obsidian wiki-link compatibility.
 
 ### **⚡ Priority 2: Advanced Entity Manipulation**
 - [ ] **Bulk Edit Mode** - Select multiple entities and edit common fields
@@ -100,10 +105,14 @@
 ### **Phase 1 Milestones (Next 2-4 weeks)**
 
 #### **Milestone 1.1: Export System**
-- JSON export with full entity data
-- CSV export for spreadsheet compatibility  
-- Export filtering by entity type and importance
-- Download progress indicators
+- [x] Obsidian template system with Handlebars
+- [x] Vault structure reference and organization
+- [ ] `/api/export` endpoint implementation
+- [ ] ZIP file generation with organized folders
+- [ ] JSON export with full entity data
+- [ ] CSV export for spreadsheet compatibility  
+- [ ] Export filtering by entity type and importance
+- [ ] Download progress indicators
 
 #### **Milestone 1.2: Bulk Operations**
 - Multi-select entity interface

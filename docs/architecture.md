@@ -63,7 +63,8 @@ src/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API routes (replaces Express)
 │   │   ├── health/        # Health check endpoint
-│   │   └── parse/         # Document processing endpoint
+│   │   ├── parse/         # Document processing endpoint
+│   │   └── export/        # Obsidian export endpoint
 │   ├── layout.tsx         # Root layout component
 │   └── page.tsx           # Main application page
 ├── components/            # React components
@@ -83,6 +84,17 @@ src/
 │   ├── useCampaignParser.ts  # Document processing state
 │   └── useFileManager.ts     # File validation & upload
 ├── lib/                   # Server-side utilities
+│   ├── export/            # Obsidian export system
+│   │   ├── templates/     # Handlebars templates for entities
+│   │   │   ├── npc.md         # NPC entity template
+│   │   │   ├── location.md    # Location entity template
+│   │   │   ├── item.md        # Item entity template
+│   │   │   ├── quest.md       # Quest entity template
+│   │   │   └── session-summary.md # Session summary template
+│   │   ├── obsidian_vault_tree.txt # Target vault structure
+│   │   ├── exportService.ts   # Export orchestration
+│   │   ├── templateEngine.ts  # Handlebars processing
+│   │   └── zipGenerator.ts    # Archive creation
 │   └── services/          # Business logic
 │       ├── documentParser/    # Document processing
 │       ├── entityExtractor/   # Entity extraction
@@ -91,6 +103,11 @@ src/
     ├── campaign.ts        # Entity type definitions
     ├── document.ts        # Document structure types
     └── index.ts           # Unified exports
+
+__mocks__/                 # Test fixtures and example data
+├── session_summary_1_rawdata.json    # Raw extracted entities
+├── session_summary_1_manual_deduped.json # Manually deduplicated data
+└── session_summary_1.md              # Example parsed document
 ```
 
 ## Component Architecture
@@ -144,6 +161,11 @@ Response: {
   entities: AnyEntity[],
   metadata: DocumentMetadata
 }
+
+// Obsidian Export
+POST /api/export
+Body: { entities: AnyEntity[], options?: ExportOptions }
+Response: ZIP file with organized markdown files
 ```
 
 ### Request/Response Flow

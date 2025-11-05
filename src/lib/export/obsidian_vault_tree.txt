@@ -1,0 +1,25 @@
+Obsidian Vault/
+├── _CampaignHub/           # Campaign overview and hub notes
+├── 00_DmNotes/            # DM-specific notes and prep
+│   └── Meta/              # Metadata and organizational files
+├── 01_SessionNotes/       # Session summaries and logs  
+├── 02_World/              # World building and lore
+│   ├── Factions/          # Organizations and groups
+│   ├── Items/             # Campaign items and artifacts
+│   ├── Locations/         # Places and environments
+│   │   ├── The Undermountain/  # Dungeon complex
+│   │   │   └── Meta/      # Undermountain metadata
+│   │   └── Waterdeep/     # Main city location
+│   ├── NPCs/              # Non-player characters
+│   │   └── Renear_Neverember/  # Specific NPC folder
+│   └── TimeLines/         # Campaign chronology
+├── 03_PlayerCharacters/   # PC backgrounds and info
+├── 04_QuestLines/         # Quest tracking and management
+│   ├── Faction/           # Faction-related quests
+│   ├── Personal/          # Character-specific quests
+│   └── Waterdeep/         # Location-specific quests
+├── Assets/                # Campaign resources
+│   ├── Art/               # Images and artwork
+│   ├── Map/               # Maps and diagrams
+│   └── StatBlocks/        # Creature/NPC stat blocks
+└── templates/             # Obsidian templates

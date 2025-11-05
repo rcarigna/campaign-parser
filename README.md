@@ -36,6 +36,13 @@ Transform your campaign notes, session summaries, and world-building documents i
 - **Importance Levels**: Major, minor, background entity classification
 - **Selection Tools**: Multi-select for bulk operations
 
+### 📤 Obsidian Export
+
+- **Template System**: Handlebars-based templates for each entity type
+- **Vault Structure**: Organized export matching Obsidian folder conventions
+- **Markdown Format**: Full frontmatter, tags, and wiki-link compatibility
+- **Batch Export**: ZIP download with complete campaign data structure
+
 ---
 
 ## 🚀 Quick Start
@@ -86,6 +93,7 @@ npm start
 
 - **`/api/health`**: System health check endpoint
 - **`/api/parse`**: Document processing and entity extraction
+- **`/api/export`**: Obsidian-formatted entity export with ZIP generation
 
 ### File Structure
 
@@ -101,8 +109,15 @@ src/
 │   └── Layout/            # Application layout
 ├── hooks/                 # Custom React hooks
 ├── lib/                   # Server-side utilities
+│   ├── export/            # Obsidian export system
+│   │   ├── templates/     # Handlebars templates for entities
+│   │   └── obsidian_vault_tree.txt # Target vault structure
 │   └── services/          # Document parsing & entity extraction
 └── types/                 # TypeScript definitions
+
+__mocks__/                 # Test fixtures and example data
+├── session_summary_*.json # Campaign session data examples
+└── session_summary_*.md   # Parsed document examples
 ```
 
 ---
@@ -185,9 +200,10 @@ Our comprehensive documentation covers every aspect of the system:
 
 ### 4. Export & Integration
 
-- Clean, deduplicated entity database
-- Ready for integration with campaign management tools
-- Structured data suitable for further processing
+- **Obsidian Export**: Generate vault-ready markdown files with proper frontmatter
+- **Template System**: Customizable Handlebars templates for each entity type
+- **ZIP Download**: Complete campaign export in organized folder structure
+- **Clean Data**: Deduplicated entity database ready for campaign management
 
 ---
 
