@@ -11,12 +11,13 @@ title: Campaign Document Parser
 
 ## 📚 Documentation
 
-### 📖 Core Documentation
+### � Core Documentation
 
 - **[📋 Architecture Overview](docs/architecture)** - Technical system design, stack details, and mermaid diagrams
 - **[🧠 Entity Extraction](docs/entity-extraction)** - Dual-engine NLP and regex processing system
 - **[🔀 Deduplication Guide](docs/deduplication-guide)** - Complete merge workflow and UI component guide
 - **[🔌 API Reference](docs/api-reference)** - Full REST API documentation with examples
+- **[🚀 Deployment Guide](docs/deployment)** - Deploy to Vercel, Netlify, or other platforms
 
 ### 🤝 Community & Contributing
 

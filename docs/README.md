@@ -7,7 +7,6 @@ Welcome to the comprehensive documentation for the Campaign Document Parser - a 
 ### 🚀 Getting Started
 
 - [Quick Start Guide](../README.md#quick-start) - Set up and run the application
-- [Development Setup](./development-guide.md) - Detailed dev environment configuration
 - [Architecture Overview](./architecture.md) - Technical architecture and design decisions
 
 ### 📄 Document Processing
@@ -15,6 +14,7 @@ Welcome to the comprehensive documentation for the Campaign Document Parser - a 
 - [Document Structure Guide](./document-structure.md) - Supported formats and structure
 - [Entity Extraction System](./entity-extraction.md) - How intelligent entity detection works
 - [API Reference](./api-reference.md) - Complete API endpoint documentation
+- [Deployment Guide](./deployment.md) - Deploy to Vercel, Netlify, or other platforms
 
 ### 🎭 Entity Management
 
