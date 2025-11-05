@@ -3,7 +3,7 @@ layout: default
 title: Campaign Document Parser
 ---
 
-# 📋 Campaign Document Parser
+## 📋 Campaign Document Parser
 
 **A powerful Next.js application for parsing and managing campaign documents with intelligent entity extraction and deduplication.**
 

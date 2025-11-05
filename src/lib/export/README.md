@@ -29,6 +29,7 @@ src/lib/export/
 ## Usage
 
 The export system will be accessible via:
+
 - API endpoint: `/api/export`
 - UI components: Entity selection and export options dialog
 - Output: ZIP file with markdown files organized by entity type

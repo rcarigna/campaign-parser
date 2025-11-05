@@ -53,7 +53,7 @@ scripts/ignore-build.sh
 - Ignore command for docs-only changes
 - Branch deployment settings
 
-#### Environment Variables
+#### Environment Setup
 
 Configure in Vercel dashboard → Project Settings → Environment Variables:
 
