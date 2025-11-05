@@ -2,9 +2,9 @@
 tags: [item]
 rarity: "{{rarity}}"
 type: "{{type}}"
-attunement: {{attunement || false}}
+attunement: {{#if attunement}}{{attunement}}{{else}}false{{/if}}
 owner: "{{owner}}"
-status: "{{status || 'available'}}"
+status: "{{#if status}}{{status}}{{else}}available{{/if}}"
 ---
 
 # 💎 {{title}}
@@ -17,14 +17,17 @@ status: "{{status || 'available'}}"
 ---
 
 ## ✨ Description
-{{description || 'Flavor text or appearance details.'}}
+
+{{#if description}}{{description}}{{else}}Flavor text or appearance details.{{/if}}
 
 ---
 
 ## ⚙️ Mechanics
+
 {{#if mechanics}}
 {{mechanics}}
 {{else}}
+
 - **Bonus / Effect:**
 - **Charges:**
 - **Special Rules:**
@@ -33,6 +36,7 @@ status: "{{status || 'available'}}"
 ---
 
 ## 🕯️ Lore / Origin
+
 {{#if lore}}
 {{lore}}
 {{else}}
@@ -44,5 +48,6 @@ Where it came from, who forged it, what legends surround it.
 ---
 
 ## 📚 Campaign References
+
 *Referenced in Sessions: {{sourceSessions}}*
 {{/if}}

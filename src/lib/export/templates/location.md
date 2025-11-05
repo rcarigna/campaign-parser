@@ -2,8 +2,8 @@
 tags: [location]
 region: "{{region}}"
 type: "{{type}}"
-faction_presence: {{faction_presence || '[]'}}
-status: "{{status || 'known'}}"
+faction_presence: {{#if faction_presence}}{{faction_presence}}{{else}}[]{{/if}}
+status: "{{#if status}}{{status}}{{else}}known{{/if}}"
 ---
 
 # 🗺️ {{title}}
@@ -15,18 +15,22 @@ status: "{{status || 'known'}}"
 ---
 
 ## 🌍 Description
-{{description || 'Atmosphere, geography, and general tone.'}}
+
+{{#if description}}{{description}}{{else}}Atmosphere, geography, and general tone.{{/if}}
 
 ---
 
 ## 🧠 Points of Interest
+
 {{#if pointsOfInterest}}
 {{#each pointsOfInterest}}
+
 - {{this}}
 {{/each}}
 {{else}}
-- 
-- 
+-
+-
+
 {{/if}}
 
 ---
@@ -37,6 +41,7 @@ status: "{{status || 'known'}}"
 ---
 
 ## 🧶 Hooks & Secrets
+
 {{#if hooks}}
 {{hooks}}
 {{/if}}
@@ -44,6 +49,7 @@ status: "{{status || 'known'}}"
 ---
 
 ## ⚙️ Relevant Quests
+
 {{#if sourceSessions}}
 *Referenced in Sessions: {{sourceSessions}}*
 {{/if}}

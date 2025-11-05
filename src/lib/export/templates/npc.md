@@ -2,9 +2,9 @@
 tags: [character, npc]
 faction: "{{faction}}"
 role: "{{role}}"
-status: "{{status || 'alive'}}"
-importance: "{{importance || 'major'}}"
-aliases: {{aliases || '[]'}}
+status: "{{#if status}}{{status}}{{else}}alive{{/if}}"
+importance: "{{#if importance}}{{importance}}{{else}}major{{/if}}"
+aliases: []
 location: "{{location}}"
 ---
 
@@ -12,17 +12,19 @@ location: "{{location}}"
 
 **Faction:** {{faction}}
 **Role:** {{role}}
-**Status:** {{status}}
+**Status:** {{#if status}}{{status}}{{else}}alive{{/if}}
 **Location:** {{location}}
 
 ---
 
 ## 🧩 Summary
-{{summary || 'Short one-sentence overview of who they are and what they want.'}}
+
+{{#if summary}}{{summary}}{{else}}Short one-sentence overview of who they are and what they want.{{/if}}
 
 ---
 
 ## 🧠 Description
+
 - **Appearance:** {{description}}
 - **Personality / Voice:**
 - **Goals / Secrets:**
@@ -39,6 +41,7 @@ location: "{{location}}"
 ---
 
 ## 🧶 Relationships
+
 - **Allies:**
 - **Enemies:**
 - **Ties to PCs:**
@@ -46,6 +49,7 @@ location: "{{location}}"
 ---
 
 ## 🕯️ Scenes / Quotes
+
 {{#if tags}}
 > [!quote] "Example line of dialogue."
 {{/if}}
@@ -53,6 +57,7 @@ location: "{{location}}"
 ---
 
 ## 🧩 Quest Connections
+
 {{#if sourceSessions}}
 *Referenced in Sessions: {{sourceSessions}}*
 {{/if}}

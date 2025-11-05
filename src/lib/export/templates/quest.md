@@ -1,10 +1,10 @@
 ---
 tags: [quest]
-status: "{{status || 'active'}}"
+status: "{{#if status}}{{status}}{{else}}active{{/if}}"
 owner: "{{owner}}"
 faction: "{{faction}}"
 arc: "{{arc}}"
-type: "{{type || 'main'}}"
+type: "{{#if type}}{{type}}{{else}}main{{/if}}"
 ---
 
 # 📜 {{title}}
@@ -18,35 +18,41 @@ type: "{{type || 'main'}}"
 ---
 
 ## 🎯 Objective
-{{objective || 'A single-sentence purpose of the quest.'}}
+
+{{#if objective}}{{objective}}{{else}}A single-sentence purpose of the quest.{{/if}}
 
 ---
 
 ## 🧩 Summary
-{{description || 'Brief description or recap of events so far.'}}
+
+{{#if description}}{{description}}{{else}}Brief description or recap of events so far.{{/if}}
 
 ---
 
 ## 🧭 Steps / Phases
+
 {{#if phases}}
 {{#each phases}}
 {{@index}}. {{this}}
 {{/each}}
 {{else}}
-1. 
-2. 
-3. 
+1.
+2.
+3.
 {{/if}}
 
 ---
 
 ## 💀 Consequences
+
 {{#if consequences}}
 {{#each consequences}}
+
 - {{this}}
 {{/each}}
 {{else}}
-- 
+-
+
 {{/if}}
 
 ---
@@ -57,6 +63,7 @@ type: "{{type || 'main'}}"
 ---
 
 ## 🪶 Notes
+
 {{#if notes}}
 {{notes}}
 {{else}}
@@ -68,5 +75,6 @@ Use this for DM commentary, pacing beats, or rewards.
 ---
 
 ## 📚 Campaign References
+
 *Referenced in Sessions: {{sourceSessions}}*
 {{/if}}
