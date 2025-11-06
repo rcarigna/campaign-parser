@@ -53,13 +53,12 @@ export default function Home() {
             entities.'
           />
 
-          {/* Persistent Welcome - Always Visible */}
           <PersistentWelcome />
 
-          {/* Demo Section - Always Visible */}
-          <WelcomeSection onDemoDataLoaded={handleDemoDataLoaded} />
+          {!hasContent && (
+            <WelcomeSection onDemoDataLoaded={handleDemoDataLoaded} />
+          )}
 
-          {/* Processing Workflow - Changes based on content state */}
           <ProcessingWorkflow
             selectedFile={fileManager.selectedFile}
             loading={campaignParser.loading}
