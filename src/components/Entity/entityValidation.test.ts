@@ -5,6 +5,9 @@ import {
     isEntityComplete,
     npcSchema,
     locationSchema,
+    itemSchema,
+    questSchema,
+    playerSchema,
     type ValidatedNPC,
     type ValidatedLocation,
 } from './entityValidation';
@@ -356,6 +359,111 @@ describe('entityValidation (Zod-based)', () => {
 
             const missing = getMissingFields(incompleteSessionPrep);
             expect(missing).toContain('notes');
+        });
+
+        it('should export all schema types for external use', () => {
+            // Test that all schemas are properly exported and functional
+            const testData = {
+                npc: {
+                    id: 'npc-1',
+                    kind: EntityKind.NPC,
+                    title: 'Test NPC',
+                    character_name: 'Bob',
+                    role: 'Merchant',
+                    faction: 'Guild',
+                    importance: 'major' as const,
+                },
+                location: {
+                    id: 'loc-1',
+                    kind: EntityKind.LOCATION,
+                    title: 'Test Location',
+                    name: 'Tavern',
+                    type: 'Building',
+                    region: 'City',
+                },
+                item: {
+                    id: 'item-1',
+                    kind: EntityKind.ITEM,
+                    title: 'Test Item',
+                    name: 'Sword',
+                    type: 'Weapon',
+                    rarity: 'Common',
+                },
+                quest: {
+                    id: 'quest-1',
+                    kind: EntityKind.QUEST,
+                    title: 'Test Quest',
+                    name: 'Find Artifact',
+                    status: 'active',
+                    type: 'main',
+                },
+                player: {
+                    id: 'player-1',
+                    kind: EntityKind.PLAYER,
+                    title: 'Test Player',
+                    character_name: 'Hero',
+                },
+                sessionSummary: {
+                    id: 'session-1',
+                    kind: EntityKind.SESSION_SUMMARY,
+                    title: 'Session 1',
+                    session_number: 1,
+                },
+                sessionPrep: {
+                    id: 'prep-1',
+                    kind: EntityKind.SESSION_PREP,
+                    title: 'Prep 1',
+                    notes: 'Test notes',
+                },
+            };
+
+            // Verify each schema can validate its corresponding test data
+            expect(npcSchema.safeParse(testData.npc).success).toBe(true);
+            expect(locationSchema.safeParse(testData.location).success).toBe(true);
+            expect(itemSchema.safeParse(testData.item).success).toBe(true);
+            expect(questSchema.safeParse(testData.quest).success).toBe(true);
+            expect(playerSchema.safeParse(testData.player).success).toBe(true);
+        });
+
+        it('should validate discriminated union correctly', () => {
+            const entities = [
+                {
+                    id: 'npc-1',
+                    kind: EntityKind.NPC,
+                    title: 'Test NPC',
+                    character_name: 'Bob',
+                    role: 'Merchant',
+                    faction: 'Guild',
+                    importance: 'major' as const,
+                },
+                {
+                    id: 'loc-1',
+                    kind: EntityKind.LOCATION,
+                    title: 'Test Location',
+                    name: 'Tavern',
+                    type: 'Building',
+                    region: 'City',
+                },
+            ];
+
+            entities.forEach(entity => {
+                const result = validateEntity(entity);
+                expect(result.success).toBe(true);
+            });
+        });
+
+        it('should reject entities with wrong kind for specific schemas', () => {
+            const npcData = {
+                id: 'npc-1',
+                kind: EntityKind.LOCATION, // Wrong kind
+                title: 'Test',
+                character_name: 'Bob',
+                role: 'Merchant',
+                faction: 'Guild',
+                importance: 'major' as const,
+            };
+
+            expect(npcSchema.safeParse(npcData).success).toBe(false);
         });
     });
 });

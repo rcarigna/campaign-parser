@@ -1,6 +1,13 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EntityViewer } from './EntityViewer';
-import { EntityKind, LocationType, type EntityWithId } from '@/types';
+import {
+  DocumentType,
+  EntityKind,
+  LocationType,
+  MarkdownContent,
+  SerializedParsedDocumentWithEntities,
+  type EntityWithId,
+} from '@/types';
 
 // Mock react-hot-toast
 jest.mock('react-hot-toast', () => ({
@@ -176,5 +183,132 @@ describe('EntityViewer', () => {
 
     expect(screen.getByText('Select Duplicates')).toBeInTheDocument();
     expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
+  });
+
+  it('toggles between entity view and raw data view', () => {
+    const parsedData: SerializedParsedDocumentWithEntities = {
+      type: DocumentType.MARKDOWN,
+      filename: 'test.md',
+      content: {} as MarkdownContent,
+      metadata: {
+        size: 1234,
+        lastModified: new Date().toISOString(),
+        mimeType: 'text/markdown',
+      },
+      entities: mockEntities,
+    };
+    render(<EntityViewer {...mockProps} parsedData={parsedData} />);
+
+    // Should start in entity view
+    expect(screen.getByText('📋 Entity View')).toHaveClass('active');
+    expect(screen.getByText('📄 Raw Data')).not.toHaveClass('active');
+
+    // Switch to raw data view
+    const rawDataButton = screen.getByText('📄 Raw Data');
+    fireEvent.click(rawDataButton);
+
+    expect(screen.getByText('📄 Raw Data')).toHaveClass('active');
+    expect(screen.getByText('📋 Entity View')).not.toHaveClass('active');
+    expect(screen.getByText(/"type": "markdown"/)).toBeInTheDocument();
+
+    // Switch back to entity view
+    const entityViewButton = screen.getByText('📋 Entity View');
+    fireEvent.click(entityViewButton);
+
+    expect(screen.getByText('📋 Entity View')).toHaveClass('active');
+    expect(screen.queryByText(/"test": "data"/)).not.toBeInTheDocument();
+  });
+
+  it('handles entity merge flow', () => {
+    const mockOnEntityMerge = jest.fn();
+    render(<EntityViewer {...mockProps} onEntityMerge={mockOnEntityMerge} />);
+
+    // Enter selection mode
+    fireEvent.click(screen.getByText('Select Duplicates'));
+
+    // Select multiple entities
+    const checkboxes = screen.getAllByRole('checkbox');
+    fireEvent.click(checkboxes[1]); // First entity checkbox
+    fireEvent.click(checkboxes[2]); // Second entity checkbox
+
+    // Mark as duplicates
+    const markDuplicatesButton = screen.getByText('Mark 2 as Duplicates');
+    fireEvent.click(markDuplicatesButton);
+
+    // Should open merge modal
+    expect(screen.getByText(/Merge Duplicate Entities/)).toBeInTheDocument();
+    fireEvent.click(screen.getByText(/Merge Duplicate Entities/));
+    // Select primary entity and merge
+    const mergeButton = screen.getByText((content, element) => {
+      return element?.textContent === '🔄 Merge 2 Entities';
+    });
+    fireEvent.click(mergeButton);
+
+    expect(mockOnEntityMerge).toHaveBeenCalled();
+    expect(mockToast.success).toHaveBeenCalledWith(
+      expect.stringContaining('Successfully merged'),
+      { duration: 5000 }
+    );
+  });
+
+  it('disables mark as duplicates button when less than 2 entities selected', () => {
+    render(<EntityViewer {...mockProps} />);
+
+    // Enter selection mode
+    fireEvent.click(screen.getByText('Select Duplicates'));
+
+    // Button should be disabled with 0 selected
+    expect(screen.getByText('Mark 0 as Duplicates')).toBeDisabled();
+
+    // Select one entity
+    const checkbox = screen.getAllByRole('checkbox')[1];
+    fireEvent.click(checkbox);
+
+    // Button should still be disabled with 1 selected
+    expect(screen.getByText('Mark 1 as Duplicates')).toBeDisabled();
+  });
+
+  it('closes merge modal when cancel is clicked', () => {
+    const mockOnEntityMerge = jest.fn();
+    render(<EntityViewer {...mockProps} onEntityMerge={mockOnEntityMerge} />);
+
+    // Enter selection mode and select entities
+    fireEvent.click(screen.getByText('Select Duplicates'));
+    const checkboxes = screen.getAllByRole('checkbox');
+    fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[2]);
+
+    // Open merge modal
+    fireEvent.click(screen.getByText('Mark 2 as Duplicates'));
+
+    // Cancel merge
+    const cancelButton = screen.getByTestId('cancel-selection');
+    fireEvent.click(cancelButton);
+
+    expect(
+      screen.queryByText('Merge Duplicate Entities')
+    ).not.toBeInTheDocument();
+  });
+
+  it('handles entity merge without onEntityMerge prop', () => {
+    render(<EntityViewer {...mockProps} />);
+
+    // Enter selection mode and select entities
+    fireEvent.click(screen.getByText('Select Duplicates'));
+    const checkboxes = screen.getAllByRole('checkbox');
+    fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[2]);
+
+    // Open merge modal
+    fireEvent.click(screen.getByText('Mark 2 as Duplicates'));
+
+    // Try to merge - should not crash
+    const mergeButton = screen.getByText((content, element) => {
+      return element?.textContent === '🔄 Merge 2 Entities';
+    });
+    fireEvent.click(mergeButton);
+
+    // Should not show success toast since merge didn't happen
+    expect(mockToast.success).not.toHaveBeenCalled();
   });
 });

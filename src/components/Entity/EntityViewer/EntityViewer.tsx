@@ -141,6 +141,7 @@ export const EntityViewer = ({
               <button
                 onClick={selection.handleCancelSelection}
                 className='btn btn-secondary'
+                data-testid='cancel-selection'
               >
                 Cancel
               </button>
