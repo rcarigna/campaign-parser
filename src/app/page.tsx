@@ -1,20 +1,16 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Header,
-  FileUpload,
-  ActionButtons,
-  EntityViewer,
-  DocumentViewer,
+  WelcomeSection,
+  ProcessingWorkflow,
+  ResultsSection,
 } from '@/components';
 import { useCampaignParser, useFileManager } from '@/hooks';
-import { loadDemoData } from '@/client/api';
-import { ALLOWED_EXTENSIONS } from '@/types';
+import { type DemoDataResponse } from '@/client/api';
 import { toast } from 'react-hot-toast';
 
 export default function Home() {
-  const [loadingDemo, setLoadingDemo] = useState(false);
   const campaignParser = useCampaignParser();
   const fileManager = useFileManager();
 
@@ -30,33 +26,20 @@ export default function Home() {
     }
   };
 
-  const handleLoadDemo = async () => {
-    setLoadingDemo(true);
-    try {
-      // Clear any existing file selection
-      fileManager.clearFile();
-
-      // Load demo data and set it directly in the campaign parser
-      const demoData = await loadDemoData();
-
-      // Use the hook method to set parsed data directly
-      campaignParser.loadDemoData(demoData);
-
-      toast.success('Demo data loaded successfully!');
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Failed to load demo';
-      toast.error(message);
-      console.error('Demo load error:', error);
-    } finally {
-      setLoadingDemo(false);
-    }
+  const handleDemoDataLoaded = (demoData: DemoDataResponse) => {
+    // Clear any existing file selection
+    fileManager.clearFile();
+    // Load demo data into campaign parser
+    campaignParser.loadDemoData(demoData);
   };
 
   const handleClearResults = () => {
     fileManager.clearFile();
     campaignParser.clearResults();
   };
+
+  const showWelcome = !fileManager.selectedFile && !campaignParser.parsedData;
+  const combinedError = fileManager.error || campaignParser.error;
 
   return (
     <div className='min-h-screen bg-gray-50'>
@@ -69,157 +52,32 @@ export default function Home() {
             entities.'
           />
 
-          {/* Welcome Message when no document is loaded */}
-          {!fileManager.selectedFile && !campaignParser.parsedData && (
-            <div className='bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200 p-8 text-center mb-6'>
-              <div className='text-6xl mb-4'>📜</div>
-              <h2 className='text-2xl font-semibold text-gray-800 mb-4'>
-                Welcome to Campaign Parser
-              </h2>
-              <p className='text-gray-600 max-w-2xl mx-auto mb-6'>
-                Get started by uploading a campaign document or try the demo
-                below. The parser will automatically identify and extract
-                entities like NPCs, locations, items, and quests, making it easy
-                to manage your tabletop RPG campaigns.
-              </p>
-              <div className='grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-6'>
-                <div className='p-4'>
-                  <div className='text-2xl mb-2'>👤</div>
-                  <div className='text-sm font-medium text-gray-700'>NPCs</div>
-                </div>
-                <div className='p-4'>
-                  <div className='text-2xl mb-2'>🗺️</div>
-                  <div className='text-sm font-medium text-gray-700'>
-                    Locations
-                  </div>
-                </div>
-                <div className='p-4'>
-                  <div className='text-2xl mb-2'>⚔️</div>
-                  <div className='text-sm font-medium text-gray-700'>Items</div>
-                </div>
-                <div className='p-4'>
-                  <div className='text-2xl mb-2'>🎯</div>
-                  <div className='text-sm font-medium text-gray-700'>
-                    Quests
-                  </div>
-                </div>
-              </div>
+          {/* Welcome Section */}
+          <WelcomeSection
+            isVisible={showWelcome}
+            onDemoDataLoaded={handleDemoDataLoaded}
+          />
 
-              {/* Demo Button */}
-              <div className='bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border border-purple-200 p-4 mb-4'>
-                <h3 className='text-lg font-semibold text-gray-800 mb-2'>
-                  🎭 Try the Demo
-                </h3>
-                <p className='text-gray-600 text-sm mb-4'>
-                  See how the parser works with an example D&D session note that
-                  includes NPCs, locations, and quests.
-                </p>
-                <button
-                  onClick={handleLoadDemo}
-                  disabled={loadingDemo}
-                  className='px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium transition-colors flex items-center gap-2 mx-auto'
-                >
-                  {loadingDemo ? (
-                    <>
-                      <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
-                      Loading Demo...
-                    </>
-                  ) : (
-                    <>
-                      <span>🚀</span>
-                      Load Demo Session
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          )}
-
-          <div className='space-y-6'>
-            {/* File Upload Section */}
-            <div>
-              <h2 className='text-xl font-semibold text-gray-800 mb-4'>
-                📤 Upload Document
-              </h2>
-              <FileUpload
-                onFileSelect={handleFileSelect}
-                selectedFile={fileManager.selectedFile}
-                error={fileManager.error || campaignParser.error}
-                allowedExtensions={ALLOWED_EXTENSIONS}
-              />
-            </div>
-
-            {/* Action Buttons */}
-            {fileManager.selectedFile && (
-              <ActionButtons
-                selectedFile={fileManager.selectedFile}
-                loading={campaignParser.loading}
-                onProcess={handleProcessDocument}
-                onReset={handleClearResults}
-              />
-            )}
-
-            {/* Processing Status */}
-            {(campaignParser.loading || loadingDemo) && (
-              <div className='bg-blue-50 border border-blue-200 rounded-lg p-4'>
-                <div className='flex items-center'>
-                  <div className='animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3'></div>
-                  <span className='text-blue-700 font-medium'>
-                    {loadingDemo
-                      ? 'Loading demo data...'
-                      : 'Processing document... This may take a few moments.'}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Error Display */}
-            {(campaignParser.error || fileManager.error) && (
-              <div className='bg-red-50 border border-red-200 rounded-lg p-4'>
-                <div className='flex items-center'>
-                  <span className='text-red-600 font-medium'>❌ Error:</span>
-                  <span className='text-red-700 ml-2'>
-                    {campaignParser.error || fileManager.error}
-                  </span>
-                </div>
-                <button
-                  onClick={campaignParser.clearError}
-                  className='mt-2 text-red-600 hover:text-red-800 text-sm underline'
-                >
-                  Clear Error
-                </button>
-              </div>
-            )}
-          </div>
+          {/* Processing Workflow */}
+          <ProcessingWorkflow
+            selectedFile={fileManager.selectedFile}
+            loading={campaignParser.loading}
+            error={combinedError}
+            onFileSelect={handleFileSelect}
+            onProcess={handleProcessDocument}
+            onReset={handleClearResults}
+            onClearError={campaignParser.clearError}
+          />
         </div>
 
         {/* Results Section */}
         {campaignParser.parsedData && (
-          <div className='space-y-6'>
-            {/* Document Content */}
-            <DocumentViewer parsedData={campaignParser.parsedData} />
-
-            {/* Entity Management */}
-            <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6'>
-              <div className='mb-4'>
-                <h3 className='text-xl font-semibold text-gray-800 mb-2'>
-                  ✨ Extracted Entities
-                </h3>
-                <p className='text-gray-600 text-sm'>
-                  The parser automatically identified{' '}
-                  {campaignParser.entities.length} entities from your document.
-                  You can view, edit, merge duplicates, and export them to
-                  Obsidian format.
-                </p>
-              </div>
-              <EntityViewer
-                entities={campaignParser.entities}
-                onEntityDiscard={campaignParser.discardEntity}
-                onEntityMerge={campaignParser.mergeEntities}
-                parsedData={campaignParser.parsedData}
-              />
-            </div>
-          </div>
+          <ResultsSection
+            parsedData={campaignParser.parsedData}
+            entities={campaignParser.entities}
+            onEntityDiscard={campaignParser.discardEntity}
+            onEntityMerge={campaignParser.mergeEntities}
+          />
         )}
       </main>
     </div>
