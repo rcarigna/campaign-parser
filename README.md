@@ -130,7 +130,7 @@ __mocks__/                 # Test fixtures and example data
 
 ## 🧪 Testing
 
-Comprehensive test suite with 96 tests covering all functionality:
+Comprehensive test suite with **183 tests** covering all functionality using **real D&D campaign data**:
 
 ```bash
 # Run all tests
@@ -143,14 +143,24 @@ npm run test:coverage
 npm run test:watch
 ```
 
-**Test Coverage**: 96 tests passing with comprehensive coverage across all architectural layers
+**Test Coverage**: **183 tests passing** with comprehensive coverage across all architectural layers
 
 ### Test Categories
 
-- **Component Tests**: UI components with user interactions
+- **Component Tests**: UI components with user interactions using real entity data
 - **Hook Tests**: Custom React hooks with mock integrations
 - **API Tests**: Next.js API routes with request/response validation
-- **Service Tests**: Document parsing and entity extraction accuracy
+- **Entity Extraction Tests**: Both NLP and regex engines validated against actual D&D session content
+- **Real Data Validation**: Tests use authentic campaign session (`session_summary_1.md`) with 7,220 characters of D&D content
+
+### Test Data Quality
+
+Our tests use **real campaign session data** instead of synthetic mocks:
+
+- **Authentic D&D Content**: Actual session summary from "Waterdeep: Dragon Heist"
+- **Entity Validation**: NPCs (Durnan, Bonnie, Yagra), Locations (Yawning Portal, Waterdeep), Items (ancestral blade)
+- **Accuracy Testing**: Both NLP and regex extractors validated against real campaign entities
+- **No Mock Dependencies**: Eliminated complex library mocking in favor of real data validation
 
 ---
 

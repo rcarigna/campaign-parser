@@ -215,9 +215,11 @@ src/
 
 ### Test Coverage Requirements
 
-- **Minimum Coverage**: 70% (current: 77%+)
-- **New Features**: Must include comprehensive tests
+- **Minimum Coverage**: 70% (current: comprehensive with 183 tests)
+- **New Features**: Must include comprehensive tests using real data where applicable
 - **Bug Fixes**: Add regression tests
+- **Entity Extraction**: Test against real campaign session data (`__mocks__/session_summary_1.md`)
+- **Real Data Validation**: Preferred over synthetic mocks for accuracy validation
 
 ### Testing Best Practices
 
@@ -323,7 +325,8 @@ Mockups, examples, related issues
 ## 📊 Current Project Status
 
 - **Next.js 16**: Modern React with App Router
-- **93 Tests**: Comprehensive test coverage
+- **183 Tests**: Comprehensive test coverage using **real D&D campaign data**
+- **Entity Validation**: Both NLP and regex extractors tested against authentic session content
 - **Production Ready**: Deployed and stable
 - **Active Development**: Regular improvements
 

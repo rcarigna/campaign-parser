@@ -3,7 +3,8 @@
 ## 🎉 Current Status: **DEPLOYED & LIVE**
 
 ✅ **Production Deployment**: Live on Vercel with full Next.js functionality  
-✅ **93 Tests Passing**: Comprehensive test coverage across all components  
+✅ **183 Tests Passing**: Comprehensive test coverage using **real D&D campaign data**  
+✅ **Real Data Validation**: Entity extraction tested against authentic session content (7,220 chars)  
 ✅ **Complete Documentation**: GitHub Pages with API docs, architecture guides  
 ✅ **CI/CD Pipeline**: Automated testing, building, and deployment  
 
@@ -26,7 +27,7 @@
 
 **User Story**: *"I upload my session notes, clean up the detected entities by merging duplicates and fixing missing fields, then export a clean, organized campaign reference for use in Obsidian or Roll20."*
 
-**Current Status**: Core pipeline is 90% complete. Entity extraction, validation, and deduplication are working. Need to finish export implementation and UI integration.
+**Current Status**: Core pipeline is 90% complete. Entity extraction, validation, and deduplication are working with **real campaign data validation**. Both NLP and regex extractors tested against authentic D&D session content. Need to finish export implementation and UI integration.
 
 ### **⚡ Priority 2: Workflow Polish & User Experience**
 

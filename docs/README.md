@@ -44,10 +44,11 @@ Welcome to the comprehensive documentation for the Campaign Document Parser - a 
 
 ## 📊 Project Statistics
 
-- **93 Tests** with 77%+ coverage
+- **183 Tests** with comprehensive coverage using **real D&D campaign data**
 - **Next.js 16** with React Compiler
-- **Dual Entity Extraction** (NLP + Regex)
+- **Dual Entity Extraction** (NLP + Regex) validated against authentic session content
 - **Complete Deduplication System**
+- **Real Data Testing** with 7,220 characters of actual campaign session
 - **Production Ready** and actively maintained
 
 ## 🎯 Use Cases

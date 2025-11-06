@@ -51,8 +51,9 @@ graph TD
 
 ### Testing & Quality
 
-- **Jest**: Unit and integration testing framework
+- **Jest**: Unit and integration testing framework (183 tests)
 - **React Testing Library**: Component testing utilities
+- **Real Data Testing**: Authentic D&D session content for validation
 - **ESLint**: Code quality and consistency
 - **TypeScript Compiler**: Static type checking
 
