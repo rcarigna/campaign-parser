@@ -239,7 +239,7 @@ describe('EntityViewer', () => {
     expect(screen.getByText(/Merge Duplicate Entities/)).toBeInTheDocument();
     fireEvent.click(screen.getByText(/Merge Duplicate Entities/));
     // Select primary entity and merge
-    const mergeButton = screen.getByText((content, element) => {
+    const mergeButton = screen.getByText((_content, element) => {
       return element?.textContent === '🔄 Merge 2 Entities';
     });
     fireEvent.click(mergeButton);
@@ -303,7 +303,7 @@ describe('EntityViewer', () => {
     fireEvent.click(screen.getByText('Mark 2 as Duplicates'));
 
     // Try to merge - should not crash
-    const mergeButton = screen.getByText((content, element) => {
+    const mergeButton = screen.getByText((_content, element) => {
       return element?.textContent === '🔄 Merge 2 Entities';
     });
     fireEvent.click(mergeButton);
