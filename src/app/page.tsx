@@ -2,6 +2,7 @@
 
 import {
   Header,
+  PersistentWelcome,
   WelcomeSection,
   ProcessingWorkflow,
   ResultsSection,
@@ -38,7 +39,7 @@ export default function Home() {
     campaignParser.clearResults();
   };
 
-  const showWelcome = !fileManager.selectedFile && !campaignParser.parsedData;
+  const hasContent = !!campaignParser.parsedData;
   const combinedError = fileManager.error || campaignParser.error;
 
   return (
@@ -52,17 +53,18 @@ export default function Home() {
             entities.'
           />
 
-          {/* Welcome Section */}
-          <WelcomeSection
-            isVisible={showWelcome}
-            onDemoDataLoaded={handleDemoDataLoaded}
-          />
+          {/* Persistent Welcome - Always Visible */}
+          <PersistentWelcome />
 
-          {/* Processing Workflow */}
+          {/* Demo Section - Always Visible */}
+          <WelcomeSection onDemoDataLoaded={handleDemoDataLoaded} />
+
+          {/* Processing Workflow - Changes based on content state */}
           <ProcessingWorkflow
             selectedFile={fileManager.selectedFile}
             loading={campaignParser.loading}
             error={combinedError}
+            hasContent={hasContent}
             onFileSelect={handleFileSelect}
             onProcess={handleProcessDocument}
             onReset={handleClearResults}
