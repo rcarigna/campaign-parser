@@ -44,7 +44,8 @@ export const ProcessingWorkflow = ({
             Content Loaded Successfully
           </h3>
           <p className='text-gray-600 text-sm mb-4'>
-            Your document has been processed. You can view the extracted entities below.
+            Your document has been processed. You can view the extracted
+            entities below.
           </p>
           <button
             onClick={onReset}

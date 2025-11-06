@@ -24,17 +24,21 @@ describe('WelcomeSection', () => {
 
   it('renders demo section', () => {
     render(<WelcomeSection onDemoDataLoaded={mockOnDemoDataLoaded} />);
-    
+
     expect(screen.getByText('🎭 Try the Demo')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /load demo session/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /load demo session/i })
+    ).toBeInTheDocument();
   });
 
   it('loads demo data when button clicked', async () => {
     render(<WelcomeSection onDemoDataLoaded={mockOnDemoDataLoaded} />);
-    
-    const demoButton = screen.getByRole('button', { name: /load demo session/i });
+
+    const demoButton = screen.getByRole('button', {
+      name: /load demo session/i,
+    });
     await userEvent.click(demoButton);
-    
+
     expect(mockOnDemoDataLoaded).toHaveBeenCalled();
   });
 });

@@ -57,9 +57,11 @@ describe('ProcessingWorkflow', () => {
 
   it('shows reset state when content is loaded', () => {
     render(<ProcessingWorkflow {...defaultProps} hasContent={true} />);
-    
+
     expect(screen.getByText('Content Loaded Successfully')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /start over/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /start over/i })
+    ).toBeInTheDocument();
     expect(screen.queryByText('📤 Upload Document')).not.toBeInTheDocument();
   });
 });

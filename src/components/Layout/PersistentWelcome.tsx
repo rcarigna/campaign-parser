@@ -8,8 +8,8 @@ export const PersistentWelcome = () => {
         Welcome to Campaign Parser
       </h2>
       <p className='text-gray-600 max-w-2xl mx-auto mb-6'>
-        Upload campaign documents (.docx, .md) or try the demo to automatically 
-        identify and extract entities like NPCs, locations, items, and quests, 
+        Upload campaign documents (.docx, .md) or try the demo to automatically
+        identify and extract entities like NPCs, locations, items, and quests,
         making it easy to manage your tabletop RPG campaigns.
       </p>
 

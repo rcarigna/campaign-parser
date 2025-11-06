@@ -29,7 +29,9 @@ export const WelcomeSection = ({ onDemoDataLoaded }: WelcomeSectionProps) => {
 
   return (
     <div className='bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border border-purple-200 p-6 text-center mb-6'>
-      <h3 className='text-xl font-semibold text-gray-800 mb-3'>🎭 Try the Demo</h3>
+      <h3 className='text-xl font-semibold text-gray-800 mb-3'>
+        🎭 Try the Demo
+      </h3>
       <p className='text-gray-600 text-sm mb-4'>
         See how the parser works with an example D&D session note that includes
         NPCs, locations, and quests.
