@@ -42,9 +42,13 @@ export const initializeTemplates = async (): Promise<void> => {
 
 /**
  * Process a single entity into rendered markdown
+ * Note: Templates must be initialized before calling this function
  */
 export const processEntity = async (entity: AnyEntity): Promise<{ filename: string; content: string }> => {
-    await initializeTemplates();
+    // Templates should already be initialized - no need to call initializeTemplates()
+    if (templateCache.size === 0) {
+        throw new Error('Templates not initialized. Call initializeTemplates() first.');
+    }
 
     const templateKey = getTemplateKey(entity.kind);
     const template = templateCache.get(templateKey);
@@ -69,6 +73,9 @@ export const processEntity = async (entity: AnyEntity): Promise<{ filename: stri
  * Process multiple entities into rendered markdown files
  */
 export const processEntities = async (entities: AnyEntity[]): Promise<Array<{ filename: string; content: string; kind: string }>> => {
+    // Initialize templates once for the entire batch
+    await initializeTemplates();
+
     const results = [];
 
     for (const entity of entities) {
