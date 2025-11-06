@@ -1,7 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Header, FileUpload, ActionButtons, EntityViewer, DemoSection } from '@/components';
+import {
+  Header,
+  FileUpload,
+  ActionButtons,
+  EntityViewer,
+  DemoSection,
+  DocumentViewer,
+} from '@/components';
 import { useCampaignParser, useFileManager } from '@/hooks';
 import { ALLOWED_EXTENSIONS } from '@/types';
 import { toast } from 'react-hot-toast';
@@ -78,15 +85,17 @@ export default function Home() {
                     Welcome to Campaign Parser
                   </h2>
                   <p className='text-gray-600 max-w-2xl mx-auto mb-6'>
-                    Get started by uploading a campaign document below. The parser
-                    will automatically identify and extract entities like NPCs,
-                    locations, items, and quests, making it easy to manage your
-                    tabletop RPG campaigns.
+                    Get started by uploading a campaign document below. The
+                    parser will automatically identify and extract entities like
+                    NPCs, locations, items, and quests, making it easy to manage
+                    your tabletop RPG campaigns.
                   </p>
                   <div className='grid grid-cols-2 md:grid-cols-4 gap-4 text-center'>
                     <div className='p-4'>
                       <div className='text-2xl mb-2'>👤</div>
-                      <div className='text-sm font-medium text-gray-700'>NPCs</div>
+                      <div className='text-sm font-medium text-gray-700'>
+                        NPCs
+                      </div>
                     </div>
                     <div className='p-4'>
                       <div className='text-2xl mb-2'>🗺️</div>
@@ -96,7 +105,9 @@ export default function Home() {
                     </div>
                     <div className='p-4'>
                       <div className='text-2xl mb-2'>⚔️</div>
-                      <div className='text-sm font-medium text-gray-700'>Items</div>
+                      <div className='text-sm font-medium text-gray-700'>
+                        Items
+                      </div>
                     </div>
                     <div className='p-4'>
                       <div className='text-2xl mb-2'>🎯</div>
@@ -148,7 +159,9 @@ export default function Home() {
                 {(campaignParser.error || fileManager.error) && (
                   <div className='bg-red-50 border border-red-200 rounded-lg p-4'>
                     <div className='flex items-center'>
-                      <span className='text-red-600 font-medium'>❌ Error:</span>
+                      <span className='text-red-600 font-medium'>
+                        ❌ Error:
+                      </span>
                       <span className='text-red-700 ml-2'>
                         {campaignParser.error || fileManager.error}
                       </span>
@@ -168,13 +181,30 @@ export default function Home() {
 
         {/* Results Section (for Upload tab only) */}
         {activeTab === 'upload' && campaignParser.parsedData && (
-          <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6'>
-            <EntityViewer
-              entities={campaignParser.entities}
-              onEntityDiscard={campaignParser.discardEntity}
-              onEntityMerge={campaignParser.mergeEntities}
-              parsedData={campaignParser.parsedData}
-            />
+          <div className='space-y-6'>
+            {/* Document Content */}
+            <DocumentViewer parsedData={campaignParser.parsedData} />
+
+            {/* Entity Management */}
+            <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6'>
+              <div className='mb-4'>
+                <h3 className='text-xl font-semibold text-gray-800 mb-2'>
+                  ✨ Extracted Entities
+                </h3>
+                <p className='text-gray-600 text-sm'>
+                  The parser automatically identified{' '}
+                  {campaignParser.entities.length} entities from your document.
+                  You can view, edit, merge duplicates, and export them to
+                  Obsidian format.
+                </p>
+              </div>
+              <EntityViewer
+                entities={campaignParser.entities}
+                onEntityDiscard={campaignParser.discardEntity}
+                onEntityMerge={campaignParser.mergeEntities}
+                parsedData={campaignParser.parsedData}
+              />
+            </div>
           </div>
         )}
       </main>

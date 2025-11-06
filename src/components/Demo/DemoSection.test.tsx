@@ -82,7 +82,7 @@ describe('DemoSection', () => {
     await userEvent.click(loadButton);
 
     await waitFor(() => {
-      expect(screen.getByText('📄 Session Notes')).toBeInTheDocument();
+      expect(screen.getByText('📄 Document Content')).toBeInTheDocument();
       expect(screen.getByText('✨ Extracted Entities')).toBeInTheDocument();
     });
   });
