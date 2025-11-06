@@ -66,6 +66,23 @@ npm install
 npm run dev
 ```
 
+**Note**: The `npm install` command automatically sets up Git hooks (via the `prepare` script) that will run linting and TypeScript compilation before each push to prevent failures.
+
+### Git Hooks
+
+This project uses a pre-push hook to ensure code quality before pushing to the repository. The hook automatically:
+
+- ✅ Runs ESLint for code style checks
+- ✅ Runs TypeScript compilation (`tsc --noEmit`) to catch type errors
+- ❌ Prevents push if any errors are found
+
+The hook is automatically installed when you run `npm install`. If you need to manually set it up:
+
+```bash
+# Manually install Git hooks
+npm run prepare
+```
+
 Open [http://localhost:3000](http://localhost:3000) to access the application.
 
 ### Production Build

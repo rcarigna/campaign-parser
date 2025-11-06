@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# Pre-push hook to run linting and TypeScript compilation
+# This helps prevent pushing code that would fail CI checks
+
+echo "🔍 Running pre-push checks..."
+echo ""
+
+# Run lint (includes eslint and tsc --noEmit)
+echo "Running lint and TypeScript compilation..."
+npm run lint
+
+# Capture exit code
+LINT_EXIT_CODE=$?
+
+if [ $LINT_EXIT_CODE -ne 0 ]; then
+  echo ""
+  echo "❌ Pre-push check failed!"
+  echo ""
+  echo "Lint errors were found. Please fix them before pushing."
+  echo "You can run 'npm run lint' to see the errors."
+  echo ""
+  exit 1
+fi
+
+echo ""
+echo "✅ Pre-push checks passed!"
+echo ""
+
+exit 0
