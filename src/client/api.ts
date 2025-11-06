@@ -1,6 +1,10 @@
 import axios from 'axios';
 import { type SerializedParsedDocumentWithEntities, type AnyEntity } from '@/types';
 
+export type DemoDataResponse = SerializedParsedDocumentWithEntities & {
+    rawMarkdown: string;
+};
+
 /**
  * Upload and parse a document via the /api/parse endpoint
  */
@@ -19,6 +23,22 @@ export const uploadDocument = async (file: File): Promise<SerializedParsedDocume
     } catch (err: unknown) {
         const errorMessage = axios.isAxiosError(err)
             ? err.response?.data?.error || 'Failed to parse document'
+            : 'An unexpected error occurred';
+
+        throw new Error(errorMessage);
+    }
+};
+
+/**
+ * Load demo data from the example session notes
+ */
+export const loadDemoData = async (): Promise<DemoDataResponse> => {
+    try {
+        const response = await axios.get<DemoDataResponse>('/api/demo');
+        return response.data;
+    } catch (err: unknown) {
+        const errorMessage = axios.isAxiosError(err)
+            ? err.response?.data?.error || 'Failed to load demo data'
             : 'An unexpected error occurred';
 
         throw new Error(errorMessage);

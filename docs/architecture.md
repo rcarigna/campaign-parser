@@ -51,7 +51,7 @@ graph TD
 
 ### Testing & Quality
 
-- **Jest**: Unit and integration testing framework (183 tests)
+- **Jest**: Unit and integration testing framework (260 tests)
 - **React Testing Library**: Component testing utilities
 - **Real Data Testing**: Authentic D&D session content for validation
 - **ESLint**: Code quality and consistency
@@ -69,7 +69,7 @@ src/
 │   │   ├── parse/         # Document processing endpoint  
 │   │   └── export/        # Obsidian export endpoint
 │   ├── layout.tsx         # Root layout component
-│   └── page.tsx           # Main application page
+│   └── page.tsx           # Main application page (refactored)
 ├── components/            # React components
 │   ├── Document/          # File upload & parsing UI
 │   │   ├── ActionButtons/ # Process/reset controls
@@ -83,6 +83,10 @@ src/
 │   │   ├── EntityMergeModal/ # Deduplication interface
 │   │   └── EntityFilters/ # Filtering & search
 │   └── Layout/            # Application layout
+│       ├── PersistentWelcome/ # Always-visible welcome & entity types
+│       ├── WelcomeSection/    # Demo-only welcome message
+│       ├── ProcessingWorkflow/ # Smart upload/reset workflow
+│       └── ResultsSection/    # Results display container
 ├── hooks/                 # Custom React hooks
 │   ├── useCampaignParser.ts  # Document processing state
 │   └── useFileManager.ts     # File validation & upload

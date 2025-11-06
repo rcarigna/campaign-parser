@@ -2,9 +2,9 @@ name: Code Quality Check - Next.js
 
 on:
   pull_request:
-    branches: [main, feat/nextjs-migration, feat/nextjs-cutover]
+    branches: [main]
   push:
-    branches: [main, feat/nextjs-migration, feat/nextjs-cutover]
+    branches: [main, develop, 'feat/**', 'copilot/**', 'fix/**']
 
 jobs:
   code-quality:
