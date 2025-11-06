@@ -4,10 +4,26 @@ import '@testing-library/jest-dom';
 import Home from './page';
 import { useFileManager, useCampaignParser } from '@/hooks';
 
+// Mock the API
+jest.mock('@/client/api', () => ({
+  loadDemoData: jest.fn().mockResolvedValue({
+    filename: 'demo.md',
+    type: 'markdown',
+    content: { raw: '# Demo', html: '<h1>Demo</h1>' },
+    entities: [],
+    metadata: {
+      size: 100,
+      lastModified: '2024-01-01',
+      mimeType: 'text/markdown',
+    },
+  }),
+}));
+
 // Mock the custom hooks
 jest.mock('@/hooks', () => ({
   useCampaignParser: jest.fn().mockReturnValue({
     processDocument: jest.fn(),
+    loadDemoData: jest.fn(),
     clearResults: jest.fn(),
     clearError: jest.fn(),
     discardEntity: jest.fn(),
@@ -37,38 +53,24 @@ describe('Home Component', () => {
     expect(screen.getByText(/Campaign Document Parser/)).toBeInTheDocument();
   });
 
-  it('shows demo tab by default', () => {
+  it('shows welcome message when no data is available', () => {
     render(<Home />);
+    expect(screen.getByText('Welcome to Campaign Parser')).toBeInTheDocument();
     expect(screen.getByText('🎭 Try the Demo')).toBeInTheDocument();
   });
 
-  it('includes tab navigation', () => {
+  it('includes demo button', () => {
     render(<Home />);
-
-    // Both tabs should be present
-    expect(screen.getByRole('button', { name: /try demo/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /upload document/i })).toBeInTheDocument();
-  });
-
-  it('can switch to upload tab', async () => {
-    render(<Home />);
-    
-    const uploadTab = screen.getByRole('button', { name: /upload document/i });
-    await userEvent.click(uploadTab);
-
-    // After switching, should see upload section
     expect(
-      screen.getByLabelText(/Click to select a file or drag and drop/i)
+      screen.getByRole('button', { name: /load demo session/i })
     ).toBeInTheDocument();
   });
 
-  it('shows welcome message in upload tab when no data is available', async () => {
+  it('includes file upload section', () => {
     render(<Home />);
-    
-    const uploadTab = screen.getByRole('button', { name: /upload document/i });
-    await userEvent.click(uploadTab);
-    
-    expect(screen.getByText('Welcome to Campaign Parser')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText(/Click to select a file or drag and drop/i)
+    ).toBeInTheDocument();
   });
 
   it('calls the appropriate functions on file select', async () => {
@@ -82,11 +84,7 @@ describe('Home Component', () => {
     });
 
     render(<Home />);
-    
-    // Switch to upload tab first
-    const uploadTab = screen.getByRole('button', { name: /upload document/i });
-    await userEvent.click(uploadTab);
-    
+
     const fileInput = screen.getByLabelText(
       /Click to select a file or drag and drop/i
     );
@@ -114,11 +112,7 @@ describe('Home Component', () => {
     });
 
     render(<Home />);
-    
-    // Switch to upload tab first
-    const uploadTab = screen.getByRole('button', { name: /upload document/i });
-    await userEvent.click(uploadTab);
-    
+
     const clearButton = screen.getByRole('button', { name: /reset/i });
     await userEvent.click(clearButton);
     expect(mockClearFile).toHaveBeenCalled();
@@ -137,6 +131,7 @@ describe('Home Component', () => {
     });
     (useCampaignParser as jest.Mock).mockReturnValue({
       processDocument: mockProcessDocument,
+      loadDemoData: jest.fn(),
       clearResults: jest.fn(),
       clearError: jest.fn(),
       discardEntity: jest.fn(),
@@ -148,13 +143,44 @@ describe('Home Component', () => {
     });
 
     render(<Home />);
-    
-    // Switch to upload tab first
-    const uploadTab = screen.getByRole('button', { name: /upload document/i });
-    await userEvent.click(uploadTab);
-    
+
     const processButton = screen.getByRole('button', { name: /parse/i });
     await userEvent.click(processButton);
     expect(mockProcessDocument).toHaveBeenCalled();
+  });
+
+  it('calls the appropriate function for loading demo data', async () => {
+    const mockLoadDemoData = jest.fn();
+    (useCampaignParser as jest.Mock).mockReturnValue({
+      processDocument: jest.fn(),
+      loadDemoData: mockLoadDemoData,
+      clearResults: jest.fn(),
+      clearError: jest.fn(),
+      discardEntity: jest.fn(),
+      restoreEntities: jest.fn(),
+      loading: false,
+      error: null,
+      parsedData: null,
+      entities: [],
+    });
+
+    // Make sure no file is selected so demo button appears
+    (useFileManager as jest.Mock).mockReturnValue({
+      selectFile: jest.fn(),
+      clearFile: jest.fn(),
+      clearError: jest.fn(),
+      selectedFile: null, // No file selected
+      error: null,
+    });
+
+    render(<Home />);
+
+    const demoButton = screen.getByRole('button', {
+      name: /load demo session/i,
+    });
+    await userEvent.click(demoButton);
+
+    // Should call loadDemoData from the API and then call the hook method
+    expect(mockLoadDemoData).toHaveBeenCalled();
   });
 });

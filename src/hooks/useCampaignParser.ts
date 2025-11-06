@@ -8,6 +8,7 @@ type UseCampaignParserReturn = {
     loading: boolean;
     error: string | null;
     processDocument: (file: File) => Promise<void>;
+    loadDemoData: (data: SerializedParsedDocumentWithEntities) => void;
     discardEntity: (entityId: string) => void;
     mergeEntities: (primaryEntity: EntityWithId, duplicateIds: string[]) => void;
     restoreEntities: () => void;
@@ -106,12 +107,18 @@ export const useCampaignParser = (): UseCampaignParserReturn => {
         setError(null);
     }, []);
 
+    const loadDemoData = useCallback((data: SerializedParsedDocumentWithEntities): void => {
+        setError(null);
+        setParsedData(data);
+    }, []);
+
     return {
         parsedData,
         entities,
         loading,
         error,
         processDocument,
+        loadDemoData,
         discardEntity,
         mergeEntities,
         restoreEntities,
