@@ -45,11 +45,12 @@ Welcome to the comprehensive documentation for the Campaign Document Parser - a 
 
 ## 📊 Project Statistics
 
-- **183 Tests** with comprehensive coverage using **real D&D campaign data**
-- **Next.js 16** with React Compiler
-- **Interactive Demo** with real campaign data
+- **260 Tests** with comprehensive coverage using **real D&D campaign data**
+- **Next.js 16** with React Compiler and unified architecture
+- **Integrated Demo** with streamlined user experience
 - **Dual Entity Extraction** (NLP + Regex) validated against authentic session content
-- **Complete Deduplication System**
+- **Complete Deduplication System** with smart entity merging
+- **Single Responsibility Components** for maintainable architecture
 - **Real Data Testing** with 7,220 characters of actual campaign session
 - **Production Ready** and actively maintained
 
@@ -72,4 +73,4 @@ This documentation covers:
 
 ## 📝 Documentation Status
 
-Last updated: November 2025 | Next.js Migration Complete ✅
+Last updated: December 2025 | Component Architecture Refactoring Complete ✅
