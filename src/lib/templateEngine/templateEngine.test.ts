@@ -1,6 +1,7 @@
-import { initializeTemplates, processEntity } from './templateEngine';
+import { initializeTemplates, processEntity, registerHandlebarsHelpers } from './templateEngine';
 import { EntityKind } from '@/types';
 import type { AnyEntity, NPC } from '@/types';
+import Handlebars from 'handlebars';
 
 // Dynamic schema validation utility
 const validateEntitySchemaInContent = <T extends Record<string, unknown>>(
@@ -381,5 +382,193 @@ describe('Template Engine', () => {
         expect(result.content).toBeDefined();
         expect(result.filename).toBe('Incomplete NPC.md');
         expect(result.content).toContain('# 🧑‍🎭 Incomplete NPC');
+    });
+});
+
+describe('Handlebars Helpers', () => {
+    beforeAll(() => {
+        // Register helpers for direct testing
+        registerHandlebarsHelpers();
+    });
+
+    describe('each_if_exists helper', () => {
+        it('should render items when array has content', () => {
+            const template = Handlebars.compile('{{#each_if_exists items}}Item: {{this}} {{/each_if_exists}}');
+            const result = template({ items: ['apple', 'banana', 'cherry'] });
+
+            expect(result).toBe('Item: apple Item: banana Item: cherry ');
+        });
+
+        it('should return empty string when array is empty', () => {
+            const template = Handlebars.compile('{{#each_if_exists items}}Item: {{this}} {{/each_if_exists}}');
+            const result = template({ items: [] });
+
+            expect(result).toBe('');
+        });
+
+        it('should return empty string when array is null or undefined', () => {
+            const template = Handlebars.compile('{{#each_if_exists items}}Item: {{this}} {{/each_if_exists}}');
+
+            expect(template({ items: null })).toBe('');
+            expect(template({ items: undefined })).toBe('');
+            expect(template({})).toBe('');
+        });
+
+        it('should return empty string when value is not an array', () => {
+            const template = Handlebars.compile('{{#each_if_exists items}}Item: {{this}} {{/each_if_exists}}');
+            const result = template({ items: 'not an array' });
+
+            expect(result).toBe('');
+        });
+    });
+
+    describe('join helper', () => {
+        it('should join array with default comma separator', () => {
+            const template = Handlebars.compile('{{join items}}');
+            const result = template({ items: ['apple', 'banana', 'cherry'] });
+
+            expect(result).toBe('apple, banana, cherry');
+        });
+
+        it('should join array with custom separator', () => {
+            const template = Handlebars.compile('{{join items " | "}}');
+            const result = template({ items: ['apple', 'banana', 'cherry'] });
+
+            expect(result).toBe('apple | banana | cherry');
+        });
+
+        it('should handle empty array', () => {
+            const template = Handlebars.compile('{{join items}}');
+            const result = template({ items: [] });
+
+            expect(result).toBe('');
+        });
+
+        it('should return the value as-is when not an array', () => {
+            const template = Handlebars.compile('{{join items}}');
+            const result = template({ items: 'single item' });
+
+            expect(result).toBe('single item');
+        });
+
+        it('should handle mixed data types in array', () => {
+            const template = Handlebars.compile('{{join items}}');
+            const result = template({ items: ['apple', 123, true, 'cherry'] });
+
+            expect(result).toBe('apple, 123, true, cherry');
+        });
+    });
+
+    describe('session_refs helper', () => {
+        it('should format session numbers with comma separation', () => {
+            const template = Handlebars.compile('Sessions: {{session_refs sessions}}');
+            const result = template({ sessions: [1, 5, 10, 15] });
+
+            expect(result).toBe('Sessions: 1, 5, 10, 15');
+        });
+
+        it('should handle single session', () => {
+            const template = Handlebars.compile('Sessions: {{session_refs sessions}}');
+            const result = template({ sessions: [7] });
+
+            expect(result).toBe('Sessions: 7');
+        });
+
+        it('should return empty string for empty array', () => {
+            const template = Handlebars.compile('Sessions: {{session_refs sessions}}');
+            const result = template({ sessions: [] });
+
+            expect(result).toBe('Sessions: ');
+        });
+
+        it('should return empty string for null or undefined', () => {
+            const template = Handlebars.compile('Sessions: {{session_refs sessions}}');
+
+            expect(template({ sessions: null })).toBe('Sessions: ');
+            expect(template({ sessions: undefined })).toBe('Sessions: ');
+            expect(template({})).toBe('Sessions: ');
+        });
+
+        it('should return empty string when not an array', () => {
+            const template = Handlebars.compile('Sessions: {{session_refs sessions}}');
+            const result = template({ sessions: 'not an array' });
+
+            expect(result).toBe('Sessions: ');
+        });
+    });
+
+    describe('wikilink helper', () => {
+        it('should wrap text in double brackets for Obsidian wiki links', () => {
+            const template = Handlebars.compile('Link to {{wikilink location}}');
+            const result = template({ location: 'Waterdeep' });
+
+            expect(result).toBe('Link to [[Waterdeep]]');
+        });
+
+        it('should handle empty strings', () => {
+            const template = Handlebars.compile('Link to {{wikilink location}}');
+            const result = template({ location: '' });
+
+            expect(result).toBe('Link to [[]]');
+        });
+
+        it('should handle text with spaces and special characters', () => {
+            const template = Handlebars.compile('{{wikilink location}}');
+            const result = template({ location: 'The Yawning Portal Tavern & Inn' });
+
+            expect(result).toBe('[[The Yawning Portal Tavern & Inn]]');
+        });
+
+        it('should handle null and undefined gracefully', () => {
+            const template = Handlebars.compile('{{wikilink location}}');
+
+            expect(template({ location: null })).toBe('[[null]]');
+            expect(template({ location: undefined })).toBe('[[]]');
+            expect(template({})).toBe('[[]]');
+        });
+    });
+
+    describe('helpers integration', () => {
+        it('should work together in complex templates', () => {
+            const template = Handlebars.compile(`
+**Tags:** {{join tags}}
+**Sessions:** {{session_refs sourceSessions}}
+**Location:** {{wikilink location}}
+
+{{#each_if_exists aliases}}
+- Alias: {{this}}
+{{/each_if_exists}}`.trim());
+
+            const result = template({
+                tags: ['friendly', 'merchant', 'guild'],
+                sourceSessions: [1, 3, 7],
+                location: 'Market Square',
+                aliases: ['The Trader', 'Gold Coin Pete']
+            });
+
+            expect(result).toContain('**Tags:** friendly, merchant, guild');
+            expect(result).toContain('**Sessions:** 1, 3, 7');
+            expect(result).toContain('**Location:** [[Market Square]]');
+            expect(result).toContain('- Alias: The Trader');
+            expect(result).toContain('- Alias: Gold Coin Pete');
+        });
+
+        it('should handle missing data gracefully in complex templates', () => {
+            const template = Handlebars.compile(`
+**Tags:** {{join tags}}
+**Sessions:** {{session_refs sourceSessions}}
+{{#each_if_exists aliases}}
+- {{this}}
+{{/each_if_exists}}`.trim());
+
+            const result = template({
+                tags: [],
+                sourceSessions: null,
+                aliases: undefined
+            });
+
+            // The template has a trailing newline due to the each_if_exists block
+            expect(result).toBe('**Tags:** \n**Sessions:** \n');
+        });
     });
 });

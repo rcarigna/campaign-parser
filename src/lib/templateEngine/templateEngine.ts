@@ -142,7 +142,7 @@ const generateFilename = (entity: AnyEntity): string => {
 /**
  * Register custom Handlebars helpers for template processing
  */
-const registerHandlebarsHelpers = (): void => {
+export const registerHandlebarsHelpers = (): void => {
     // Helper for conditional array rendering
     Handlebars.registerHelper('each_if_exists', function (context: unknown[], options: Handlebars.HelperOptions) {
         if (context && Array.isArray(context) && context.length > 0) {
@@ -152,9 +152,12 @@ const registerHandlebarsHelpers = (): void => {
     });
 
     // Helper for array joining
-    Handlebars.registerHelper('join', function (array: unknown[], separator: string = ', ') {
+    Handlebars.registerHelper('join', function (array: unknown[], separator?: string) {
+        // Handle Handlebars helper arguments properly
+        const actualSeparator = typeof separator === 'string' ? separator : ', ';
+
         if (Array.isArray(array)) {
-            return array.join(separator);
+            return array.join(actualSeparator);
         }
         return array;
     });
@@ -169,6 +172,15 @@ const registerHandlebarsHelpers = (): void => {
 
     // Helper for Obsidian wiki links
     Handlebars.registerHelper('wikilink', function (text: string) {
-        return `[[${text}]]`;
+        let content = '';
+        if (text === null) {
+            content = 'null';
+        } else if (text === undefined) {
+            content = '';
+        } else {
+            content = String(text);
+        }
+        // Use SafeString to prevent HTML escaping
+        return new Handlebars.SafeString(`[[${content}]]`);
     });
 };
