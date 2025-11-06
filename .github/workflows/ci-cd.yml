@@ -2,7 +2,7 @@ name: CI/CD Pipeline - Next.js
 
 on:
   push:
-    branches: [main, develop, feat/nextjs-migration, feat/nextjs-cutover]
+    branches: [main, develop, 'feat/**', 'copilot/**', 'fix/**']
   pull_request:
     branches: [main]
 
