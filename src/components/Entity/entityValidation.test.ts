@@ -222,5 +222,140 @@ describe('entityValidation (Zod-based)', () => {
 
             expect(isEntityComplete(minimalPlayer)).toBe(true);
         });
+
+        it('should validate quest entities correctly', () => {
+            const validQuest = {
+                id: 'quest-1',
+                kind: EntityKind.QUEST,
+                title: 'The Missing Artifact',
+                name: 'Find the Lost Crown',
+                status: 'active',
+                type: 'main',
+            };
+
+            expect(isEntityComplete(validQuest)).toBe(true);
+
+            const incompleteQuest = {
+                id: 'quest-2',
+                kind: EntityKind.QUEST,
+                title: 'Incomplete Quest',
+                name: '', // Empty required field
+                status: 'active',
+                // Missing type
+            };
+
+            const missing = getMissingFields(incompleteQuest);
+            expect(missing).toContain('name');
+            expect(missing).toContain('type');
+        });
+
+        it('should handle array fields validation', () => {
+            const locationWithTags = {
+                id: 'loc-1',
+                kind: EntityKind.LOCATION,
+                title: 'Tagged Location',
+                name: 'City Hall',
+                type: 'Building',
+                region: 'Downtown',
+                tags: ['government', 'important'],
+                faction_presence: ['City Guard', 'Merchants'],
+            };
+
+            expect(isEntityComplete(locationWithTags)).toBe(true);
+        });
+
+        it('should validate item entities correctly', () => {
+            const validItem = {
+                id: 'item-1',
+                kind: EntityKind.ITEM,
+                title: 'Excalibur',
+                name: 'Legendary Sword',
+                type: 'Weapon',
+                rarity: 'Legendary',
+            };
+
+            expect(isEntityComplete(validItem)).toBe(true);
+
+            const incompleteItem = {
+                id: 'item-2',
+                kind: EntityKind.ITEM,
+                title: 'Incomplete Item',
+                name: '', // Empty required field
+                type: 'Weapon',
+                // Missing rarity
+            };
+
+            const missing = getMissingFields(incompleteItem);
+            expect(missing).toContain('name');
+            expect(missing).toContain('rarity');
+        });
+
+        it('should validate player entities correctly', () => {
+            const validPlayer = {
+                id: 'player-1',
+                kind: EntityKind.PLAYER,
+                title: 'Test Player',
+                character_name: 'Hero',
+                // All other fields are optional for players
+            };
+
+            expect(isEntityComplete(validPlayer)).toBe(true);
+
+            const incompletePlayer = {
+                id: 'player-2',
+                kind: EntityKind.PLAYER,
+                title: 'Incomplete Player',
+                character_name: '', // Empty required field
+            };
+
+            const missing = getMissingFields(incompletePlayer);
+            expect(missing).toContain('character_name');
+        });
+
+        it('should validate session summary entities correctly', () => {
+            const validSessionSummary = {
+                id: 'session-1',
+                kind: EntityKind.SESSION_SUMMARY,
+                title: 'Session 1 Summary',
+                session_number: 1,
+                summary: 'The party explored the ancient ruins and found a mysterious artifact.',
+                date: '2024-04-27',
+            };
+
+            expect(isEntityComplete(validSessionSummary)).toBe(true);
+
+            const incompleteSessionSummary = {
+                id: 'session-2',
+                kind: EntityKind.SESSION_SUMMARY,
+                title: 'Incomplete Session Summary',
+                summary: '', // Empty required field
+                // Missing date
+            };
+
+            const missing = getMissingFields(incompleteSessionSummary);
+            expect(missing).toContain('session_number');
+        });
+
+        it('should validate session prep entities correctly', () => {
+            const validSessionPrep = {
+                id: 'prep-1',
+                kind: EntityKind.SESSION_PREP,
+                title: 'Session 1 Prep',
+                notes: 'Prepare maps and NPCs for the upcoming session.',
+                date: '2024-04-26',
+            };
+
+            expect(isEntityComplete(validSessionPrep)).toBe(true);
+
+            const incompleteSessionPrep = {
+                id: 'prep-2',
+                kind: EntityKind.SESSION_PREP,
+                title: 'Incomplete Session Prep',
+                notes: '', // Empty required field
+            };
+
+            const missing = getMissingFields(incompleteSessionPrep);
+            expect(missing).toContain('notes');
+        });
     });
 });

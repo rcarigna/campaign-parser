@@ -62,9 +62,11 @@ const playerSchema = baseEntitySchema.extend({
 
 const sessionSummarySchema = baseEntitySchema.extend({
     kind: z.literal('session_summary'),
-    session_number: z.number().optional(),
+    session_number: z.number(),
     session_date: z.string().optional(),
     arc: z.string().optional(),
+    synopsis: z.string().optional(),
+    summary: z.string().optional(),
 });
 
 const sessionPrepSchema = baseEntitySchema.extend({
@@ -72,6 +74,7 @@ const sessionPrepSchema = baseEntitySchema.extend({
     session_number: z.number().optional(),
     planned_date: z.string().optional(),
     arc: z.string().optional(),
+    notes: z.string().min(1, 'Notes are required'),
 });
 
 // Union schema for all entity types
