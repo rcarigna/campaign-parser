@@ -1,12 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// Mock the marked library to avoid ESM issues
-jest.mock('marked', () => ({
-    marked: {
-        parse: jest.fn((content) => `<p>${content}</p>`),
-        setOptions: jest.fn(),
-    },
-    Renderer: jest.fn(),
-}));
 
 // Mock Next.js server imports before importing the route
 jest.mock('next/server', () => ({

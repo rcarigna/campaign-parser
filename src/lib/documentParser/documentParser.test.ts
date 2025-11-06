@@ -5,7 +5,6 @@ import { marked } from 'marked';
 
 // Mock external dependencies
 jest.mock('mammoth');
-jest.mock('marked');
 
 const mockMammoth = mammoth as jest.Mocked<typeof mammoth>;
 const mockMarked = marked as jest.MockedFunction<typeof marked>;
