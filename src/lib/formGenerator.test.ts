@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { generateFieldsFromSchema, type FieldMetadata } from './formGenerator';
+import { generateFieldsFromSchema } from './formGenerator';
 
 describe('generateFieldsFromSchema', () => {
     it('should return empty array for schema without shape', () => {
