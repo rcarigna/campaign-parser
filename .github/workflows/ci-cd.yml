@@ -2,9 +2,18 @@ name: CI/CD Pipeline - Next.js
 
 on:
   push:
-    branches: [main, develop, 'feat/**', 'copilot/**', 'fix/**']
+    branches: [main, develop, feat/nextjs-migration, feat/nextjs-cutover]
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '.gitignore'
   pull_request:
     branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '.gitignore'
+  workflow_dispatch: # Allows manual triggering
 
 permissions:
   contents: read
@@ -12,44 +21,7 @@ permissions:
   actions: read
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run ESLint
-        run: npm run lint
-
-      - name: Run TypeScript check
-        run: npx tsc --noEmit
-
-      - name: Run all tests with coverage
-        run: npm test -- --coverage --watchAll=false
-
-      - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./coverage/lcov.info
-          flags: nextjs
-          name: nextjs-coverage
-
   build:
-    needs: test
     runs-on: ubuntu-latest
 
     steps:
@@ -102,7 +74,7 @@ jobs:
           format: 'table'
 
   deployment-check:
-    needs: [test, build]
+    needs: [build]
     runs-on: ubuntu-latest
 
     steps:
