@@ -2,7 +2,15 @@ name: CI/CD Pipeline - Next.js
 
 on:
   push:
-    branches: [main, develop, feat/nextjs-migration, feat/nextjs-cutover]
+    branches:
+      [
+        main,
+        develop,
+        feat/nextjs-migration,
+        feat/nextjs-cutover,
+        'copilot/**',
+        'fix/**',
+      ]
     paths-ignore:
       - 'docs/**'
       - '*.md'
@@ -95,8 +103,15 @@ jobs:
         with:
           name: nextjs-build
           path: ./.next/
+        continue-on-error: true
 
       - name: Test production build
         run: |
-          npm run build
+          # If artifacts weren't available, build from scratch
+          if [ ! -d ".next" ] || [ -z "$(ls -A .next)" ]; then
+            echo "🔄 No build artifacts found, building from scratch..."
+            npm run build
+          else
+            echo "✅ Using downloaded build artifacts"
+          fi
           timeout 10s npm start || echo "Production server started successfully"
