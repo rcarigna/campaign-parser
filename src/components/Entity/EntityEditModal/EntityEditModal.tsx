@@ -1,86 +1,12 @@
 import { FieldMetadata } from '@/lib/formGenerator';
 import { getEntityFields, type EntityWithId } from '@/types';
-// import { useForm, useFieldArray } from 'react-hook-form';
+import { FormField } from './FormField';
+import { useForm } from 'react-hook-form';
 
 type EntityEditModalProps = {
   entity: EntityWithId;
   onClose: () => void;
   onSave: (entity: EntityWithId) => void;
-};
-
-const FormField = ({
-  field,
-  entity,
-}: {
-  field: FieldMetadata;
-  entity: EntityWithId;
-}) => {
-  switch (field.type) {
-    case 'text':
-      return (
-        <div className='form-group'>
-          <label htmlFor={field.key}>{field.label}</label>
-          <input
-            type='text'
-            id={field.key}
-            defaultValue={entity[field.key as keyof EntityWithId] as string}
-          />
-        </div>
-      );
-    case 'number':
-      return (
-        <div className='form-group'>
-          <label htmlFor={field.key}>{field.label}</label>
-          <input
-            type='number'
-            id={field.key}
-            defaultValue={
-              entity[field.key as keyof EntityWithId] as unknown as number
-            }
-          />
-        </div>
-      );
-    case 'boolean':
-      return (
-        <div className='form-group'>
-          <label htmlFor={field.key}>{field.label}</label>
-          <input
-            type='checkbox'
-            id={field.key}
-            defaultChecked={
-              entity[field.key as keyof EntityWithId] as unknown as boolean
-            }
-          />
-        </div>
-      );
-    case 'select':
-      return (
-        <div className='form-group'>
-          <label htmlFor={field.key}>{field.label}</label>
-          <select
-            id={field.key}
-            defaultValue={entity[field.key as keyof EntityWithId] as string}
-          >
-            {field.options?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      );
-    default:
-      return (
-        <div className='form-group'>
-          <label htmlFor={field.key}>{field.label}</label>
-          <input
-            type='text'
-            id={field.key}
-            defaultValue={String(entity[field.key as keyof EntityWithId])}
-          />
-        </div>
-      );
-  }
 };
 
 export const EntityEditModal = ({
@@ -93,7 +19,7 @@ export const EntityEditModal = ({
     onSave(entity);
   };
   const formFields: FieldMetadata[] = getEntityFields(entity.kind);
-
+  const { register } = useForm();
   return (
     <div
       className='modal-overlay'
@@ -120,15 +46,12 @@ export const EntityEditModal = ({
             <strong>Title:</strong> {entity.title}
           </p>
           {formFields.map((field) => (
-            <div key={field.key} className='form-group'>
-              <div>
-                <label htmlFor={field.key}>{field.label}</label>
-                {/* <label>input type: {field.type}</label> */}
-                {/* <label>
-                  default value: {entity[field.key as keyof EntityWithId]}
-                </label> */}
-              </div>
-            </div>
+            <FormField
+              key={field.key}
+              field={field}
+              entity={entity}
+              register={register}
+            />
           ))}
         </div>
         <div className='modal-footer'>
