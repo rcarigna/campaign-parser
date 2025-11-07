@@ -3,14 +3,14 @@
 ## 🎉 Current Status: **DEPLOYED & LIVE**
 
 ✅ **Production Deployment**: Live on Vercel with full Next.js functionality  
-✅ **183 Tests Passing**: Comprehensive test coverage using **real D&D campaign data**  
+✅ **260 Tests Passing**: Comprehensive test coverage using **real D&D campaign data** (42% increase)  
 ✅ **Real Data Validation**: Entity extraction tested against authentic session content (7,220 chars)  
 ✅ **Complete Documentation**: GitHub Pages with API docs, architecture guides  
-✅ **CI/CD Pipeline**: Automated testing, building, and deployment  
+✅ **CI/CD Pipeline**: Automated testing, building, and deployment with smart build skipping  
 
 ---
 
-## 🎯 **Phase 1: Core Workflow Completion (Current Focus)**
+## 🎯 **Phase 1: Core Workflow Completion (95% Complete - UI Integration Needed)**
 
 ### **🚀 Priority 1: Complete Import → Dedupe → Clean → Export Pipeline**
 
@@ -20,20 +20,28 @@
 - [x] **Duplicate Detection** - Identify similar entities across documents
 - [x] **Entity Management** - View, edit, merge, and discard entities
 - [x] **Obsidian Template System** - Handlebars-based templates for export
-- [ ] **Export API Implementation** - `/api/export` endpoint with ZIP generation
-- [ ] **Export UI Integration** - Frontend export buttons and progress indicators
-- [ ] **Export Format Options** - JSON, CSV, and Obsidian markdown bundles
-- [ ] **Filtered Export** - Export only selected entity types or importance levels
+- [x] **Export API Implementation** - `/api/export` endpoint with file organization ✅
+- [x] **Export Client Functions** - Browser API calls and Blob handling ✅
+- [x] **Export Templates** - Complete Handlebars template system ✅
+- [ ] **🚨 CRITICAL: Export UI Integration** - Frontend export buttons and progress indicators
+- [ ] **Export Format Options** - Enhanced filtering and format selection
+- [ ] **Export Progress Indicators** - Visual feedback during export generation
 
 **User Story**: *"I upload my session notes, clean up the detected entities by merging duplicates and fixing missing fields, then export a clean, organized campaign reference for use in Obsidian or Roll20."*
 
-**Current Status**: Core pipeline is 90% complete. Entity extraction, validation, and deduplication are working with **real campaign data validation**. Both NLP and regex extractors tested against authentic D&D session content. Need to finish export implementation and UI integration.
+**Current Status**: Core pipeline is 95% complete. Entity extraction, validation, and deduplication are working with **real campaign data validation**. Export API and templates are fully implemented and tested. **ONLY MISSING**: Export buttons in the UI - the entire backend infrastructure is production-ready.
 
-### **⚡ Priority 2: Workflow Polish & User Experience**
+### **🚨 CRITICAL: Complete Export UI Integration**
 
-- [ ] **Export Progress Indicators** - Show progress during ZIP file generation
-- [ ] **Export Preview** - Preview generated files before download
-- [ ] **Export History** - Track and re-download previous exports
+- [ ] **Export Buttons** - Add export buttons to EntityViewer component
+- [ ] **Export Options** - Filter by entity type and importance level
+- [ ] **Export Progress** - Visual feedback during file generation
+- [ ] **Export Success** - Download handling and user confirmation
+- [ ] **Export Error Handling** - User-friendly error messages and recovery
+
+### **⚡ Priority 2: Enhanced Entity Management**
+
+- [ ] **🚨 Entity Edit Implementation** - Complete EntityEditModal functionality (currently placeholder)
 - [ ] **Bulk Entity Operations** - Select multiple entities for merge/delete/edit
 - [ ] **Entity Validation UI** - Clear indicators for incomplete entities
 - [ ] **Undo/Redo System** - Allow users to reverse entity operations
@@ -145,27 +153,28 @@
 
 ## 📋 **Implementation Strategy**
 
-### **Phase 1 Milestones (Next 2-4 weeks)**
+### **Phase 1 Milestones (Next 1-2 weeks)**
 
-#### **Milestone 1.1: Complete Export Pipeline**
+#### **🚨 URGENT: Complete Missing UI Components**
 
-- [x] Obsidian template system with Handlebars
-- [x] Vault structure reference and organization
-- [x] Zod validation system for entities
-- [ ] `/api/export` endpoint implementation  
-- [ ] ZIP file generation with organized folders
-- [ ] JSON export with full entity data
-- [ ] CSV export for spreadsheet compatibility
-- [ ] Export UI integration with progress indicators
+- [x] Obsidian template system with Handlebars ✅
+- [x] Vault structure reference and organization ✅
+- [x] Zod validation system for entities ✅
+- [x] `/api/export` endpoint implementation ✅ **COMPLETE**
+- [x] File organization with organized vault structure ✅
+- [x] Export client functions and Blob handling ✅
+- [ ] **CRITICAL: Export UI integration** - Add export buttons to interface
+- [ ] **CRITICAL: Entity Edit Modal** - Complete placeholder implementation
+- [ ] Export progress indicators and user feedback
 - [ ] Export filtering by entity type and importance
 
-#### **Milestone 1.2: Enhanced Entity Management**
+#### **Milestone 1.2: Core Functionality Completion**
 
+- [ ] **EntityEditModal Implementation** - Replace placeholder with full editing capabilities
+- [ ] **Export Button Integration** - Connect UI to existing export API
+- [ ] **Component Architecture Polish** - Leverage recent refactoring improvements
 - [ ] Entity validation UI with clear missing field indicators
 - [ ] Bulk selection and operations (merge, delete, edit)
-- [ ] Improved duplicate detection and merging workflow
-- [ ] Entity completion suggestions and validation feedback
-- [ ] Undo/redo system for entity operations
 
 #### **Milestone 1.3: Workflow Polish**
 
@@ -177,11 +186,28 @@
 
 ### **Success Metrics**
 
+- **Export UI Implementation**: Export buttons accessible and functional > 100%
 - **Core Workflow Completion**: Users successfully complete import → clean → export > 80%
-- **Export Adoption**: Export feature usage rate > 70% of active users
+- **Entity Edit Capability**: Users can edit entity details and see changes persist > 90%
+- **Export Adoption**: Export feature usage rate > 70% of active users (once UI is available)
 - **Efficiency**: Average time to clean and export campaign entities < 15 minutes
 - **Quality**: User-reported entity accuracy > 90% (improved validation)
 - **User Satisfaction**: Complete workflow satisfaction rating > 4.5/5
+
+### **Critical Gap Analysis**
+
+**Backend Infrastructure**: ✅ **100% Complete**
+
+- Export API endpoint fully functional
+- Template system tested and validated
+- Client functions implemented and tested
+- File organization and vault structure ready
+
+**Frontend Integration**: ❌ **Missing Critical UI Components**
+
+- No export buttons in EntityViewer
+- EntityEditModal is placeholder-only  
+- Export functionality invisible to users
 
 ---
 
@@ -285,6 +311,7 @@ type EntityRelationship = {
 
 ---
 
-**Last Updated**: November 5, 2025  
+**Last Updated**: November 6, 2025  
 **Current Version**: v1.0 (Production)  
-**Next Release Target**: v1.1 (Export & Bulk Operations) - ~2 weeks
+**Next Release Target**: v1.1 (Export UI & Entity Editing) - ~1 week  
+**Critical Status**: Backend 100% ready, UI integration needed

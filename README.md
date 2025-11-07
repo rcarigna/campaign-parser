@@ -46,10 +46,11 @@ Transform your campaign notes, session summaries, and world-building documents i
 
 ### 📤 Obsidian Export
 
-- **Template System**: Handlebars-based templates for each entity type
-- **Vault Structure**: Organized export matching Obsidian folder conventions
-- **Markdown Format**: Full frontmatter, tags, and wiki-link compatibility
-- **Batch Export**: ZIP download with complete campaign data structure
+- **Complete Backend**: Export API fully implemented and tested ✅
+- **Template System**: Handlebars-based templates for each entity type ✅
+- **Vault Structure**: Organized export matching Obsidian folder conventions ✅
+- **Markdown Format**: Full frontmatter, tags, and wiki-link compatibility ✅
+- **UI Integration**: Export buttons coming soon (backend ready) 🔄
 
 ---
 
@@ -195,12 +196,11 @@ Our comprehensive documentation covers every aspect of the system:
 
 ### 📚 Core Documentation
 
-- **[📋 Architecture Overview](docs/architecture.md)** - Technical system design, stack details, and mermaid diagrams
-- **[🧠 Entity Extraction](docs/entity-extraction.md)** - Dual-engine NLP and regex processing system
-- **[🔀 Deduplication Guide](docs/deduplication-guide.md)** - Complete merge workflow and UI component guide
-- **[🔌 API Reference](docs/api-reference)** - Full REST API documentation with examples
-- **[🗺️ Project Roadmap](docs/ROADMAP)** - Feature roadmap and development priorities
-- **[🤝 Contributing Guidelines](CONTRIBUTING)** - Development setup, coding standards, and community guidelines
+- **[📋 Architecture Overview](docs/architecture.md)** - Technical system design, stack details, and component structure
+- **[🔌 API Reference](docs/api-reference.md)** - Complete REST API documentation with examples
+- **[🗺️ Project Roadmap](docs/ROADMAP.md)** - Current status and development priorities
+- **[🤝 Contributing Guidelines](CONTRIBUTING.md)** - Development setup, coding standards, and community guidelines
+- **[📁 Detailed Documentation](docs/archive/)** - In-depth guides for entity extraction, deduplication, and more
 
 ### 🎯 GitHub Integration
 
@@ -224,6 +224,7 @@ Our comprehensive documentation covers every aspect of the system:
 5. **Test features** like filtering, editing, merging duplicates, and Obsidian export
 
 The demo uses a real session note from the `__mocks__` directory, showcasing how the parser handles:
+
 - **NPCs**: Durnan, Volothamp Geddarm, Yagra, and more
 - **Locations**: Yawning Portal, Waterdeep, Undermountain
 - **Items**: Ancestral Blade

@@ -2,46 +2,34 @@
 
 Welcome to the comprehensive documentation for the Campaign Document Parser - a Next.js application that transforms campaign notes into structured, searchable entity databases.
 
-## 📖 Documentation Index
+## 📖 Essential Documentation
 
-### 🚀 Getting Started
+### 🚀 Core Documentation
 
 - [Quick Start Guide](../README.md#quick-start) - Set up and run the application
-- [Demo Feature Guide](./demo-feature.md) - 🎭 Interactive demo with example session notes
-- [Architecture Overview](./architecture.md) - Technical architecture and Clean Architecture design
-- [Clean Architecture Migration](./clean-architecture-migration.md) - 🆕 Module reorganization details
-
-### 📄 Document Processing
-
-- [Entity Extraction System](./entity-extraction.md) - How intelligent entity detection works
+- [Architecture Overview](./architecture.md) - Technical architecture and system design
 - [API Reference](./api-reference.md) - Complete API endpoint documentation
-- [Deployment Guide](./deployment.md) - Deploy to Vercel, Netlify, or other platforms
-- [Project Roadmap](./ROADMAP.md) - Feature roadmap and development priorities
-
-### 🎭 Entity Management
-
-- [Entity Types & Fields](./entity-types.md) - Comprehensive entity type definitions
-- [Deduplication System](./deduplication-guide.md) - Smart duplicate detection and merging
-- [UI Components Guide](./ui-components.md) - Interactive component documentation
+- [Project Roadmap](./ROADMAP.md) - Current status and development priorities
 
 ### 🛠️ Development
 
 - [Contributing Guide](../CONTRIBUTING.md) - How to contribute to the project
-- [Testing Guide](./testing-guide.md) - Testing strategy and best practices
-- [Deployment Guide](./deployment-guide.md) - Production deployment options
 
-### 🎯 Advanced Usage
+### 📁 Additional Resources
 
-- [Campaign Analytics](./analytics-guide.md) - Generate insights from campaign data
-- [Integration Examples](./integration-examples.md) - Use with other tools
-- [Performance Optimization](./performance-guide.md) - Optimization tips and benchmarks
+Detailed guides and historical documentation are available in the [archive folder](./archive/) including:
+
+- Entity extraction system details
+- Deduplication implementation
+- Migration guides and testing strategies
+- Deployment and integration examples
 
 ## 🔗 Quick Links
 
 - **[GitHub Repository](https://github.com/rcarigna/campaign-parser)** - Source code and issues
 - **[API Documentation](./api-reference.md)** - Complete endpoint reference  
 - **[Live Demo](http://localhost:3000)** - Try the application (when running locally)
-- **[Migration Checklist](../NEXTJS_MIGRATION_CHECKLIST.md)** - Complete migration documentation
+- **[Archive Documentation](./archive/)** - Detailed guides and implementation history
 
 ## 📊 Project Statistics
 

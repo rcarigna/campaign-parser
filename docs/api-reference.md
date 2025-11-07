@@ -109,9 +109,11 @@ const result = await response.json();
 
 ---
 
-### Entity Export
+### Entity Export ✅
 
 Export entities to Obsidian-formatted markdown files with vault organization.
+
+**Status**: ✅ **FULLY IMPLEMENTED** - API ready, UI integration pending
 
 **Endpoint**: `POST /api/export`
 
