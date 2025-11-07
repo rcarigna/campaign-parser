@@ -1,3 +1,6 @@
+import { itemSchema, locationSchema, npcSchema, playerSchema, questSchema, sessionPrepSchema, sessionSummarySchema } from "@/components/Entity/entityValidation";
+import { generateFieldsFromSchema } from "@/lib/formGenerator";
+
 // Campaign Entity Types
 export enum EntityKind {
     ITEM = "item",
@@ -145,4 +148,20 @@ export type AnyEntity =
 // Client-specific type extensions
 export type EntityWithId = AnyEntity & {
     id: string;
+};
+
+// Dynamic form field mapping - generates form fields from schemas automatically
+export const EntityFieldMap = {
+    [EntityKind.ITEM]: generateFieldsFromSchema(itemSchema),
+    [EntityKind.LOCATION]: generateFieldsFromSchema(locationSchema),
+    [EntityKind.QUEST]: generateFieldsFromSchema(questSchema),
+    [EntityKind.NPC]: generateFieldsFromSchema(npcSchema),
+    [EntityKind.PLAYER]: generateFieldsFromSchema(playerSchema),
+    [EntityKind.SESSION_PREP]: generateFieldsFromSchema(sessionPrepSchema),
+    [EntityKind.SESSION_SUMMARY]: generateFieldsFromSchema(sessionSummarySchema)
+};
+
+// Helper to get form fields for any entity type
+export const getEntityFields = (entityKind: EntityKind) => {
+    return EntityFieldMap[entityKind] || [];
 };
