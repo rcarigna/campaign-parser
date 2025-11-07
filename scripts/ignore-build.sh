@@ -2,14 +2,29 @@
 # Vercel ignore script - skip deployment for docs-only changes
 
 echo "🔍 Checking if build should be skipped..."
+echo "📋 Vercel Environment Info:"
+echo "  - Previous SHA: ${VERCEL_GIT_PREVIOUS_SHA:-'Not available'}"
+echo "  - Current SHA: ${VERCEL_GIT_COMMIT_SHA:-'Not available'}"
 
 # Get the list of changed files since last deploy
 if [ -n "$VERCEL_GIT_PREVIOUS_SHA" ]; then
-  # Compare against previous deployment
-  CHANGED_FILES=$(git diff --name-only $VERCEL_GIT_PREVIOUS_SHA $VERCEL_GIT_COMMIT_SHA)
+  # Compare against previous deployment - with error handling
+  CHANGED_FILES=$(git diff --name-only $VERCEL_GIT_PREVIOUS_SHA $VERCEL_GIT_COMMIT_SHA 2>/dev/null)
+  
+  # If git diff fails (bad object), fall back to HEAD~1
+  if [ $? -ne 0 ] || [ -z "$CHANGED_FILES" ]; then
+    echo "⚠️ Previous SHA not found, comparing against HEAD~1"
+    CHANGED_FILES=$(git diff --name-only HEAD~1 2>/dev/null)
+  fi
 else
   # Fallback: compare against HEAD~1
-  CHANGED_FILES=$(git diff --name-only HEAD~1)
+  CHANGED_FILES=$(git diff --name-only HEAD~1 2>/dev/null)
+fi
+
+# If we still can't get changed files, assume deployment is needed
+if [ -z "$CHANGED_FILES" ]; then
+  echo "⚠️ Cannot determine changed files, proceeding with deployment"
+  exit 1
 fi
 
 echo "📁 Changed files:"
