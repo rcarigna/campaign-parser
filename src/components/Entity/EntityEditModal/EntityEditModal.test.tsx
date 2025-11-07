@@ -80,75 +80,16 @@ describe('EntityEditModal', () => {
       expect(screen.getByRole('button', { name: '×' })).toBeInTheDocument();
     });
 
-    it('calls getEntityFields with correct entity kind', () => {
+    it('renders entity information correctly', () => {
       renderComponent();
 
-      expect(mockConsoleLog).toHaveBeenCalledWith('Form fields for player:', [
-        {
-          key: 'title',
-          label: 'Title',
-          options: undefined,
-          placeholder: 'Enter title...',
-          required: true,
-          type: 'text',
-        },
-        {
-          key: 'tags',
-          label: 'Tags',
-          options: undefined,
-          placeholder: 'Add tags...',
-          required: false,
-          type: 'array',
-        },
-        {
-          key: 'character_name',
-          label: 'Character Name',
-          options: undefined,
-          placeholder: 'Enter character name...',
-          required: true,
-          type: 'text',
-        },
-        {
-          key: 'player_name',
-          label: 'Player Name',
-          options: undefined,
-          placeholder: 'Enter player name...',
-          required: false,
-          type: 'text',
-        },
-        {
-          key: 'race',
-          label: 'Race',
-          options: undefined,
-          placeholder: 'Enter race...',
-          required: false,
-          type: 'text',
-        },
-        {
-          key: 'class',
-          label: 'Class',
-          options: undefined,
-          placeholder: 'Enter class...',
-          required: false,
-          type: 'text',
-        },
-        {
-          key: 'level',
-          label: 'Level',
-          options: undefined,
-          placeholder: '0',
-          required: false,
-          type: 'number',
-        },
-        {
-          key: 'status',
-          label: 'Status',
-          options: undefined,
-          placeholder: 'Enter status...',
-          required: false,
-          type: 'text',
-        },
-      ]);
+      // Verify the modal renders with correct entity information
+      expect(screen.getByText('Edit Entity: Test Player')).toBeInTheDocument();
+      expect(
+        screen.getByText((_content, element) => {
+          return element?.textContent === 'Type: player';
+        })
+      ).toBeInTheDocument();
     });
   });
 
