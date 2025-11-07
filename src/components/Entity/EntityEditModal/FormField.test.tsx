@@ -53,7 +53,7 @@ describe('FormField', () => {
           />
         );
 
-        expect(screen.getByLabelText(titleField.label)).toBeInTheDocument();
+        expect(screen.getByLabelText(/Title/)).toBeInTheDocument();
         expect(screen.getByDisplayValue('Davil Starsong')).toBeInTheDocument();
         expect(mockRegister).toHaveBeenCalledWith('title');
       }
@@ -72,7 +72,7 @@ describe('FormField', () => {
           />
         );
 
-        expect(screen.getByLabelText(factionField.label)).toBeInTheDocument();
+        expect(screen.getByLabelText(/Faction/)).toBeInTheDocument();
         expect(screen.getByDisplayValue('Zhentarim')).toBeInTheDocument();
         expect(mockRegister).toHaveBeenCalledWith('faction');
       }
@@ -91,9 +91,7 @@ describe('FormField', () => {
           />
         );
 
-        expect(
-          screen.getByLabelText(importanceField.label)
-        ).toBeInTheDocument();
+        expect(screen.getByLabelText(/Importance/)).toBeInTheDocument();
         const selectElement = screen.getByRole('combobox') as HTMLSelectElement;
         expect(selectElement).toBeInTheDocument();
         expect(selectElement.value).toBe('supporting');
@@ -116,7 +114,7 @@ describe('FormField', () => {
           />
         );
 
-        expect(screen.getByLabelText(titleField.label)).toBeInTheDocument();
+        expect(screen.getByLabelText(/Title/)).toBeInTheDocument();
         expect(screen.getByDisplayValue('Yawning Portal')).toBeInTheDocument();
         expect(mockRegister).toHaveBeenCalledWith('title');
       }
@@ -135,7 +133,7 @@ describe('FormField', () => {
           />
         );
 
-        expect(screen.getByLabelText(typeField.label)).toBeInTheDocument();
+        expect(screen.getByLabelText(/Type/)).toBeInTheDocument();
         const selectElement = screen.getByRole('combobox') as HTMLSelectElement;
         expect(selectElement).toBeInTheDocument();
         expect(selectElement.value).toBe('tavern');

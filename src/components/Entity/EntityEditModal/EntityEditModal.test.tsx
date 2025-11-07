@@ -14,7 +14,7 @@ describe('EntityEditModal', () => {
   const mockEntity: EntityWithId = {
     id: 'test-id',
     kind: EntityKind.PLAYER,
-    title: 'Test Player',
+    title: 'Test Player Title',
     character_name: 'Test Character',
     // description: 'A test player character',
     tags: ['hero'],
@@ -55,17 +55,9 @@ describe('EntityEditModal', () => {
     it('renders the modal with entity information', () => {
       renderComponent();
 
-      expect(screen.getByText('Edit Entity: Test Player')).toBeInTheDocument();
-      expect(
-        screen.getByText((_content, element) => {
-          return element?.textContent === 'Type: player';
-        })
-      ).toBeInTheDocument();
-      expect(screen.getByText('Title:')).toBeInTheDocument();
-      expect(screen.getByText('Test Player')).toBeInTheDocument();
-      expect(
-        screen.getByText(/Entity editing functionality coming soon.../)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Edit Player: Test Player/)).toBeInTheDocument();
+      expect(screen.getByText(/Test Player Title/)).toBeInTheDocument();
+      expect(screen.getByDisplayValue('Test Player Title')).toBeInTheDocument();
     });
 
     it('renders action buttons', () => {
@@ -77,18 +69,17 @@ describe('EntityEditModal', () => {
       expect(
         screen.getByRole('button', { name: 'Save Changes' })
       ).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: '×' })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Close modal' })
+      ).toBeInTheDocument();
     });
 
     it('renders entity information correctly', () => {
       renderComponent();
 
       // Verify the modal renders with correct entity information
-      expect(screen.getByText('Edit Entity: Test Player')).toBeInTheDocument();
       expect(
-        screen.getByText((_content, element) => {
-          return element?.textContent === 'Type: player';
-        })
+        screen.getByText(/Edit Player: Test Player Title/)
       ).toBeInTheDocument();
     });
   });
@@ -97,7 +88,7 @@ describe('EntityEditModal', () => {
     it('calls onClose when close button is clicked', () => {
       renderComponent();
 
-      fireEvent.click(screen.getByRole('button', { name: '×' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Close modal' }));
 
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
@@ -147,12 +138,7 @@ describe('EntityEditModal', () => {
       renderComponent({ entity: locationEntity });
 
       expect(
-        screen.getByText('Edit Entity: Test Location')
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText((_content, element) => {
-          return element?.textContent === 'Type: location';
-        })
+        screen.getByText(/Edit Location: Test Location/)
       ).toBeInTheDocument();
     });
 
@@ -165,21 +151,16 @@ describe('EntityEditModal', () => {
 
       renderComponent({ entity: itemEntity });
 
-      expect(screen.getByText('Edit Entity: Test Item')).toBeInTheDocument();
-      expect(
-        screen.getByText((_content, element) => {
-          return element?.textContent === 'Type: item';
-        })
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Edit Item: Test Item/)).toBeInTheDocument();
     });
   });
 
   describe('Accessibility', () => {
     it('has proper modal structure with test ids', () => {
-      const { container } = renderComponent();
+      renderComponent();
 
-      const overlay = container.querySelector('.modal-overlay');
-      const content = container.querySelector('.modal-content');
+      const overlay = screen.getByTestId('modal-overlay');
+      const content = screen.getByTestId('modal-content');
 
       expect(overlay).toBeInTheDocument();
       expect(content).toBeInTheDocument();
