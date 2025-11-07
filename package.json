@@ -11,7 +11,13 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "prepare": "bash scripts/setup-hooks.sh"
+    "prepare": "bash scripts/setup-hooks.sh",
+    "clean": "rm -rf .next && rm -rf node_modules/.cache && rm -rf coverage",
+    "clean:next": "rm -rf .next",
+    "clean:cache": "rm -rf node_modules/.cache && rm -rf .next/cache",
+    "clean:all": "npm run clean && rm -rf node_modules && npm install",
+    "fresh-build": "npm run clean:next && npm run build",
+    "fresh-dev": "npm run clean:next && npm run dev"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^6.9.1",
