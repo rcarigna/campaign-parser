@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { HelpTooltip, HelpContent } from '@/components/Layout/Help';
 
 type FileUploadProps = {
   onFileSelect: (file: File) => void;
@@ -60,6 +61,7 @@ export const FileUpload = ({
           type='file'
           role='button'
           id='file-input'
+          data-testid='file-input'
           accept={allowedExtensions.join(',')}
           onChange={handleFileChange}
           style={{ display: 'none' }}
@@ -72,7 +74,14 @@ export const FileUpload = ({
             </div>
           ) : (
             <div>
-              <p>Click to select a file or drag and drop</p>
+              <div className='flex items-center justify-center space-x-2 mb-2'>
+                <p>Click to select a file or drag and drop</p>
+                <HelpTooltip
+                  content={HelpContent.fileUpload}
+                  title='File Upload Help'
+                  position='top'
+                />
+              </div>
               <p>Supported formats: {allowedExtensions.join(', ')}</p>
             </div>
           )}

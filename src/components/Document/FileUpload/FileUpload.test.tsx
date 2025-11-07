@@ -49,7 +49,7 @@ describe('FileUpload', () => {
   it('calls onFileSelect when file is selected via input', () => {
     render(<FileUpload {...defaultProps} />);
 
-    const input = screen.getByLabelText(/click to select a file/i);
+    const input = screen.getByTestId('file-input') as HTMLInputElement;
     const mockFile = new File(['content'], 'test.md', {
       type: 'text/markdown',
     });
@@ -142,9 +142,7 @@ describe('FileUpload', () => {
   it('sets correct accept attribute on file input', () => {
     render(<FileUpload {...defaultProps} />);
 
-    const input = screen.getByLabelText(
-      /click to select a file/i
-    ) as HTMLInputElement;
+    const input = screen.getByTestId('file-input') as HTMLInputElement;
 
     expect(input.accept).toBe('.md,.doc,.docx');
   });

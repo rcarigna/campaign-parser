@@ -72,6 +72,11 @@ const customJestConfig = {
     '<rootDir>/src/**/*.(test|spec).{ts,tsx}',
   ],
 
+  // Test environment overrides for specific patterns
+  testEnvironmentOptions: {
+    url: 'http://localhost:3000',
+  },
+
   // Module file extensions
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 

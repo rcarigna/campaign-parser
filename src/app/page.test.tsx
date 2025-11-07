@@ -68,9 +68,7 @@ describe('Home Component', () => {
 
   it('includes file upload section', () => {
     render(<Home />);
-    expect(
-      screen.getByLabelText(/Click to select a file or drag and drop/i)
-    ).toBeInTheDocument();
+    expect(screen.getByTestId('file-input')).toBeInTheDocument();
   });
 
   it('calls the appropriate functions on file select', async () => {
@@ -85,9 +83,7 @@ describe('Home Component', () => {
 
     render(<Home />);
 
-    const fileInput = screen.getByLabelText(
-      /Click to select a file or drag and drop/i
-    );
+    const fileInput = screen.getByTestId('file-input');
 
     // Create a mock file
     const mockFile = new File(['test content'], 'test.docx', {
