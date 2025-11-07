@@ -1,8 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EntityEditModal } from './EntityEditModal';
 import { EntityKind, EntityWithId } from '@/types';
-import * as formGenerator from '@/lib/formGenerator';
-
+s;
 // Mock the formGenerator module
 // jest.mock('@/lib/formGenerator', () => ({
 //     getEntityFields: jest.fn(),
