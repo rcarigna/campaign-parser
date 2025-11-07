@@ -1,4 +1,5 @@
-import { type EntityWithId } from '@/types';
+import { FieldMetadata } from '@/lib/formGenerator';
+import { getEntityFields, type EntityWithId } from '@/types';
 
 type EntityEditModalProps = {
   entity: EntityWithId;
@@ -15,10 +16,19 @@ export const EntityEditModal = ({
     // TODO: Implement entity editing functionality
     onSave(entity);
   };
-
+  const formFields: FieldMetadata[] = getEntityFields(entity.kind);
+  console.log(`Form fields for ${entity.kind}:`, formFields);
   return (
-    <div className='modal-overlay' onClick={onClose}>
-      <div className='modal-content' onClick={(e) => e.stopPropagation()}>
+    <div
+      className='modal-overlay'
+      data-testid='modal-overlay'
+      onClick={onClose}
+    >
+      <div
+        className='modal-content'
+        data-testid='modal-content'
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className='modal-header'>
           <h3>Edit Entity: {entity.title}</h3>
           <button className='close-button' onClick={onClose}>
