@@ -64,7 +64,7 @@ export const PersistentWelcome = () => {
             Fields
           </h3>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-            {getSelectedEntitySchema()?.map((field) => (
+            {getSelectedEntitySchema().map((field) => (
               <div key={field.key} className='p-3 bg-gray-50 rounded-lg border'>
                 <div className='flex items-center mb-2'>
                   <span className='font-medium text-sm text-gray-800'>
