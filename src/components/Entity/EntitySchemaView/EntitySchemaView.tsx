@@ -1,5 +1,6 @@
 import { EntityKind, getEntityFields } from '@/types';
 import { getAllEntityMetadata } from '@/lib/utils/entity';
+import { generateSchemaEnhancementIssueUrl } from '@/lib/utils/github';
 import { SchemaField } from './SchemaField';
 
 type EntitySchemaViewProps = {
@@ -16,6 +17,11 @@ export const EntitySchemaView = ({
   const fields = getEntityFields(entityKind);
   const requiredCount = fields.filter((f) => f.required).length;
   const optionalCount = fields.filter((f) => !f.required).length;
+
+  const handleSuggestEnhancement = () => {
+    const url = generateSchemaEnhancementIssueUrl(entityKind);
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   if (!entityMetadata) return null;
 
@@ -60,30 +66,52 @@ export const EntitySchemaView = ({
 
       {/* Schema Content */}
       <div className='p-6 bg-gray-50'>
-        <div className='mb-4 flex items-center gap-2 text-sm text-gray-600'>
-          <svg
-            className='w-4 h-4'
-            fill='none'
-            stroke='currentColor'
-            viewBox='0 0 24 24'
+        <div className='mb-4 flex items-center justify-between'>
+          <div className='flex items-center gap-2 text-sm text-gray-600'>
+            <svg
+              className='w-4 h-4'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+              />
+            </svg>
+            <span>
+              Fields marked with <span className='text-red-500 font-bold'>*</span>{' '}
+              are required
+            </span>
+          </div>
+          <button
+            onClick={handleSuggestEnhancement}
+            className='flex items-center gap-2 px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md font-medium transition-colors border border-blue-200 hover:border-blue-300'
+            aria-label='Suggest schema enhancement'
           >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={2}
-              d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-            />
-          </svg>
-          <span>
-            Fields marked with <span className='text-red-500 font-bold'>*</span>{' '}
-            are required
-          </span>
+            <svg
+              className='w-4 h-4'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z'
+              />
+            </svg>
+            Suggest Enhancement
+          </button>
         </div>
 
         {/* Field List */}
         <div className='space-y-3'>
           {fields.map((field) => (
-            <SchemaField key={field.key} field={field} />
+            <SchemaField key={field.key} field={field} entityKind={entityKind} />
           ))}
         </div>
       </div>
