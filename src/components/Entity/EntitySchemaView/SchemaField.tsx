@@ -1,10 +1,18 @@
 import type { FieldMetadata } from '@/types';
+import type { EntityKind } from '@/types';
+import { generateFieldModificationIssueUrl } from '@/lib/utils/github';
 
 type SchemaFieldProps = {
   field: FieldMetadata;
+  entityKind: EntityKind;
 };
 
-export const SchemaField = ({ field }: SchemaFieldProps) => {
+export const SchemaField = ({ field, entityKind }: SchemaFieldProps) => {
+  const handleSuggestEdit = () => {
+    const url = generateFieldModificationIssueUrl(entityKind, field);
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className='bg-white rounded-lg border border-gray-200 p-4 hover:border-blue-300 transition-colors select-none'>
       <div className='flex items-start justify-between mb-2'>
@@ -50,6 +58,30 @@ export const SchemaField = ({ field }: SchemaFieldProps) => {
           </div>
         </div>
       )}
+
+      {/* Suggest Edit Button */}
+      <div className='mt-3 pt-3 border-t border-gray-200'>
+        <button
+          onClick={handleSuggestEdit}
+          className='flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors'
+          aria-label={`Suggest edit for ${field.key} field`}
+        >
+          <svg
+            className='w-3.5 h-3.5'
+            fill='none'
+            stroke='currentColor'
+            viewBox='0 0 24 24'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth={2}
+              d='M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'
+            />
+          </svg>
+          Suggest Edit
+        </button>
+      </div>
     </div>
   );
 };
