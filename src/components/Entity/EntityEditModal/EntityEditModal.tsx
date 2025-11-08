@@ -16,6 +16,7 @@ export const EntityEditModal = ({
 }: EntityEditModalProps) => {
   const handleSave = () => {
     // TODO: Implement entity editing functionality
+    console.log('Saving entity:', entity);
     onSave(entity);
   };
   const formFields: FieldMetadata[] = getEntityFields(entity.kind);
