@@ -2,45 +2,9 @@
 
 import { useState } from 'react';
 import { EntityKind, getEntityFields } from '@/types';
+import { getAllEntityMetadata } from '@/components/Entity/entityUtils';
 
-export const entityTypes = [
-  {
-    kind: EntityKind.NPC,
-    emoji: '👤',
-    label: 'NPCs',
-    description: 'Characters and non-player characters',
-  },
-  {
-    kind: EntityKind.LOCATION,
-    emoji: '🗺️',
-    label: 'Locations',
-    description: 'Places and venues in your world',
-  },
-  {
-    kind: EntityKind.ITEM,
-    emoji: '⚔️',
-    label: 'Items',
-    description: 'Equipment, weapons, and magical items',
-  },
-  {
-    kind: EntityKind.QUEST,
-    emoji: '🎯',
-    label: 'Quests',
-    description: 'Missions and storyline objectives',
-  },
-  {
-    kind: EntityKind.PLAYER,
-    emoji: '🧙',
-    label: 'Players',
-    description: 'Player characters and their details',
-  },
-  {
-    kind: EntityKind.SESSION_SUMMARY,
-    emoji: '📝',
-    label: 'Sessions',
-    description: 'Session summaries and notes',
-  },
-];
+const entityTypes = getAllEntityMetadata();
 
 export const PersistentWelcome = () => {
   const [selectedEntity, setSelectedEntity] = useState<EntityKind | null>(null);

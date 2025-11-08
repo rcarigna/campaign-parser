@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { type EntityWithId } from '@/types';
+import { getEntityIcon } from '@/components/Entity/entityUtils';
 
 type EntityMergeModalProps = {
   entities: EntityWithId[];
@@ -208,15 +209,7 @@ export const EntityMergeModal = ({
                 <div className='entity-card preview'>
                   <div className='entity-header'>
                     <span className='entity-icon'>
-                      {primaryEntity.kind === 'npc'
-                        ? '👤'
-                        : primaryEntity.kind === 'location'
-                        ? '🗺️'
-                        : primaryEntity.kind === 'item'
-                        ? '⚔️'
-                        : primaryEntity.kind === 'quest'
-                        ? '🎯'
-                        : '📜'}
+                      {getEntityIcon(primaryEntity.kind)}
                     </span>
                     <span className='entity-type'>{primaryEntity.kind}</span>
                   </div>

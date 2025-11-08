@@ -1,4 +1,11 @@
-import { getEntityIcon, getEntityColor } from './entityUtils';
+import {
+    getEntityIcon,
+    getEntityColor,
+    getEntityLabel,
+    getEntityDescription,
+    getEntityMetadata,
+    getAllEntityMetadata
+} from './entityUtils';
 import { EntityKind } from '@/types';
 
 describe('entityUtils', () => {
@@ -42,6 +49,101 @@ describe('entityUtils', () => {
             Object.values(EntityKind).forEach(kind => {
                 const color = getEntityColor(kind);
                 expect(color).toMatch(hexColorRegex);
+            });
+        });
+    });
+
+    describe('getEntityLabel', () => {
+        it('should return correct labels for all entity kinds', () => {
+            expect(getEntityLabel(EntityKind.NPC)).toBe('NPCs');
+            expect(getEntityLabel(EntityKind.LOCATION)).toBe('Locations');
+            expect(getEntityLabel(EntityKind.ITEM)).toBe('Items');
+            expect(getEntityLabel(EntityKind.QUEST)).toBe('Quests');
+            expect(getEntityLabel(EntityKind.PLAYER)).toBe('Players');
+            expect(getEntityLabel(EntityKind.SESSION_SUMMARY)).toBe('Sessions');
+            expect(getEntityLabel(EntityKind.SESSION_PREP)).toBe('Session Prep');
+        });
+
+        it('should return default label for unknown entity kind', () => {
+            expect(getEntityLabel('unknown' as EntityKind)).toBe('Entities');
+        });
+    });
+
+    describe('getEntityDescription', () => {
+        it('should return correct descriptions for all entity kinds', () => {
+            expect(getEntityDescription(EntityKind.NPC)).toBe('Characters and non-player characters');
+            expect(getEntityDescription(EntityKind.LOCATION)).toBe('Places and venues in your world');
+            expect(getEntityDescription(EntityKind.ITEM)).toBe('Equipment, weapons, and magical items');
+            expect(getEntityDescription(EntityKind.QUEST)).toBe('Missions and storyline objectives');
+            expect(getEntityDescription(EntityKind.PLAYER)).toBe('Player characters and their details');
+            expect(getEntityDescription(EntityKind.SESSION_SUMMARY)).toBe('Session summaries and notes');
+            expect(getEntityDescription(EntityKind.SESSION_PREP)).toBe('Session preparation and planning');
+        });
+
+        it('should return default description for unknown entity kind', () => {
+            expect(getEntityDescription('unknown' as EntityKind)).toBe('Campaign entities');
+        });
+    });
+
+    describe('getEntityMetadata', () => {
+        it('should return complete metadata for an entity kind', () => {
+            const metadata = getEntityMetadata(EntityKind.NPC);
+
+            expect(metadata).toEqual({
+                kind: EntityKind.NPC,
+                emoji: '👤',
+                label: 'NPCs',
+                description: 'Characters and non-player characters',
+                color: '#059669',
+            });
+        });
+
+        it('should include all metadata fields', () => {
+            const metadata = getEntityMetadata(EntityKind.QUEST);
+
+            expect(metadata).toHaveProperty('kind');
+            expect(metadata).toHaveProperty('emoji');
+            expect(metadata).toHaveProperty('label');
+            expect(metadata).toHaveProperty('description');
+            expect(metadata).toHaveProperty('color');
+        });
+    });
+
+    describe('getAllEntityMetadata', () => {
+        it('should return metadata for all main entity kinds', () => {
+            const allMetadata = getAllEntityMetadata();
+
+            expect(allMetadata).toHaveLength(6);
+
+            const kinds = allMetadata.map(m => m.kind);
+            expect(kinds).toContain(EntityKind.NPC);
+            expect(kinds).toContain(EntityKind.LOCATION);
+            expect(kinds).toContain(EntityKind.ITEM);
+            expect(kinds).toContain(EntityKind.QUEST);
+            expect(kinds).toContain(EntityKind.PLAYER);
+            expect(kinds).toContain(EntityKind.SESSION_SUMMARY);
+        });
+
+        it('should not include SESSION_PREP in main entity list', () => {
+            const allMetadata = getAllEntityMetadata();
+            const kinds = allMetadata.map(m => m.kind);
+
+            expect(kinds).not.toContain(EntityKind.SESSION_PREP);
+        });
+
+        it('should return complete metadata objects', () => {
+            const allMetadata = getAllEntityMetadata();
+
+            allMetadata.forEach(metadata => {
+                expect(metadata).toHaveProperty('kind');
+                expect(metadata).toHaveProperty('emoji');
+                expect(metadata).toHaveProperty('label');
+                expect(metadata).toHaveProperty('description');
+                expect(metadata).toHaveProperty('color');
+                expect(typeof metadata.emoji).toBe('string');
+                expect(typeof metadata.label).toBe('string');
+                expect(typeof metadata.description).toBe('string');
+                expect(metadata.color).toMatch(/^#[0-9A-Fa-f]{6}$/);
             });
         });
     });
