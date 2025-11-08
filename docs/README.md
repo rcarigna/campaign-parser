@@ -9,6 +9,7 @@ Welcome to the comprehensive documentation for the Campaign Document Parser - a 
 - [Quick Start Guide](../README.md#quick-start) - Set up and run the application
 - [Architecture Overview](./architecture.md) - Technical architecture and system design
 - [API Reference](./api-reference.md) - Complete API endpoint documentation
+- [Schema Suggestions](./schema-suggestions.md) - How to propose schema improvements
 - [Project Roadmap](./ROADMAP.md) - Current status and development priorities
 
 ### 🛠️ Development
