@@ -78,7 +78,7 @@ export const getEntityLabel = (kind: EntityKind): string => {
 export const getEntityDescription = (kind: EntityKind): string => {
     switch (kind) {
         case EntityKind.NPC:
-            return 'Characters and non-player characters';
+            return 'Non-player characters';
         case EntityKind.LOCATION:
             return 'Places and venues in your world';
         case EntityKind.ITEM:
