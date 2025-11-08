@@ -10,7 +10,7 @@ import {
     playerSchema,
     type ValidatedNPC,
     type ValidatedLocation,
-} from './entityValidation';
+} from './entity';
 import { EntityKind } from '@/types';
 
 describe('entityValidation (Zod-based)', () => {

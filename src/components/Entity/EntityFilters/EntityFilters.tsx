@@ -1,5 +1,5 @@
 import { EntityKind } from '@/types';
-import { getEntityIcon } from '../entityUtils';
+import { getEntityIcon } from '@/lib/utils/entity';
 
 type EntityFilterType = 'all' | EntityKind;
 

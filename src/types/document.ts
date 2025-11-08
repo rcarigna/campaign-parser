@@ -1,4 +1,4 @@
-import { DocumentType } from './fileValidation';
+import { DocumentType } from '@/lib/validation/file';
 import type { AnyEntity } from './campaign';
 
 // Document parsing types

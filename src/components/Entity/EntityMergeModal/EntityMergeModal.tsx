@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { type EntityWithId } from '@/types';
-import { getEntityIcon } from '@/components/Entity/entityUtils';
+import { getEntityIcon } from '@/lib/utils/entity';
 
 type EntityMergeModalProps = {
   entities: EntityWithId[];

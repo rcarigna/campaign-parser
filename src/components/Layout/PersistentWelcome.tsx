@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { EntityKind, getEntityFields } from '@/types';
-import { getAllEntityMetadata } from '@/components/Entity/entityUtils';
+import { getAllEntityMetadata } from '@/lib/utils/entity';
 
 const entityTypes = getAllEntityMetadata();
 

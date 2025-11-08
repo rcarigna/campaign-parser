@@ -5,7 +5,7 @@ import {
     getEntityDescription,
     getEntityMetadata,
     getAllEntityMetadata
-} from './entityUtils';
+} from './entity';
 import { EntityKind } from '@/types';
 
 describe('entityUtils', () => {
