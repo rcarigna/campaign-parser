@@ -81,11 +81,10 @@ const inferFieldType = (fieldKey: string, schema: z.ZodTypeAny): FieldType => {
 
 const getEnumOptions = (schema: z.ZodTypeAny): Array<{ value: string; label: string }> | undefined => {
     const { terminalSchema } = unwrapToTerminalType(schema);
-    const typeName = (terminalSchema as z.ZodTypeAny)._def?.type;
 
-    if (typeName === 'enum') {
-        const values = (terminalSchema as z.ZodEnum<any>)._def?.values || [];
-        return values.map((value) => ({
+    if (terminalSchema instanceof z.ZodEnum) {
+        const enumValues = terminalSchema.options || [];
+        return enumValues.map((value) => ({
             value: String(value),
             label: formatLabel(String(value))
         }));
