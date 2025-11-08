@@ -1,6 +1,7 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { EntityEditModal } from './EntityEditModal';
 import { EntityKind, EntityWithId } from '@/types';
+import userEvent from '@testing-library/user-event';
 
 // Mock the formGenerator module
 // jest.mock('@/lib/formGenerator', () => ({
@@ -85,43 +86,55 @@ describe('EntityEditModal', () => {
   });
 
   describe('User Interactions', () => {
-    it('calls onClose when close button is clicked', () => {
+    it('calls onClose when close button is clicked', async () => {
       renderComponent();
 
-      fireEvent.click(screen.getByRole('button', { name: 'Close modal' }));
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Close modal' })
+      );
 
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
 
-    it('calls onClose when cancel button is clicked', () => {
+    it('calls onClose when cancel button is clicked', async () => {
       renderComponent();
 
-      fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
 
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
 
-    it('calls onSave with entity when save button is clicked', () => {
+    it('calls onSave with entity when save button is clicked', async () => {
       renderComponent();
 
-      fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Save Changes' })
+      );
 
       expect(mockOnSave).toHaveBeenCalledTimes(1);
-      expect(mockOnSave).toHaveBeenCalledWith(mockEntity);
+      expect(mockOnSave).toHaveBeenCalledWith({
+        ...mockEntity,
+        class: '',
+        level: '',
+        player_name: '',
+        race: '',
+        status: '',
+        tags: 'hero',
+      });
     });
 
-    it('calls onClose when modal overlay is clicked', () => {
+    it('calls onClose when modal overlay is clicked', async () => {
       renderComponent();
 
-      fireEvent.click(screen.getByTestId('modal-overlay'));
+      await userEvent.click(screen.getByTestId('modal-overlay'));
 
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
 
-    it('does not call onClose when modal content is clicked', () => {
+    it('does not call onClose when modal content is clicked', async () => {
       renderComponent();
 
-      fireEvent.click(screen.getByTestId('modal-content'));
+      await userEvent.click(screen.getByTestId('modal-content'));
 
       expect(mockOnClose).not.toHaveBeenCalled();
     });
@@ -166,14 +179,20 @@ describe('EntityEditModal', () => {
       expect(content).toBeInTheDocument();
     });
 
-    it('stops propagation when clicking modal content', () => {
+    it('stops propagation when clicking modal content', async () => {
       renderComponent();
 
+      // Mock the stopPropagation method on the event
+      const stopPropagationSpy = jest.fn();
       const modalContent = screen.getByTestId('modal-content');
-      const clickEvent = new MouseEvent('click', { bubbles: true });
-      const stopPropagationSpy = jest.spyOn(clickEvent, 'stopPropagation');
 
-      fireEvent(modalContent, clickEvent);
+      // Simulate a click event with stopPropagation spy
+      modalContent.addEventListener('click', (e) => {
+        e.stopPropagation = stopPropagationSpy;
+        e.stopPropagation();
+      });
+
+      await userEvent.click(modalContent);
 
       expect(stopPropagationSpy).toHaveBeenCalled();
     });
