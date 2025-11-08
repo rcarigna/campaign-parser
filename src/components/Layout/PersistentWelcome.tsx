@@ -13,10 +13,7 @@ export const PersistentWelcome = () => {
     setSelectedEntity(selectedEntity === entityKind ? null : entityKind);
   };
 
-  const getSelectedEntitySchema = () => {
-    if (!selectedEntity) return null;
-    return getEntityFields(selectedEntity);
-  };
+  // Removed getSelectedEntitySchema for KISS principle
 
   return (
     <div className='bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200 p-8 mb-6'>
