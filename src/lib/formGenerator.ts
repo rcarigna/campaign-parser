@@ -84,8 +84,8 @@ const getEnumOptions = (schema: z.ZodTypeAny): Array<{ value: string; label: str
     const typeName = (terminalSchema as z.ZodTypeAny)._def?.type;
 
     if (typeName === 'enum') {
-        const entries = (terminalSchema as z.ZodEnum)._def?.entries || {};
-        return Object.values(entries).map((value) => ({
+        const values = (terminalSchema as z.ZodEnum<any>)._def?.values || [];
+        return values.map((value) => ({
             value: String(value),
             label: formatLabel(String(value))
         }));
