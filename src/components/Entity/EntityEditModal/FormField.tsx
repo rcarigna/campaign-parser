@@ -113,6 +113,30 @@ export const FormField = ({
           />
         </div>
       );
+    case 'array':
+      return (
+        <div className={containerClasses}>
+          <label htmlFor={field.key} className={labelClasses}>
+            {field.label}
+            {field.required && <span className='text-red-500 ml-1'>*</span>}
+          </label>
+          <input
+            type='text'
+            id={field.key}
+            className={baseInputClasses}
+            placeholder={field.placeholder}
+            defaultValue={
+              (
+                entity[field.key as keyof EntityWithId] as unknown as string[]
+              )?.join(', ') || ''
+            }
+            {...register(field.key)}
+          />
+          <small className='text-gray-500 text-xs mt-1'>
+            Enter multiple values separated by commas.
+          </small>
+        </div>
+      );
     default:
       return (
         <div className={containerClasses}>

@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-export type FieldType = 'text' | 'textarea' | 'number' | 'boolean' | 'select';
+export type FieldType = 'text' | 'textarea' | 'number' | 'boolean' | 'select' | 'array';
 
-const TERMINAL_FIELD_TYPES: FieldType[] = ['text', 'textarea', 'number', 'boolean', 'select'];
+const TERMINAL_FIELD_TYPES: FieldType[] = ['text', 'textarea', 'number', 'boolean', 'select', 'array'];
 
 export type FieldMetadata = {
     key: string;
@@ -69,6 +69,8 @@ const inferFieldType = (fieldKey: string, schema: z.ZodTypeAny): FieldType => {
         case 'number':
         case 'bigint':
             return 'number';
+        case 'array':
+            return 'array';
         case 'enum':
             return 'select';
         default:
@@ -102,6 +104,9 @@ const formatLabel = (text: string): string => {
 
 // Generate placeholder text
 const generatePlaceholder = (fieldKey: string, fieldType: FieldType): string | undefined => {
+    if (fieldType === 'array') {
+        return `Add ${formatLabel(fieldKey).toLowerCase()}...`;
+    }
     if (fieldType === 'textarea') {
         return `Enter ${formatLabel(fieldKey).toLowerCase()}...`;
     }
