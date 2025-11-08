@@ -53,6 +53,14 @@ Transform your campaign notes, session summaries, and world-building documents i
 - **ZIP Download**: One-click export to downloadable vault archive ✅
 - **Folder Organization**: Proper Campaign Vault structure (02_World/NPCs, etc.) ✅
 
+### 💡 Schema Suggestions
+
+- **Interactive Schema View**: Click any entity type to explore its fields and structure
+- **Field-Level Suggestions**: "Suggest Edit" button on each field to propose improvements
+- **Schema Enhancements**: "Suggest Enhancement" button to propose broader schema changes
+- **GitHub Integration**: Opens pre-filled GitHub issues with entity and field context
+- **Community Driven**: Help shape the schema to fit your campaign system (D&D, Pathfinder, etc.)
+
 ---
 
 ## 🚀 Quick Start
@@ -234,6 +242,7 @@ Our comprehensive documentation covers every aspect of the system:
 
 - **[🐛 Bug Reports](.github/ISSUE_TEMPLATE/bug_report.yml)** - Structured issue templates
 - **[✨ Feature Requests](.github/ISSUE_TEMPLATE/feature_request.yml)** - Enhancement proposals
+- **[📝 Schema Suggestions](.github/ISSUE_TEMPLATE/schema_suggestion.yml)** - Propose improvements to entity schemas
 - **[💬 Discussions](https://github.com/YOUR_USERNAME/obsidian-parser/discussions)** - Community questions and ideas
 - **[📋 Pull Request Template](.github/pull_request_template.md)** - Standardized contribution process
 
@@ -285,6 +294,15 @@ The demo uses a real session note from the `__mocks__` directory, showcasing how
 - **Template System**: Customizable Handlebars templates for each entity type
 - **ZIP Download**: Complete campaign export in organized folder structure
 - **Clean Data**: Deduplicated entity database ready for campaign management
+
+### 5. Suggest Schema Improvements
+
+- **View Schema**: Click on any entity type card in the welcome section to view its schema
+- **Explore Fields**: See all available fields, their types, and whether they're required
+- **Suggest Field Edits**: Click "Suggest Edit" on any field to propose changes to that field
+- **Suggest Enhancements**: Click "Suggest Enhancement" to propose broader schema improvements
+- **GitHub Integration**: Your suggestion opens a pre-filled GitHub issue with all context
+- **Community Impact**: Help make the schema better for all users and campaign systems
 
 ---
 
