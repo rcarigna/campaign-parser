@@ -41,7 +41,7 @@ export const PersistentWelcome = () => {
                 : 'bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300'
             }`}
             onClick={() => handleEntityClick(kind)}
-            role="button"
+            role='button'
             tabIndex={0}
             aria-pressed={selectedEntity === kind}
             onKeyDown={(e) => {
@@ -70,7 +70,7 @@ export const PersistentWelcome = () => {
             Fields
           </h3>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-            {getSelectedEntitySchema().map((field) => (
+            {getEntityFields(selectedEntity).map((field) => (
               <div key={field.key} className='p-3 bg-gray-50 rounded-lg border'>
                 <div className='flex items-center mb-2'>
                   <span className='font-medium text-sm text-gray-800'>

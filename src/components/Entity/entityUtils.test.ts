@@ -71,7 +71,7 @@ describe('entityUtils', () => {
 
     describe('getEntityDescription', () => {
         it('should return correct descriptions for all entity kinds', () => {
-            expect(getEntityDescription(EntityKind.NPC)).toBe('Characters and non-player characters');
+            expect(getEntityDescription(EntityKind.NPC)).toBe('Non-player characters');
             expect(getEntityDescription(EntityKind.LOCATION)).toBe('Places and venues in your world');
             expect(getEntityDescription(EntityKind.ITEM)).toBe('Equipment, weapons, and magical items');
             expect(getEntityDescription(EntityKind.QUEST)).toBe('Missions and storyline objectives');
@@ -93,7 +93,7 @@ describe('entityUtils', () => {
                 kind: EntityKind.NPC,
                 emoji: '👤',
                 label: 'NPCs',
-                description: 'Characters and non-player characters',
+                description: 'Non-player characters',
                 color: '#059669',
             });
         });
