@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { PersistentWelcome } from './PersistentWelcome';
+import { PersistentWelcome } from '../PersistentWelcome';
 
 describe('PersistentWelcome', () => {
   it('renders welcome message and entity types', () => {

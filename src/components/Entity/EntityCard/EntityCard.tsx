@@ -1,5 +1,5 @@
 import { type EntityWithId } from '@/types';
-import { getEntityIcon, getEntityColor } from '../entityUtils';
+import { getEntityIcon, getEntityColor } from '@/lib/utils/entity';
 
 type EntityCardProps = {
   entity: EntityWithId;

@@ -1,5 +1,5 @@
-import { itemSchema, locationSchema, npcSchema, playerSchema, questSchema, sessionPrepSchema, sessionSummarySchema } from "@/components/Entity/entityValidation";
-import { FieldMetadata, generateFieldsFromSchema } from "@/lib/formGenerator";
+import { itemSchema, locationSchema, npcSchema, playerSchema, questSchema, sessionPrepSchema, sessionSummarySchema } from "@/lib/validation/entity";
+import { FieldMetadata, generateFieldsFromSchema } from "@/lib/utils/form";
 
 // Campaign Entity Types
 export enum EntityKind {
