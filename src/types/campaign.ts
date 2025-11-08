@@ -1,3 +1,6 @@
+import { itemSchema, locationSchema, npcSchema, playerSchema, questSchema, sessionPrepSchema, sessionSummarySchema } from "@/components/Entity/entityValidation";
+import { FieldMetadata, generateFieldsFromSchema } from "@/lib/formGenerator";
+
 // Campaign Entity Types
 export enum EntityKind {
     ITEM = "item",
@@ -145,4 +148,57 @@ export type AnyEntity =
 // Client-specific type extensions
 export type EntityWithId = AnyEntity & {
     id: string;
+};
+
+// Dynamic form field mapping - generates form fields from schemas automatically, with lazy memoization
+const fieldCache: Partial<Record<EntityKind, FieldMetadata[]>> = {};
+export const EntityFieldMap: Record<EntityKind, () => FieldMetadata[]> = {
+    [EntityKind.ITEM]: () => {
+        if (!fieldCache[EntityKind.ITEM]) {
+            fieldCache[EntityKind.ITEM] = generateFieldsFromSchema(itemSchema);
+        }
+        return fieldCache[EntityKind.ITEM]!;
+    },
+    [EntityKind.LOCATION]: () => {
+        if (!fieldCache[EntityKind.LOCATION]) {
+            fieldCache[EntityKind.LOCATION] = generateFieldsFromSchema(locationSchema);
+        }
+        return fieldCache[EntityKind.LOCATION]!;
+    },
+    [EntityKind.QUEST]: () => {
+        if (!fieldCache[EntityKind.QUEST]) {
+            fieldCache[EntityKind.QUEST] = generateFieldsFromSchema(questSchema);
+        }
+        return fieldCache[EntityKind.QUEST]!;
+    },
+    [EntityKind.NPC]: () => {
+        if (!fieldCache[EntityKind.NPC]) {
+            fieldCache[EntityKind.NPC] = generateFieldsFromSchema(npcSchema);
+        }
+        return fieldCache[EntityKind.NPC]!;
+    },
+    [EntityKind.PLAYER]: () => {
+        if (!fieldCache[EntityKind.PLAYER]) {
+            fieldCache[EntityKind.PLAYER] = generateFieldsFromSchema(playerSchema);
+        }
+        return fieldCache[EntityKind.PLAYER]!;
+    },
+    [EntityKind.SESSION_PREP]: () => {
+        if (!fieldCache[EntityKind.SESSION_PREP]) {
+            fieldCache[EntityKind.SESSION_PREP] = generateFieldsFromSchema(sessionPrepSchema);
+        }
+        return fieldCache[EntityKind.SESSION_PREP]!;
+    },
+    [EntityKind.SESSION_SUMMARY]: () => {
+        if (!fieldCache[EntityKind.SESSION_SUMMARY]) {
+            fieldCache[EntityKind.SESSION_SUMMARY] = generateFieldsFromSchema(sessionSummarySchema);
+        }
+        return fieldCache[EntityKind.SESSION_SUMMARY]!;
+    }
+};
+
+// Helper to get form fields for any entity type
+export const getEntityFields = (entityKind: EntityKind) => {
+    const getter = EntityFieldMap[entityKind];
+    return getter ? getter() : [];
 };

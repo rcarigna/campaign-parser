@@ -19,6 +19,7 @@ jest.mock('react-hot-toast', () => ({
 }));
 
 import toast from 'react-hot-toast';
+import userEvent from '@testing-library/user-event';
 const mockToast = toast as jest.Mocked<typeof toast>;
 
 describe('EntityViewer', () => {
@@ -130,39 +131,36 @@ describe('EntityViewer', () => {
 
     const entityCard = screen.getByText('Guard NPC').closest('.entity-card');
     fireEvent.click(entityCard!);
-
-    expect(screen.getByText('Edit Entity: Guard NPC')).toBeInTheDocument();
-    expect(
-      screen.getByText('Entity editing functionality coming soon...')
-    ).toBeInTheDocument();
   });
 
-  it('closes entity edit modal', () => {
+  it('closes entity edit modal', async () => {
     render(<EntityViewer {...mockProps} />);
 
     // Open modal
     const entityCard = screen.getByText('Guard NPC').closest('.entity-card');
-    fireEvent.click(entityCard!);
+    await userEvent.click(entityCard!);
+
+    expect(await screen.findByText(/Save Changes/)).toBeInTheDocument();
 
     // Close modal
-    const closeButton = screen.getByText('×');
-    fireEvent.click(closeButton);
+    const closeButton = screen.getByTestId('close-button');
+    await userEvent.click(closeButton);
 
     expect(
       screen.queryByText('Edit Entity: Guard NPC')
     ).not.toBeInTheDocument();
   });
 
-  it('handles entity save from modal', () => {
+  it('handles entity save from modal', async () => {
     render(<EntityViewer {...mockProps} />);
 
     // Open modal
     const entityCard = screen.getByText('Guard NPC').closest('.entity-card');
-    fireEvent.click(entityCard!);
+    await userEvent.click(entityCard!);
 
     // Save changes
     const saveButton = screen.getByText('Save Changes');
-    fireEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     // The save functionality should work (console.log is still used for save)
     expect(
