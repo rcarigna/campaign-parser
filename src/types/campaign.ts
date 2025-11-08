@@ -1,5 +1,5 @@
 import { itemSchema, locationSchema, npcSchema, playerSchema, questSchema, sessionPrepSchema, sessionSummarySchema } from "@/components/Entity/entityValidation";
-import { generateFieldsFromSchema } from "@/lib/formGenerator";
+import { FieldMetadata, FieldType, generateFieldsFromSchema } from "@/lib/formGenerator";
 
 // Campaign Entity Types
 export enum EntityKind {
@@ -151,8 +151,8 @@ export type EntityWithId = AnyEntity & {
 };
 
 // Dynamic form field mapping - generates form fields from schemas automatically, with lazy memoization
-const fieldCache: Partial<Record<EntityKind, any[]>> = {};
-export const EntityFieldMap: Record<EntityKind, () => any[]> = {
+const fieldCache: Partial<Record<EntityKind, FieldMetadata[]>> = {};
+export const EntityFieldMap: Record<EntityKind, () => FieldMetadata[]> = {
     [EntityKind.ITEM]: () => {
         if (!fieldCache[EntityKind.ITEM]) {
             fieldCache[EntityKind.ITEM] = generateFieldsFromSchema(itemSchema);
