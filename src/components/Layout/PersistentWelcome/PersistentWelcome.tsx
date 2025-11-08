@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { EntityKind } from '@/types';
-import { WelcomeHeader } from './WelcomeHeader';
-import { EntityTypesGrid } from './EntityTypesGrid';
-import { EntitySchemaView } from './EntitySchemaView';
+import { WelcomeHeader } from '../WelcomeHeader';
+import { EntityTypesGrid, EntitySchemaView } from '@/components/Entity';
 
 export const PersistentWelcome = () => {
   const [selectedEntity, setSelectedEntity] = useState<EntityKind | null>(null);

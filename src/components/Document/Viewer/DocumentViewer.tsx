@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MarkdownRenderer } from '../MarkdownRenderer/MarkdownRenderer';
+import { MarkdownRenderer } from '../../MarkdownRenderer/MarkdownRenderer';
 import {
   type SerializedParsedDocumentWithEntities,
   DocumentType,

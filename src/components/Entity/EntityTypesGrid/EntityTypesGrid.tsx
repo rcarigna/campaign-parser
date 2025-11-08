@@ -1,6 +1,6 @@
 import { EntityKind } from '@/types';
 import { getAllEntityMetadata } from '@/lib/utils/entity';
-import { EntityTypeCard } from './EntityTypeCard';
+import { EntityTypeCard } from '../EntityTypeCard';
 
 type EntityTypesGridProps = {
   selectedEntity: EntityKind | null;
