@@ -179,7 +179,16 @@ export const EntityViewer = ({
         </>
       ) : (
         <div className='json-output'>
-          <pre>{JSON.stringify(parsedData, null, 2)}</pre>
+          <pre>
+            {JSON.stringify(
+              {
+                ...parsedData,
+                entities: entities,
+              },
+              null,
+              2
+            )}
+          </pre>
         </div>
       )}
 
