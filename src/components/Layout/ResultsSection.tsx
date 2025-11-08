@@ -10,6 +10,7 @@ type ResultsSectionProps = {
   parsedData: SerializedParsedDocumentWithEntities;
   entities: EntityWithId[];
   onEntityDiscard: (entityId: string) => void;
+  onEntityUpdate: (updatedEntity: EntityWithId) => void;
   onEntityMerge: (primaryEntity: EntityWithId, duplicateIds: string[]) => void;
 };
 
@@ -17,6 +18,7 @@ export const ResultsSection = ({
   parsedData,
   entities,
   onEntityDiscard,
+  onEntityUpdate,
   onEntityMerge,
 }: ResultsSectionProps) => {
   return (
@@ -39,6 +41,7 @@ export const ResultsSection = ({
         <EntityViewer
           entities={entities}
           onEntityDiscard={onEntityDiscard}
+          onEntityUpdate={onEntityUpdate}
           onEntityMerge={onEntityMerge}
           parsedData={parsedData}
         />

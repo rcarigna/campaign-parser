@@ -10,6 +10,7 @@ type UseCampaignParserReturn = {
     processDocument: (file: File) => Promise<void>;
     loadDemoData: (data: SerializedParsedDocumentWithEntities) => void;
     discardEntity: (entityId: string) => void;
+    updateEntity: (updatedEntity: EntityWithId) => void;
     mergeEntities: (primaryEntity: EntityWithId, duplicateIds: string[]) => void;
     restoreEntities: () => void;
     clearResults: () => void;
@@ -60,6 +61,14 @@ export const useCampaignParser = (): UseCampaignParserReturn => {
 
     const discardEntity = useCallback((entityId: string): void => {
         setEntities((prev) => prev.filter((entity) => entity.id !== entityId));
+    }, []);
+
+    const updateEntity = useCallback((updatedEntity: EntityWithId): void => {
+        setEntities((prev) =>
+            prev.map((entity) =>
+                entity.id === updatedEntity.id ? updatedEntity : entity
+            )
+        );
     }, []);
 
     const mergeEntities = useCallback((primaryEntity: EntityWithId, duplicateIds: string[]): void => {
@@ -120,6 +129,7 @@ export const useCampaignParser = (): UseCampaignParserReturn => {
         processDocument,
         loadDemoData,
         discardEntity,
+        updateEntity,
         mergeEntities,
         restoreEntities,
         clearResults,
