@@ -41,6 +41,15 @@ export const PersistentWelcome = () => {
                 : 'bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300'
             }`}
             onClick={() => handleEntityClick(kind)}
+            role="button"
+            tabIndex={0}
+            aria-pressed={selectedEntity === kind}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleEntityClick(kind);
+              }
+            }}
           >
             <div className='text-2xl mb-2 text-center'>{emoji}</div>
             <div className='text-sm font-medium text-gray-700 text-center mb-1'>
