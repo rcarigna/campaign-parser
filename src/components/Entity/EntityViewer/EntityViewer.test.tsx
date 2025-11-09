@@ -254,7 +254,7 @@ describe('EntityViewer', () => {
 
     // Mark as duplicates
     const markDuplicatesButton = screen.getByText(
-      (content, element) =>
+      (_content, element) =>
         element?.textContent?.replace(/\s+/g, ' ').trim() ===
         'Mark 2 as Duplicates'
     );
