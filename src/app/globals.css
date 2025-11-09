@@ -804,6 +804,40 @@ body {
   font-style: italic;
 }
 
+.custom-input-container {
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #f9fafb;
+}
+
+.custom-input {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  resize: vertical;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.custom-hint {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
 .merged-preview {
   border: 1px solid #e5e7eb;
   border-radius: 8px;

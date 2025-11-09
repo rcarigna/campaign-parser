@@ -13,6 +13,13 @@ type EntityMergeModalProps = {
   ) => void;
 };
 
+type FieldEditState = {
+  [fieldName: string]: {
+    mode: 'select' | 'custom';
+    customValue: string;
+  };
+};
+
 export const EntityMergeModal = ({
   entities,
   onClose,
@@ -22,6 +29,7 @@ export const EntityMergeModal = ({
     entities[0]?.id || ''
   );
   const [mergedFields, setMergedFields] = useState<Record<string, unknown>>({});
+  const [fieldEditStates, setFieldEditStates] = useState<FieldEditState>({});
 
   const primaryEntity = entities.find((e) => e.id === primaryEntityId);
 
@@ -68,6 +76,48 @@ export const EntityMergeModal = ({
       ...prev,
       [fieldName]: value,
     }));
+  };
+
+  const handleFieldModeChange = (
+    fieldName: string,
+    mode: 'select' | 'custom'
+  ) => {
+    setFieldEditStates((prev) => ({
+      ...prev,
+      [fieldName]: {
+        mode,
+        customValue:
+          mode === 'custom'
+            ? String(
+                mergedFields[fieldName] ||
+                  primaryEntity?.[fieldName as keyof EntityWithId] ||
+                  ''
+              )
+            : prev[fieldName]?.customValue || '',
+      },
+    }));
+
+    // If switching to custom mode, initialize with current value
+    if (mode === 'custom') {
+      const currentValue =
+        mergedFields[fieldName] ||
+        primaryEntity?.[fieldName as keyof EntityWithId];
+      if (currentValue) {
+        handleFieldChange(fieldName, String(currentValue));
+      }
+    }
+  };
+
+  const handleCustomValueChange = (fieldName: string, value: string) => {
+    setFieldEditStates((prev) => ({
+      ...prev,
+      [fieldName]: {
+        ...prev[fieldName],
+        mode: 'custom',
+        customValue: value,
+      },
+    }));
+    handleFieldChange(fieldName, value);
   };
 
   const getMergedEntity = () => {
@@ -160,8 +210,7 @@ export const EntityMergeModal = ({
           <div className='merge-section'>
             <h3>2. Merge Fields</h3>
             <p className='help-text'>
-              For each field, choose the value you want to keep in the merged
-              entity.
+              For each field, choose a value or enter a custom combination.
             </p>
             <div className='field-merger'>
               {allFields.map((fieldName) => {
@@ -172,6 +221,12 @@ export const EntityMergeModal = ({
                 const currentValue =
                   mergedFields[fieldName] ||
                   primaryEntity?.[fieldName as keyof EntityWithId];
+
+                const editState = fieldEditStates[fieldName] || {
+                  mode: 'select',
+                  customValue: '',
+                };
+                const isCustomMode = editState.mode === 'custom';
 
                 return (
                   <div key={fieldName} className='field-merge-group'>
@@ -186,8 +241,13 @@ export const EntityMergeModal = ({
                             type='radio'
                             name={`field-${fieldName}`}
                             value={String(value)}
-                            checked={currentValue === value}
-                            onChange={() => handleFieldChange(fieldName, value)}
+                            checked={
+                              !isCustomMode && currentValue === value
+                            }
+                            onChange={() => {
+                              handleFieldModeChange(fieldName, 'select');
+                              handleFieldChange(fieldName, value);
+                            }}
                           />
                           <div className='field-value'>
                             <strong>{String(value)}</strong>
@@ -195,6 +255,42 @@ export const EntityMergeModal = ({
                           </div>
                         </label>
                       ))}
+                      <label className='field-option custom-option'>
+                        <input
+                          type='radio'
+                          name={`field-${fieldName}`}
+                          checked={isCustomMode}
+                          onChange={() =>
+                            handleFieldModeChange(fieldName, 'custom')
+                          }
+                        />
+                        <div className='field-value custom-value'>
+                          <strong>Custom / Combined</strong>
+                          <span className='source'>
+                            manually edit or combine values
+                          </span>
+                        </div>
+                      </label>
+                      {isCustomMode && (
+                        <div className='custom-input-container'>
+                          <textarea
+                            className='custom-input'
+                            value={editState.customValue}
+                            onChange={(e) =>
+                              handleCustomValueChange(
+                                fieldName,
+                                e.target.value
+                              )
+                            }
+                            placeholder={`Enter custom value for ${fieldName}...`}
+                            rows={3}
+                          />
+                          <div className='custom-hint'>
+                            💡 Tip: You can combine values from multiple
+                            entities above
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
