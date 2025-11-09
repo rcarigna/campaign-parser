@@ -129,26 +129,26 @@ export const EntityMergeModal = ({
               renderEntityDetail={renderEntityDetail}
             />
           </div>
-        </div>
-        <FieldMergeSection
-          allFields={allFields}
-          getFieldValues={getFieldValues}
-          isEnumField={isEnumField}
-          onFieldChange={handleFieldChange}
-        />
-        <div className='merge-section'>
-          <h3>3. Preview Merged Entity</h3>
-          <MergedEntityPreview
-            primaryEntity={primaryEntity}
+          <FieldMergeSection
             allFields={allFields}
-            mergedFields={mergedFields}
+            getFieldValues={getFieldValues}
+            isEnumField={isEnumField}
+            onFieldChange={handleFieldChange}
+          />
+          <div className='merge-section'>
+            <h3>3. Preview Merged Entity</h3>
+            <MergedEntityPreview
+              primaryEntity={primaryEntity}
+              allFields={allFields}
+              mergedFields={mergedFields}
+            />
+          </div>
+          <ModalFooter
+            onCancel={handleClose}
+            onConfirm={handleMerge}
+            confirmLabel={`🔄 Merge ${entities.length} Entities`}
           />
         </div>
-        <ModalFooter
-          onCancel={handleClose}
-          onConfirm={handleMerge}
-          confirmLabel={`🔄 Merge ${entities.length} Entities`}
-        />
       </div>
     </div>
   );
