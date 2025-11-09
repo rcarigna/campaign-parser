@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldMergeGroup } from './FieldMergeGroup';
+import { FieldMergeGroup } from '../FieldMergeGroup';
 
 export type FieldMergeSectionProps = {
   allFields: string[];

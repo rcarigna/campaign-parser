@@ -1,6 +1,7 @@
 import React from 'react';
-import { ModalHeader } from './ModalHeader';
-import { ModalFooter } from './ModalFooter';
+import { ModalHeader } from '../ModalHeader';
+import { ModalFooter } from '../ModalFooter';
+import { InsufficientEntitiesMessage } from '../InsufficientEntitiesMessage'; // Updated import path
 
 export type InsufficientEntitiesMessageProps = {
   onClose: () => void;
