@@ -233,6 +233,11 @@ export const EntityViewer = ({
             }
             isSelectionMode={selection.isSelectionMode}
             selectedEntityIds={selection.selectedEntityIds}
+            onEntitySelect={
+              selection.isSelectionMode
+                ? selection.handleEntitySelect
+                : undefined
+            }
             onEntityDiscard={handleEntityDiscard}
           />
         </>

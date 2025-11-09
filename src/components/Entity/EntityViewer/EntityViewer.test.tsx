@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { EntityViewer } from './EntityViewer';
 import {
   DocumentType,
@@ -9,6 +9,9 @@ import {
   type EntityWithId,
 } from '@/types';
 
+import toast from 'react-hot-toast';
+import userEvent from '@testing-library/user-event';
+import { exportEntities } from '@/client/api';
 // Mock react-hot-toast
 jest.mock('react-hot-toast', () => ({
   __esModule: true,
@@ -23,10 +26,6 @@ jest.mock('react-hot-toast', () => ({
 jest.mock('@/client/api', () => ({
   exportEntities: jest.fn(),
 }));
-
-import toast from 'react-hot-toast';
-import userEvent from '@testing-library/user-event';
-import { exportEntities } from '@/client/api';
 
 const mockToast = toast as jest.Mocked<typeof toast>;
 const mockExportEntities = exportEntities as jest.MockedFunction<
@@ -90,7 +89,7 @@ describe('EntityViewer', () => {
     ).toBeInTheDocument();
   });
 
-  it('handles entity filtering', () => {
+  it('handles entity filtering', async () => {
     render(<EntityViewer {...mockProps} />);
 
     // Check filter dropdown
@@ -98,7 +97,7 @@ describe('EntityViewer', () => {
     expect(filterSelect).toBeInTheDocument();
 
     // Filter by NPC type
-    fireEvent.change(filterSelect, { target: { value: EntityKind.NPC } });
+    await userEvent.selectOptions(filterSelect, EntityKind.NPC);
 
     // Should show both NPCs
     expect(screen.getByText('Guard NPC')).toBeInTheDocument();
@@ -106,33 +105,33 @@ describe('EntityViewer', () => {
     expect(screen.queryByText('Test Location')).not.toBeInTheDocument();
   });
 
-  it('handles duplicate detection', () => {
+  it('handles duplicate detection', async () => {
     render(<EntityViewer {...mockProps} />);
 
     // Toggle show duplicates
     const duplicateToggle = screen.getByRole('checkbox');
-    fireEvent.click(duplicateToggle);
+    await userEvent.click(duplicateToggle);
 
     // Should show no duplicates since our entities have unique names now
     expect(screen.getByText('Show only duplicates (0)')).toBeInTheDocument();
   });
 
-  it('enters selection mode correctly', () => {
+  it('enters selection mode correctly', async () => {
     render(<EntityViewer {...mockProps} />);
 
     const selectButton = screen.getByText('Select Duplicates');
-    fireEvent.click(selectButton);
+    await userEvent.click(selectButton);
 
     expect(screen.getByText('Cancel')).toBeInTheDocument();
     expect(screen.getByText(/Selected: 0/)).toBeInTheDocument();
   });
 
-  it('handles entity discard', () => {
+  it('handles entity discard', async () => {
     render(<EntityViewer {...mockProps} />);
 
     // Find and click discard button for first entity
     const discardButtons = screen.getAllByLabelText(/Discard/);
-    fireEvent.click(discardButtons[0]);
+    await userEvent.click(discardButtons[0]);
 
     expect(mockProps.onEntityDiscard).toHaveBeenCalledWith('1');
     expect(mockToast.success).toHaveBeenCalledWith(
@@ -141,11 +140,11 @@ describe('EntityViewer', () => {
     );
   });
 
-  it('opens entity edit modal when entity is clicked', () => {
+  it('opens entity edit modal when entity is clicked', async () => {
     render(<EntityViewer {...mockProps} />);
 
     const entityCard = screen.getByText('Guard NPC').closest('.entity-card');
-    fireEvent.click(entityCard!);
+    await userEvent.click(entityCard!);
   });
 
   it('closes entity edit modal', async () => {
@@ -187,22 +186,22 @@ describe('EntityViewer', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('cancels selection mode', () => {
+  it('cancels selection mode', async () => {
     render(<EntityViewer {...mockProps} />);
 
     // Enter selection mode
     const selectButton = screen.getByText('Select Duplicates');
-    fireEvent.click(selectButton);
+    await userEvent.click(selectButton);
 
     // Cancel selection
     const cancelButton = screen.getByText('Cancel');
-    fireEvent.click(cancelButton);
+    await userEvent.click(cancelButton);
 
     expect(screen.getByText('Select Duplicates')).toBeInTheDocument();
     expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
   });
 
-  it('toggles between entity view and raw data view', () => {
+  it('toggles between entity view and raw data view', async () => {
     const parsedData: SerializedParsedDocumentWithEntities = {
       type: DocumentType.MARKDOWN,
       filename: 'test.md',
@@ -222,7 +221,7 @@ describe('EntityViewer', () => {
 
     // Switch to raw data view
     const rawDataButton = screen.getByText('📄 Raw Data');
-    fireEvent.click(rawDataButton);
+    await userEvent.click(rawDataButton);
 
     expect(screen.getByText('📄 Raw Data')).toHaveClass('active');
     expect(screen.getByText('📋 Entity View')).not.toHaveClass('active');
@@ -230,36 +229,45 @@ describe('EntityViewer', () => {
 
     // Switch back to entity view
     const entityViewButton = screen.getByText('📋 Entity View');
-    fireEvent.click(entityViewButton);
+    await userEvent.click(entityViewButton);
 
     expect(screen.getByText('📋 Entity View')).toHaveClass('active');
     expect(screen.queryByText(/"test": "data"/)).not.toBeInTheDocument();
   });
 
-  it('handles entity merge flow', () => {
+  it('handles entity merge flow', async () => {
     const mockOnEntityMerge = jest.fn();
     render(<EntityViewer {...mockProps} onEntityMerge={mockOnEntityMerge} />);
 
     // Enter selection mode
-    fireEvent.click(screen.getByText('Select Duplicates'));
-
+    await userEvent.click(screen.getByText('Select Duplicates'));
+    expect(screen.getByText(/Mark 0 as Duplicates/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Select entities to mark as duplicates. Selected: 0/)
+    ).toBeInTheDocument();
     // Select multiple entities
-    const checkboxes = screen.getAllByRole('checkbox');
-    fireEvent.click(checkboxes[1]); // First entity checkbox
-    fireEvent.click(checkboxes[2]); // Second entity checkbox
+    await userEvent.click(screen.getByTestId('select-checkbox-1')); // First entity checkbox
+    await waitFor(() =>
+      expect(screen.getByText(/Mark 1 as Duplicates/)).toBeInTheDocument()
+    );
+    await userEvent.click(screen.getByTestId('select-checkbox-2')); // Second entity checkbox
 
     // Mark as duplicates
-    const markDuplicatesButton = screen.getByText('Mark 2 as Duplicates');
-    fireEvent.click(markDuplicatesButton);
+    const markDuplicatesButton = screen.getByText(
+      (content, element) =>
+        element?.textContent?.replace(/\s+/g, ' ').trim() ===
+        'Mark 2 as Duplicates'
+    );
+    await userEvent.click(markDuplicatesButton);
 
     // Should open merge modal
     expect(screen.getByText(/Merge Duplicate Entities/)).toBeInTheDocument();
-    fireEvent.click(screen.getByText(/Merge Duplicate Entities/));
+    await userEvent.click(screen.getByText(/Merge Duplicate Entities/));
     // Select primary entity and merge
     const mergeButton = screen.getByText((_content, element) => {
       return element?.textContent === '🔄 Merge 2 Entities';
     });
-    fireEvent.click(mergeButton);
+    await userEvent.click(mergeButton);
 
     expect(mockOnEntityMerge).toHaveBeenCalled();
     expect(mockToast.success).toHaveBeenCalledWith(
@@ -268,62 +276,68 @@ describe('EntityViewer', () => {
     );
   });
 
-  it('disables mark as duplicates button when less than 2 entities selected', () => {
+  it('disables mark as duplicates button when less than 2 entities selected', async () => {
     render(<EntityViewer {...mockProps} />);
 
     // Enter selection mode
-    fireEvent.click(screen.getByText('Select Duplicates'));
+    await userEvent.click(screen.getByText('Select Duplicates'));
 
     // Button should be disabled with 0 selected
     expect(screen.getByText('Mark 0 as Duplicates')).toBeDisabled();
 
     // Select one entity
     const checkbox = screen.getAllByRole('checkbox')[1];
-    fireEvent.click(checkbox);
+    await userEvent.click(checkbox);
 
     // Button should still be disabled with 1 selected
-    expect(screen.getByText('Mark 1 as Duplicates')).toBeDisabled();
+    expect(
+      screen.getByText(
+        (_content, element) =>
+          element?.textContent?.replace(/\s+/g, ' ').trim() ===
+          'Mark 1 as Duplicates'
+      )
+    ).toBeDisabled();
   });
 
-  it('closes merge modal when cancel is clicked', () => {
+  it('closes merge modal when cancel is clicked', async () => {
     const mockOnEntityMerge = jest.fn();
     render(<EntityViewer {...mockProps} onEntityMerge={mockOnEntityMerge} />);
 
     // Enter selection mode and select entities
-    fireEvent.click(screen.getByText('Select Duplicates'));
+    await userEvent.click(screen.getByText('Select Duplicates'));
     const checkboxes = screen.getAllByRole('checkbox');
-    fireEvent.click(checkboxes[1]);
-    fireEvent.click(checkboxes[2]);
+    await userEvent.click(checkboxes[1]);
+    await userEvent.click(checkboxes[2]);
 
     // Open merge modal
-    fireEvent.click(screen.getByText('Mark 2 as Duplicates'));
+    await userEvent.click(screen.getByText('Mark 2 as Duplicates'));
 
     // Cancel merge
     const cancelButton = screen.getByTestId('cancel-selection');
-    fireEvent.click(cancelButton);
+    await userEvent.click(cancelButton);
 
     expect(
       screen.queryByText('Merge Duplicate Entities')
     ).not.toBeInTheDocument();
   });
 
-  it('handles entity merge without onEntityMerge prop', () => {
+  it('handles entity merge without onEntityMerge prop', async () => {
     render(<EntityViewer {...mockProps} />);
 
     // Enter selection mode and select entities
-    fireEvent.click(screen.getByText('Select Duplicates'));
+    await userEvent.click(screen.getByText('Select Duplicates'));
     const checkboxes = screen.getAllByRole('checkbox');
-    fireEvent.click(checkboxes[1]);
-    fireEvent.click(checkboxes[2]);
+    await userEvent.click(checkboxes[1]);
+    await userEvent.click(checkboxes[2]);
 
     // Open merge modal
-    fireEvent.click(screen.getByText('Mark 2 as Duplicates'));
+    await userEvent.click(screen.getByText('Mark 2 as Duplicates'));
 
     // Try to merge - should not crash
     const mergeButton = screen.getByText((_content, element) => {
       return element?.textContent === '🔄 Merge 2 Entities';
     });
-    fireEvent.click(mergeButton);
+    await userEvent.click(mergeButton);
 
     // Should not show success toast since merge didn't happen
     expect(mockToast.success).not.toHaveBeenCalled();

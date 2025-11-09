@@ -8,7 +8,7 @@ type EntityCardProps = {
   onClick: (entity: EntityWithId) => void;
   isSelectable?: boolean;
   isSelected?: boolean;
-  onSelect?: (isSelected: boolean) => void;
+  onSelect?: (entityId: string, isSelected: boolean) => void;
   onDiscard?: (entity: EntityWithId) => void;
 };
 
@@ -38,7 +38,7 @@ export const EntityCard = ({
   const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     if (onSelect) {
-      onSelect(e.target.checked);
+      onSelect(entity.id, e.target.checked);
     }
   };
 
@@ -64,6 +64,7 @@ export const EntityCard = ({
             checked={isSelected}
             onChange={handleSelectChange}
             className='entity-select-checkbox'
+            data-testid={`select-checkbox-${entity.id}`}
           />
         )}
         <span className='entity-icon'>{getEntityIcon(entity.kind)}</span>
