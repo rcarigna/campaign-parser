@@ -1,6 +1,6 @@
 import { EntityCard } from '../EntityCard';
 import { type EntityWithId } from '@/types';
-import { getMissingFields } from '../entityValidation';
+import { getMissingFields } from '@/lib/validation/entity';
 
 type EntityGridProps = {
   entities: EntityWithId[];

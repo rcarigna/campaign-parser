@@ -56,7 +56,7 @@ describe('EntityEditModal', () => {
     it('renders the modal with entity information', () => {
       renderComponent();
 
-      expect(screen.getByText(/Edit Player: Test Player/)).toBeInTheDocument();
+      expect(screen.getByText(/Edit Entity: Test Player/)).toBeInTheDocument();
       expect(screen.getByText(/Test Player Title/)).toBeInTheDocument();
       expect(screen.getByDisplayValue('Test Player Title')).toBeInTheDocument();
     });
@@ -80,7 +80,7 @@ describe('EntityEditModal', () => {
 
       // Verify the modal renders with correct entity information
       expect(
-        screen.getByText(/Edit Player: Test Player Title/)
+        screen.getByText(/Edit Entity: Test Player Title/)
       ).toBeInTheDocument();
     });
   });
@@ -151,7 +151,7 @@ describe('EntityEditModal', () => {
       renderComponent({ entity: locationEntity });
 
       expect(
-        screen.getByText(/Edit Location: Test Location/)
+        screen.getByText(/Edit Entity: Test Location/)
       ).toBeInTheDocument();
     });
 
@@ -164,7 +164,7 @@ describe('EntityEditModal', () => {
 
       renderComponent({ entity: itemEntity });
 
-      expect(screen.getByText(/Edit Item: Test Item/)).toBeInTheDocument();
+      expect(screen.getByText(/Edit Entity: Test Item/)).toBeInTheDocument();
     });
   });
 

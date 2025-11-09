@@ -14,6 +14,7 @@ import { useEntitySelection } from './hooks/useEntitySelection';
 type EntityViewerProps = {
   entities: EntityWithId[];
   onEntityDiscard: (entityId: string) => void;
+  onEntityUpdate: (updatedEntity: EntityWithId) => void;
   onEntityMerge?: (primaryEntity: EntityWithId, duplicateIds: string[]) => void;
   parsedData?: SerializedParsedDocumentWithEntities | null;
 };
@@ -21,6 +22,7 @@ type EntityViewerProps = {
 export const EntityViewer = ({
   entities,
   onEntityDiscard,
+  onEntityUpdate,
   onEntityMerge,
   parsedData,
 }: EntityViewerProps) => {
@@ -47,8 +49,9 @@ export const EntityViewer = ({
   };
 
   const handleEntitySave = (updatedEntity: EntityWithId): void => {
-    console.log('Save entity:', updatedEntity);
+    onEntityUpdate(updatedEntity);
     setSelectedEntity(null);
+    toast.success(`Updated "${updatedEntity.title}"`, { duration: 3000 });
   };
 
   const handleEntityDiscard = (entity: EntityWithId): void => {
@@ -176,7 +179,16 @@ export const EntityViewer = ({
         </>
       ) : (
         <div className='json-output'>
-          <pre>{JSON.stringify(parsedData, null, 2)}</pre>
+          <pre>
+            {JSON.stringify(
+              {
+                ...parsedData,
+                entities: entities,
+              },
+              null,
+              2
+            )}
+          </pre>
         </div>
       )}
 

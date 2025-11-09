@@ -52,6 +52,7 @@ describe('EntityViewer', () => {
   const mockProps = {
     entities: mockEntities,
     onEntityDiscard: jest.fn(),
+    onEntityUpdate: jest.fn(),
   };
 
   beforeEach(() => {
@@ -162,7 +163,11 @@ describe('EntityViewer', () => {
     const saveButton = screen.getByText('Save Changes');
     await userEvent.click(saveButton);
 
-    // The save functionality should work (console.log is still used for save)
+    // Should call onEntityUpdate and close modal
+    expect(mockProps.onEntityUpdate).toHaveBeenCalled();
+    expect(mockToast.success).toHaveBeenCalledWith('Updated "Guard NPC"', {
+      duration: 3000,
+    });
     expect(
       screen.queryByText('Edit Entity: Guard NPC')
     ).not.toBeInTheDocument();

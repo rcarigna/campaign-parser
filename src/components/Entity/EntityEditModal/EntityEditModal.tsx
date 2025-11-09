@@ -1,7 +1,9 @@
-import { FieldMetadata } from '@/lib/formGenerator';
-import { getEntityFields, type EntityWithId } from '@/types';
+import { FieldMetadata } from '@/lib/utils/form';
+import { getEntityFields, type EntityWithId, EntityKind } from '@/types';
 import { FormField } from './FormField';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { getAllEntityMetadata } from '@/lib/utils/entity';
 
 type EntityEditModalProps = {
   entity: EntityWithId;
@@ -14,14 +16,17 @@ export const EntityEditModal = ({
   onClose,
   onSave,
 }: EntityEditModalProps) => {
-  const formFields: FieldMetadata[] = getEntityFields(entity.kind);
+  const [entityKind, setEntityKind] = useState<EntityKind>(entity.kind);
+  const formFields: FieldMetadata[] = getEntityFields(entityKind);
   const { register, handleSubmit } = useForm();
+  const entityTypes = getAllEntityMetadata();
 
   const handleSave = (data: Record<string, unknown>) => {
-    const updatedEntity: EntityWithId = {
+    const updatedEntity = {
       ...entity,
       ...data,
-    };
+      kind: entityKind, // Update the kind
+    } as EntityWithId;
     console.log('Saving entity:', updatedEntity);
     onSave(updatedEntity);
   };
@@ -42,9 +47,7 @@ export const EntityEditModal = ({
           <div className='bg-gray-50 px-6 py-4 border-b border-gray-200'>
             <div className='flex items-center justify-between'>
               <h3 className='text-lg font-medium text-gray-900'>
-                Edit{' '}
-                {entity.kind.charAt(0).toUpperCase() + entity.kind.slice(1)}:{' '}
-                {entity.title}
+                Edit Entity: {entity.title}
               </h3>
               <button
                 className='text-gray-400 hover:text-gray-600 transition-colors duration-200'
@@ -72,6 +75,40 @@ export const EntityEditModal = ({
 
           {/* Body */}
           <div className='px-6 py-4 overflow-y-auto max-h-[60vh]'>
+            {/* Entity Type Selector */}
+            <div className='mb-6 pb-4 border-b border-gray-200'>
+              <label
+                htmlFor='entity-type'
+                className='block text-sm font-medium text-gray-700 mb-2'
+              >
+                Entity Type{' '}
+                {entityKind !== entity.kind && (
+                  <span className='text-orange-600 text-xs ml-2'>
+                    (Changed from {entity.kind})
+                  </span>
+                )}
+              </label>
+              <select
+                id='entity-type'
+                value={entityKind}
+                onChange={(e) => setEntityKind(e.target.value as EntityKind)}
+                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'
+              >
+                {entityTypes.map((type) => (
+                  <option key={type.kind} value={type.kind}>
+                    {type.emoji} {type.label}
+                  </option>
+                ))}
+              </select>
+              {entityKind !== entity.kind && (
+                <p className='mt-2 text-xs text-orange-600'>
+                  ⚠️ Changing entity type will preserve existing fields where
+                  possible, but some fields may be lost if they don&apos;t exist
+                  in the new type.
+                </p>
+              )}
+            </div>
+
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               {formFields.map((field) => (
                 <div

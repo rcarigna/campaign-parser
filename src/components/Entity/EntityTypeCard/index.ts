@@ -1,0 +1,1 @@
+export { EntityTypeCard } from './EntityTypeCard';

@@ -42,11 +42,6 @@ jest.mock('@/hooks', () => ({
   }),
 }));
 
-// Mock types
-jest.mock('@/types', () => ({
-  ALLOWED_EXTENSIONS: ['.docx', '.md'],
-}));
-
 describe('Home Component', () => {
   it('renders without crashing', () => {
     render(<Home />);

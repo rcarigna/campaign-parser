@@ -36,6 +36,7 @@ This is a simplified Next.js 16 application for campaign document parsing with c
 - Follow KISS (Keep It Simple, Stupid) principle
 - Write modular, testable, and reusable code
 - Use conventional commits for commit messages
+- Use pull_request_template.md for PR descriptions to ensure consistency and completeness of information provided in PRs
 
 ### Testing
 

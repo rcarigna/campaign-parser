@@ -77,6 +77,7 @@ export default function Home() {
             parsedData={campaignParser.parsedData}
             entities={campaignParser.entities}
             onEntityDiscard={campaignParser.discardEntity}
+            onEntityUpdate={campaignParser.updateEntity}
             onEntityMerge={campaignParser.mergeEntities}
           />
         )}
