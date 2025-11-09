@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { type EntityWithId } from '@/types';
+import { type EntityWithId, getEntityFields } from '@/types';
 import { getEntityIcon } from '@/lib/utils/entity';
 
 type EntityMergeModalProps = {
@@ -32,6 +32,13 @@ export const EntityMergeModal = ({
   const [fieldEditStates, setFieldEditStates] = useState<FieldEditState>({});
 
   const primaryEntity = entities.find((e) => e.id === primaryEntityId);
+
+  // Get entity field metadata to check for enums
+  const entityFields = primaryEntity ? getEntityFields(primaryEntity.kind) : [];
+  const isEnumField = (fieldName: string): boolean => {
+    const fieldMeta = entityFields.find(f => f.key === fieldName);
+    return fieldMeta?.type === 'select';
+  };
 
   // Helper function to render entity details safely
   const renderEntityDetail = (
@@ -227,6 +234,7 @@ export const EntityMergeModal = ({
                   customValue: '',
                 };
                 const isCustomMode = editState.mode === 'custom';
+                const allowCustom = !isEnumField(fieldName);
 
                 return (
                   <div key={fieldName} className='field-merge-group'>
@@ -241,9 +249,7 @@ export const EntityMergeModal = ({
                             type='radio'
                             name={`field-${fieldName}`}
                             value={String(value)}
-                            checked={
-                              !isCustomMode && currentValue === value
-                            }
+                            checked={!isCustomMode && currentValue === value}
                             onChange={() => {
                               handleFieldModeChange(fieldName, 'select');
                               handleFieldChange(fieldName, value);
@@ -255,41 +261,45 @@ export const EntityMergeModal = ({
                           </div>
                         </label>
                       ))}
-                      <label className='field-option custom-option'>
-                        <input
-                          type='radio'
-                          name={`field-${fieldName}`}
-                          checked={isCustomMode}
-                          onChange={() =>
-                            handleFieldModeChange(fieldName, 'custom')
-                          }
-                        />
-                        <div className='field-value custom-value'>
-                          <strong>Custom / Combined</strong>
-                          <span className='source'>
-                            manually edit or combine values
-                          </span>
-                        </div>
-                      </label>
-                      {isCustomMode && (
-                        <div className='custom-input-container'>
-                          <textarea
-                            className='custom-input'
-                            value={editState.customValue}
-                            onChange={(e) =>
-                              handleCustomValueChange(
-                                fieldName,
-                                e.target.value
-                              )
-                            }
-                            placeholder={`Enter custom value for ${fieldName}...`}
-                            rows={3}
-                          />
-                          <div className='custom-hint'>
-                            💡 Tip: You can combine values from multiple
-                            entities above
-                          </div>
-                        </div>
+                      {allowCustom && (
+                        <>
+                          <label className='field-option custom-option'>
+                            <input
+                              type='radio'
+                              name={`field-${fieldName}`}
+                              checked={isCustomMode}
+                              onChange={() =>
+                                handleFieldModeChange(fieldName, 'custom')
+                              }
+                            />
+                            <div className='field-value custom-value'>
+                              <strong>Custom / Combined</strong>
+                              <span className='source'>
+                                manually edit or combine values
+                              </span>
+                            </div>
+                          </label>
+                          {isCustomMode && (
+                            <div className='custom-input-container'>
+                              <textarea
+                                className='custom-input'
+                                value={editState.customValue}
+                                onChange={(e) =>
+                                  handleCustomValueChange(
+                                    fieldName,
+                                    e.target.value
+                                  )
+                                }
+                                placeholder={`Enter custom value for ${fieldName}...`}
+                                rows={3}
+                              />
+                              <div className='custom-hint'>
+                                💡 Tip: You can combine values from multiple
+                                entities above
+                              </div>
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
                   </div>
