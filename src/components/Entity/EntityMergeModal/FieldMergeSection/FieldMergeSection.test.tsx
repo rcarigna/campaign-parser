@@ -25,7 +25,7 @@ const defaultProps: FieldMergeSectionProps = {
   onFieldChange: jest.fn(),
 };
 
-jest.mock('./FieldMergeGroup', () => ({
+jest.mock('../FieldMergeGroup', () => ({
   FieldMergeGroup: ({ fieldName }: { fieldName: string }) => (
     <div data-testid={`field-merge-group-${fieldName}`}>{fieldName}</div>
   ),
