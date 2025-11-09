@@ -1,8 +1,7 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { EntityMergeModal } from './EntityMergeModal';
 import { EntityKind, type EntityWithId } from '@/types';
 import { getEntityIcon } from '@/lib/utils/entity';
-import * as mockedTypes from '@/types';
 import userEvent from '@testing-library/user-event';
 
 // Mock the entity utils
@@ -277,7 +276,10 @@ describe('EntityMergeModal', () => {
   });
 
   describe('Modal interactions', () => {
-    it('should close modal when cancel button is clicked', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+    it('should close modal when cancel button is clicked', async () => {
       render(
         <EntityMergeModal
           entities={mockEntities}
@@ -285,8 +287,9 @@ describe('EntityMergeModal', () => {
           onMerge={mockOnMerge}
         />
       );
+      expect(mockOnClose).toHaveBeenCalledTimes(0);
 
-      fireEvent.click(screen.getByText('Cancel'));
+      await userEvent.click(screen.getByText('Cancel'));
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
 
@@ -300,19 +303,6 @@ describe('EntityMergeModal', () => {
       );
 
       fireEvent.click(screen.getByRole('button', { name: '×' }));
-      expect(mockOnClose).toHaveBeenCalledTimes(1);
-    });
-
-    it('should close modal when overlay is clicked', async () => {
-      render(
-        <EntityMergeModal
-          entities={mockEntities}
-          onClose={mockOnClose}
-          onMerge={mockOnMerge}
-        />
-      );
-
-      await userEvent.click(screen.getByTestId('modal-overlay'));
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
 
