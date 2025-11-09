@@ -4,7 +4,10 @@ import { useCallback, useState } from 'react';
 import { type EntityWithId, getEntityFields } from '@/types';
 import { PrimaryEntitySelector } from './PrimaryEntitySelector';
 import { MergedEntityPreview } from './MergedEntityPreview';
-import { FieldMergeGroup } from './FieldMergeGroup';
+import { FieldMergeSection } from './FieldMergeSection';
+import { ModalHeader } from './ModalHeader';
+import { ModalFooter } from './ModalFooter';
+import { InsufficientEntitiesMessage } from './InsufficientEntitiesMessage';
 
 type EntityMergeModalProps = {
   entities: EntityWithId[];
@@ -13,13 +16,6 @@ type EntityMergeModalProps = {
     primaryEntity: EntityWithId,
     mergedData: Record<string, unknown>
   ) => void;
-};
-
-type FieldEditState = {
-  [fieldName: string]: {
-    mode: 'select' | 'custom';
-    customValue: string;
-  };
 };
 
 export const EntityMergeModal = ({
@@ -34,7 +30,6 @@ export const EntityMergeModal = ({
     entities[0]?.id || ''
   );
   const [mergedFields, setMergedFields] = useState<Record<string, unknown>>({});
-  const [fieldEditStates, setFieldEditStates] = useState<FieldEditState>({});
 
   const primaryEntity = entities.find((e) => e.id === primaryEntityId);
 
@@ -90,48 +85,6 @@ export const EntityMergeModal = ({
     }));
   };
 
-  const handleFieldModeChange = (
-    fieldName: string,
-    mode: 'select' | 'custom'
-  ) => {
-    setFieldEditStates((prev) => ({
-      ...prev,
-      [fieldName]: {
-        mode,
-        customValue:
-          mode === 'custom'
-            ? String(
-                mergedFields[fieldName] ||
-                  primaryEntity?.[fieldName as keyof EntityWithId] ||
-                  ''
-              )
-            : prev[fieldName]?.customValue || '',
-      },
-    }));
-
-    // If switching to custom mode, initialize with current value
-    if (mode === 'custom') {
-      const currentValue =
-        mergedFields[fieldName] ||
-        primaryEntity?.[fieldName as keyof EntityWithId];
-      if (currentValue) {
-        handleFieldChange(fieldName, String(currentValue));
-      }
-    }
-  };
-
-  const handleCustomValueChange = (fieldName: string, value: string) => {
-    setFieldEditStates((prev) => ({
-      ...prev,
-      [fieldName]: {
-        ...prev[fieldName],
-        mode: 'custom',
-        customValue: value,
-      },
-    }));
-    handleFieldChange(fieldName, value);
-  };
-
   const getMergedEntity = () => {
     if (!primaryEntity) return null;
 
@@ -154,26 +107,7 @@ export const EntityMergeModal = ({
   };
 
   if (entities.length < 2) {
-    return (
-      <div className='modal-overlay'>
-        <div className='modal-content' onClick={(e) => e.stopPropagation()}>
-          <div className='modal-header'>
-            <h2>⚠️ Insufficient Entities</h2>
-            <button className='modal-close' onClick={handleClose}>
-              ×
-            </button>
-          </div>
-          <div className='modal-body'>
-            <p>At least 2 entities are required for merging.</p>
-          </div>
-          <div className='modal-footer'>
-            <button onClick={handleClose} className='btn-secondary'>
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+    return <InsufficientEntitiesMessage onClose={handleClose} />;
   }
 
   return (
@@ -182,13 +116,10 @@ export const EntityMergeModal = ({
         className='modal-content merge-modal'
         onClick={(e) => e.stopPropagation()}
       >
-        <div className='modal-header'>
-          <h2>🔄 Merge Duplicate Entities</h2>
-          <button className='modal-close' onClick={handleClose}>
-            ×
-          </button>
-        </div>
-
+        <ModalHeader
+          title='🔄 Merge Duplicate Entities'
+          onClose={handleClose}
+        />
         <div className='modal-body'>
           <div className='merge-section'>
             <PrimaryEntitySelector
@@ -199,55 +130,12 @@ export const EntityMergeModal = ({
             />
           </div>
         </div>
-
-        <div className='merge-section'>
-          <h3>2. Merge Fields</h3>
-          <p className='help-text'>
-            For each field, choose a value or enter a custom combination.
-          </p>
-          <div className='field-merger'>
-            {allFields.map((fieldName) => {
-              const fieldValues = getFieldValues(fieldName);
-
-              if (fieldValues.length <= 1) return null;
-
-              const currentValue =
-                mergedFields[fieldName] ||
-                primaryEntity?.[fieldName as keyof EntityWithId];
-
-              const editState = fieldEditStates[fieldName] || {
-                mode: 'select',
-                customValue: '',
-              };
-              const isCustomMode = editState.mode === 'custom';
-              const allowCustom = !isEnumField(fieldName);
-
-              return (
-                <div key={fieldName} className='field-merge-group'>
-                  <FieldMergeGroup
-                    fieldName={fieldName}
-                    fieldValues={fieldValues}
-                    currentValue={currentValue}
-                    editState={editState}
-                    isCustomMode={isCustomMode}
-                    allowCustom={allowCustom}
-                    onSelect={(value) =>
-                      // handleFieldModeChange(fieldName, 'select') ||
-                      handleFieldChange(fieldName, value)
-                    }
-                    onCustomMode={() =>
-                      handleFieldModeChange(fieldName, 'custom')
-                    }
-                    onCustomValueChange={(value) =>
-                      handleCustomValueChange(fieldName, value)
-                    }
-                  />
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
+        <FieldMergeSection
+          allFields={allFields}
+          getFieldValues={getFieldValues}
+          isEnumField={isEnumField}
+          onFieldChange={handleFieldChange}
+        />
         <div className='merge-section'>
           <h3>3. Preview Merged Entity</h3>
           <MergedEntityPreview
@@ -257,15 +145,11 @@ export const EntityMergeModal = ({
           />
         </div>
       </div>
-
-      <div className='modal-footer'>
-        <button onClick={handleClose} className='btn-secondary'>
-          Cancel
-        </button>
-        <button onClick={handleMerge} className='btn-primary'>
-          🔄 Merge {entities.length} Entities
-        </button>
-      </div>
+      <ModalFooter
+        onCancel={handleClose}
+        onConfirm={handleMerge}
+        confirmLabel={`🔄 Merge ${entities.length} Entities`}
+      />
     </div>
   );
 };

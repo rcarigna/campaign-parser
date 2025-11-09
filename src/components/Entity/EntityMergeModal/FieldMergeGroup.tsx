@@ -1,81 +1,90 @@
-import React from 'react';
-
-export type FieldEditState = {
-  mode: 'select' | 'custom';
-  customValue: string;
-};
+import React, { useRef, useState } from 'react';
 
 export type FieldMergeGroupProps = {
   fieldName: string;
   fieldValues: Array<{ entityId: string; entityTitle: string; value: unknown }>;
-  currentValue: unknown;
-  editState: FieldEditState;
-  isCustomMode: boolean;
   allowCustom: boolean;
-  onSelect: (value: unknown) => void;
-  onCustomMode: () => void;
-  onCustomValueChange: (value: string) => void;
+  onChange: (value: unknown) => void;
 };
 
 export const FieldMergeGroup: React.FC<FieldMergeGroupProps> = ({
   fieldName,
   fieldValues,
-  currentValue,
-  editState,
-  isCustomMode,
   allowCustom,
-  onSelect,
-  onCustomMode,
-  onCustomValueChange,
-}) => (
-  <div>
-    <h4>{fieldName}</h4>
-    <div className='field-options'>
-      {fieldValues.map(({ entityId, entityTitle, value }) => (
-        <label key={`${fieldName}-${entityId}`} className='field-option'>
-          <input
-            type='radio'
-            name={`field-${fieldName}`}
-            value={String(value)}
-            checked={!isCustomMode && currentValue === value}
-            onChange={() => onSelect(value)}
-          />
-          <div className='field-value'>
-            <strong>{String(value)}</strong>
-            <span className='source'>from {entityTitle}</span>
-          </div>
-        </label>
-      ))}
-      {allowCustom && (
-        <>
-          <label className='field-option custom-option'>
+  onChange,
+}) => {
+  const [selected, setSelected] = useState<string>('');
+  const [customValue, setCustomValue] = useState<string>('');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelected(e.target.value);
+    if (e.target.value === 'custom') {
+      onChange(customValue);
+    } else {
+      onChange(e.target.value);
+    }
+  };
+
+  const handleCustomInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setCustomValue(e.target.value);
+    if (selected === 'custom') {
+      onChange(e.target.value);
+    }
+  };
+
+  return (
+    <div>
+      <h4>{fieldName}</h4>
+      <div className='field-options'>
+        {fieldValues.map(({ entityId, entityTitle, value }) => (
+          <label key={`${fieldName}-${entityId}`} className='field-option'>
             <input
               type='radio'
               name={`field-${fieldName}`}
-              checked={isCustomMode}
-              onChange={onCustomMode}
+              value={String(value)}
+              checked={selected === String(value)}
+              onChange={handleRadioChange}
             />
-            <div className='field-value custom-value'>
-              <strong>Custom / Combined</strong>
-              <span className='source'>manually edit or combine values</span>
+            <div className='field-value'>
+              <strong>{String(value)}</strong>
+              <span className='source'>from {entityTitle}</span>
             </div>
           </label>
-          {isCustomMode && (
-            <div className='custom-input-container'>
-              <textarea
-                className='custom-input'
-                value={editState.customValue}
-                onChange={(e) => onCustomValueChange(e.target.value)}
-                placeholder={`Enter custom value for ${fieldName}...`}
-                rows={3}
+        ))}
+        {allowCustom && (
+          <>
+            <label className='field-option custom-option'>
+              <input
+                type='radio'
+                name={`field-${fieldName}`}
+                value='custom'
+                checked={selected === 'custom'}
+                onChange={handleRadioChange}
               />
-              <div className='custom-hint'>
-                💡 Tip: You can combine values from multiple entities above
+              <div className='field-value custom-value'>
+                <strong>Custom / Combined</strong>
+                <span className='source'>manually edit or combine values</span>
               </div>
-            </div>
-          )}
-        </>
-      )}
+            </label>
+            {selected === 'custom' && (
+              <div className='custom-input-container'>
+                <textarea
+                  ref={textareaRef}
+                  className='custom-input'
+                  value={customValue}
+                  onChange={handleCustomInput}
+                  placeholder={`Enter custom value for ${fieldName}...`}
+                  rows={3}
+                />
+                <div className='custom-hint'>
+                  💡 Tip: You can combine values from multiple entities above
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
