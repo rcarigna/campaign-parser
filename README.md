@@ -46,11 +46,12 @@ Transform your campaign notes, session summaries, and world-building documents i
 
 ### 📤 Obsidian Export
 
-- **Complete Backend**: Export API fully implemented and tested ✅
-- **Template System**: Handlebars-based templates for each entity type ✅
+- **Complete System**: Export API fully implemented with ZIP generation ✅
+- **Template Engine**: Handlebars-based templates for each entity type ✅
 - **Vault Structure**: Organized export matching Obsidian folder conventions ✅
 - **Markdown Format**: Full frontmatter, tags, and wiki-link compatibility ✅
-- **UI Integration**: Export buttons coming soon (backend ready) 🔄
+- **ZIP Download**: One-click export to downloadable vault archive ✅
+- **Folder Organization**: Proper Campaign Vault structure (02_World/NPCs, etc.) ✅
 
 ---
 
@@ -58,24 +59,33 @@ Transform your campaign notes, session summaries, and world-building documents i
 
 ### Prerequisites
 
-- Node.js 18+ (20.x recommended)
-- npm, yarn, or pnpm
+- Node.js 18+ and npm
+- Modern web browser (Chrome, Firefox, Edge, Safari)
 
-### Development Setup
+### Installation
 
 ```bash
 # Clone the repository
 git clone https://github.com/rcarigna/campaign-parser.git
-cd campaign-parser
+cd campaign-parser/workspace
 
 # Install dependencies
 npm install
 
-# Start development server
+# Run development server
 npm run dev
+
+# Open browser to http://localhost:3000
 ```
 
-**Note**: The `npm install` command automatically sets up Git hooks (via the `prepare` script) that will run linting and TypeScript compilation before each push to prevent failures.
+### Usage
+
+1. **Upload** your session notes (DOC or Markdown)
+2. **Review** extracted entities in the grid view
+3. **Edit** any entity details or change entity types
+4. **Merge** duplicate entities using the selection tool
+5. **Export** your organized vault as a ZIP file
+6. **Import** the ZIP into Obsidian and start your campaign!
 
 ### Git Hooks
 
@@ -146,7 +156,6 @@ src/
 │       └── templates/     #   Template files for each entity type
 └── types/                 # TypeScript definitions
 
-__mocks__/                 # Test fixtures and example data
 ├── expected_obsidian_output/  # Expected template outputs
 ├── session_summary_*.json     # Campaign session data
 └── session_summary_*.md       # Example documents
@@ -154,26 +163,45 @@ __mocks__/                 # Test fixtures and example data
 
 ---
 
-## 🧪 Testing
-
-Comprehensive test suite with **183 tests** covering all functionality using **real D&D campaign data**:
+## 🧪 Test Suite
 
 ```bash
 # Run all tests
 npm test
 
-# Run tests with coverage
+# Run tests in watch mode
+npm run test:watch
+
+# Generate coverage report
 npm run test:coverage
 
-# Watch mode for development
-npm run test:watch
+# Current status: 308 tests passing across 29 test suites
 ```
 
-**Test Coverage**: **183 tests passing** with comprehensive coverage across all architectural layers
+**Test Coverage**: **308 tests passing** with comprehensive coverage across all architectural layers
 
 ### Test Categories
 
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Generate coverage report
+npm run test:coverage
+```
+
+**Current Status**: 308 tests passing across 29 test suites
+
+### Coverage by Area
+
 - **Component Tests**: UI components with user interactions using real entity data
+- **Hook Tests**: Custom React hooks (useCampaignParser, useEntitySelection, useFileManager)
+- **API Tests**: All endpoints (parse, export, demo, health)
+- **Library Tests**: Entity extraction, template engine, validation
+- **Integration Tests**: End-to-end workflows with real campaign data
 - **Hook Tests**: Custom React hooks with mock integrations
 - **API Tests**: Next.js API routes with request/response validation
 - **Entity Extraction Tests**: Both NLP and regex engines validated against actual D&D session content

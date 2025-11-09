@@ -1,8 +1,16 @@
-# 📡 API Reference
+# 🌐 API Reference
 
-## Base URL
+Complete documentation for all Campaign Parser API endpoints.
 
-When running locally: `http://localhost:3000`
+**Base URL**: `http://localhost:3000/api` (development)  
+**Production**: `https://your-deployment.vercel.app/api`
+
+**Last Updated**: November 9, 2025  
+**API Version**: 1.0
+
+---
+
+## 📋 Table of Contents
 
 ## Authentication
 
