@@ -36,7 +36,7 @@ export const EntityMergeModal = ({
   // Get entity field metadata to check for enums
   const entityFields = primaryEntity ? getEntityFields(primaryEntity.kind) : [];
   const isEnumField = (fieldName: string): boolean => {
-    const fieldMeta = entityFields.find(f => f.key === fieldName);
+    const fieldMeta = entityFields.find((f) => f.key === fieldName);
     return fieldMeta?.type === 'select';
   };
 
