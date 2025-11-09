@@ -172,7 +172,11 @@ export const EntityMergeModal = ({
   }
 
   return (
-    <div className='modal-overlay' onClick={onClose}>
+    <div
+      className='modal-overlay'
+      data-testid='modal-overlay'
+      onClick={onClose}
+    >
       <div
         className='modal-content merge-modal'
         onClick={(e) => e.stopPropagation()}
@@ -333,7 +337,11 @@ export const EntityMergeModal = ({
                         return null;
 
                       return (
-                        <div key={fieldName} className='detail-item'>
+                        <div
+                          key={fieldName}
+                          className='detail-item'
+                          data-testid={`preview-${fieldName}`}
+                        >
                           <strong>{fieldName}:</strong> {String(value)}
                         </div>
                       );
