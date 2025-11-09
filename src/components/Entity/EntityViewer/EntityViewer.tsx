@@ -222,10 +222,17 @@ export const EntityViewer = ({
           <EntityGrid
             entities={filtering.filteredEntities}
             duplicateIds={filtering.duplicateIds}
-            onEntityClick={handleEntityClick}
+            onEntityClick={
+              selection.isSelectionMode
+                ? (entity) =>
+                    selection.handleEntitySelect(
+                      entity.id,
+                      !selection.selectedEntityIds.has(entity.id)
+                    )
+                : handleEntityClick
+            }
             isSelectionMode={selection.isSelectionMode}
             selectedEntityIds={selection.selectedEntityIds}
-            onEntitySelect={selection.handleEntitySelect}
             onEntityDiscard={handleEntityDiscard}
           />
         </>

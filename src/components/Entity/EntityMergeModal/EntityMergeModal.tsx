@@ -144,12 +144,12 @@ export const EntityMergeModal = ({
             mergedFields={mergedFields}
           />
         </div>
+        <ModalFooter
+          onCancel={handleClose}
+          onConfirm={handleMerge}
+          confirmLabel={`🔄 Merge ${entities.length} Entities`}
+        />
       </div>
-      <ModalFooter
-        onCancel={handleClose}
-        onConfirm={handleMerge}
-        confirmLabel={`🔄 Merge ${entities.length} Entities`}
-      />
     </div>
   );
 };
