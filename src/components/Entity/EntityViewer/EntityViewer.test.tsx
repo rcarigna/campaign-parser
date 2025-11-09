@@ -15,12 +15,23 @@ jest.mock('react-hot-toast', () => ({
   default: {
     success: jest.fn(),
     error: jest.fn(),
+    loading: jest.fn(),
   },
+}));
+
+// Mock the export API
+jest.mock('@/client/api', () => ({
+  exportEntities: jest.fn(),
 }));
 
 import toast from 'react-hot-toast';
 import userEvent from '@testing-library/user-event';
+import { exportEntities } from '@/client/api';
+
 const mockToast = toast as jest.Mocked<typeof toast>;
+const mockExportEntities = exportEntities as jest.MockedFunction<
+  typeof exportEntities
+>;
 
 describe('EntityViewer', () => {
   const mockEntities: EntityWithId[] = [
@@ -57,6 +68,9 @@ describe('EntityViewer', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    // Mock URL.createObjectURL and revokeObjectURL
+    global.URL.createObjectURL = jest.fn(() => 'blob:mock-url');
+    global.URL.revokeObjectURL = jest.fn();
   });
 
   it('renders entities correctly', () => {
@@ -313,5 +327,83 @@ describe('EntityViewer', () => {
 
     // Should not show success toast since merge didn't happen
     expect(mockToast.success).not.toHaveBeenCalled();
+  });
+
+  it('renders export button', () => {
+    render(<EntityViewer {...mockProps} />);
+    expect(screen.getByText('📦 Export to Obsidian')).toBeInTheDocument();
+  });
+
+  it('handles successful export', async () => {
+    const mockBlob = new Blob(['test data'], { type: 'application/zip' });
+    mockExportEntities.mockResolvedValue(mockBlob);
+    mockToast.loading.mockReturnValue('toast-id');
+
+    render(<EntityViewer {...mockProps} />);
+
+    const exportButton = screen.getByText('📦 Export to Obsidian');
+    await userEvent.click(exportButton);
+
+    // Should show loading toast
+    expect(mockToast.loading).toHaveBeenCalledWith(
+      'Exporting 3 entities to Obsidian format...'
+    );
+
+    // Should call export API
+    expect(mockExportEntities).toHaveBeenCalledWith(mockEntities);
+
+    // Wait for async operations
+    await screen.findByText('📦 Export to Obsidian');
+
+    // Should show success toast
+    expect(mockToast.success).toHaveBeenCalledWith(
+      'Successfully exported 3 entities as Obsidian vault!',
+      { id: 'toast-id', duration: 5000 }
+    );
+  });
+
+  it('handles export error', async () => {
+    mockExportEntities.mockRejectedValue(new Error('Export failed'));
+    mockToast.loading.mockReturnValue('toast-id');
+
+    render(<EntityViewer {...mockProps} />);
+
+    const exportButton = screen.getByText('📦 Export to Obsidian');
+    await userEvent.click(exportButton);
+
+    // Wait for error handling
+    await screen.findByText('📦 Export to Obsidian');
+
+    expect(mockToast.error).toHaveBeenCalledWith('Export failed', {
+      id: 'toast-id',
+      duration: 5000,
+    });
+  });
+
+  it('shows error when trying to export empty entities', async () => {
+    render(<EntityViewer {...mockProps} entities={[]} />);
+
+    // Can't click export button because empty state shows different UI
+    expect(screen.queryByText('📦 Export to Obsidian')).not.toBeInTheDocument();
+  });
+
+  it('disables export button while exporting', async () => {
+    const mockBlob = new Blob(['test data'], { type: 'application/zip' });
+    // Make export take a while
+    mockExportEntities.mockImplementation(
+      () => new Promise((resolve) => setTimeout(() => resolve(mockBlob), 100))
+    );
+    mockToast.loading.mockReturnValue('toast-id');
+
+    render(<EntityViewer {...mockProps} />);
+
+    const exportButton = screen.getByText('📦 Export to Obsidian');
+    await userEvent.click(exportButton);
+
+    // Button should show loading state and be disabled
+    expect(screen.getByText('⏳ Exporting...')).toBeDisabled();
+
+    // Wait for export to complete
+    await screen.findByText('📦 Export to Obsidian');
   });
 });

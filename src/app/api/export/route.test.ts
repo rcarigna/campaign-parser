@@ -6,11 +6,20 @@ jest.mock('next/server', () => ({
             return JSON.parse(this.init?.body || '{}');
         }
     },
-    NextResponse: {
-        json: (data: unknown, init?: { status?: number }) => ({
-            json: () => Promise.resolve(data),
-            status: init?.status || 200,
-        }),
+    NextResponse: class MockNextResponse {
+        constructor(public body: unknown, public init?: { status?: number; headers?: Record<string, string> }) { }
+        get status() {
+            return this.init?.status || 200;
+        }
+        get headers() {
+            return this.init?.headers || {};
+        }
+        static json(data: unknown, init?: { status?: number }) {
+            return new MockNextResponse(data, init);
+        }
+        async json() {
+            return this.body;
+        }
     },
 }));
 
@@ -19,6 +28,16 @@ jest.mock('@/lib/templateEngine', () => ({
     initializeTemplates: jest.fn(),
     processEntities: jest.fn(),
 }));
+
+// Mock JSZip
+jest.mock('jszip', () => {
+    return jest.fn().mockImplementation(() => ({
+        file: jest.fn(),
+        generateAsync: jest.fn().mockResolvedValue({
+            arrayBuffer: jest.fn().mockResolvedValue(new ArrayBuffer(100))
+        })
+    }));
+});
 
 import { POST } from './route';
 import { initializeTemplates, processEntities } from '@/lib/templateEngine';
@@ -64,14 +83,13 @@ describe('/api/export', () => {
         };
 
         const response = await POST(mockRequest as unknown as NextRequest);
-        const result = await response.json();
 
         expect(response.status).toBe(200);
-        expect(result.success).toBe(true);
-        expect(result.files).toHaveLength(1);
-        expect(result.files[0].filename).toBe('Test NPC.md');
-        expect(result.files[0].vaultPath).toBe('02_World/NPCs');
-        expect(result.metadata.totalEntities).toBe(1);
+        expect(response.headers).toMatchObject({
+            'Content-Type': 'application/zip',
+            'Content-Disposition': 'attachment; filename="obsidian-vault.zip"'
+        });
+        expect(response.body).toBeInstanceOf(Buffer);
         expect(mockInitializeTemplates).toHaveBeenCalled();
         expect(mockProcessEntities).toHaveBeenCalledWith([mockEntity]);
     });

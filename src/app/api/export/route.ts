@@ -1,22 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import JSZip from 'jszip';
 import { initializeTemplates, processEntities } from '@/lib/templateEngine';
 import { type EntityWithId, type AnyEntity } from '@/types';
-
-// Types for the export response
-interface OrganizedFile {
-    filename: string;
-    content: string;
-    vaultPath: string;
-    fullPath: string;
-    kind: string;
-}
-
-interface ExportMetadata {
-    exportDate: string;
-    totalEntities: number;
-    entityCounts: Record<string, number>;
-    vaultStructure: Record<string, unknown>;
-}
 
 export const POST = async (request: NextRequest): Promise<NextResponse> => {
     try {
@@ -42,40 +27,53 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
         await initializeTemplates();
         const processedFiles = await processEntities(validatedEntities as AnyEntity[]);
 
-        // Organize files by vault structure
-        const organizedFiles: OrganizedFile[] = processedFiles.map(file => {
+        // Create ZIP file
+        const zip = new JSZip();
+        const vaultName = 'Campaign Vault';
+
+        // Add each file to the ZIP with proper folder structure
+        for (const file of processedFiles) {
             const vaultPath = getVaultPath(file.kind);
-            return {
-                filename: file.filename,
-                content: file.content,
-                vaultPath,
-                fullPath: `${vaultPath}/${file.filename}`,
-                kind: file.kind
-            };
+            const fullPath = `${vaultName}/${vaultPath}/${file.filename}`;
+            zip.file(fullPath, file.content);
+        }
+
+        // Add a README to the root
+        const readmeContent = `# Campaign Vault Export
+
+Exported on: ${new Date().toISOString()}
+Total Entities: ${validatedEntities.length}
+
+## Folder Structure
+
+- **02_World/NPCs**: Non-player characters
+- **02_World/Locations**: Places and regions
+- **04_QuestLines**: Quests and objectives
+- **06_Items**: Equipment and artifacts
+- **07_Sessions**: Session summaries
+
+Import this vault into Obsidian to view your campaign data.
+`;
+        zip.file(`${vaultName}/README.md`, readmeContent);
+
+        // Generate the ZIP file as a blob
+        const zipBlob = await zip.generateAsync({
+            type: 'blob',
+            compression: 'DEFLATE',
+            compressionOptions: { level: 9 }
         });
 
-        // Generate metadata
-        const metadata: ExportMetadata = {
-            exportDate: new Date().toISOString(),
-            totalEntities: validatedEntities.length,
-            entityCounts: countEntitiesByType(validatedEntities),
-            vaultStructure: {
-                'Campaign Vault': {
-                    '02_World': {
-                        'NPCs': 'Character files with relationships and stats',
-                        'Locations': 'Places, regions, and points of interest'
-                    },
-                    '04_QuestLines': 'Active and completed quests with objectives',
-                    '06_Items': 'Equipment, artifacts, and magical items',
-                    '07_Sessions': 'Session summaries and campaign narrative'
-                }
-            }
-        };
+        // Convert blob to buffer for NextResponse
+        const arrayBuffer = await zipBlob.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
 
-        return NextResponse.json({
-            success: true,
-            files: organizedFiles,
-            metadata,
+        // Return the ZIP file
+        return new NextResponse(buffer, {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/zip',
+                'Content-Disposition': 'attachment; filename="obsidian-vault.zip"',
+            },
         });
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Failed to export entities';
@@ -96,18 +94,9 @@ const getVaultPath = (kind: string): string => {
         'location': '02_World/Locations',
         'item': '06_Items',
         'quest': '04_QuestLines',
-        'session_summary': '07_Sessions'
+        'session_summary': '07_Sessions',
+        'player': '02_World/Players',
+        'session_prep': '07_Sessions/Prep'
     };
     return pathMap[kind] || '99_Misc';
-};
-
-/**
- * Count entities by type for metadata
- */
-const countEntitiesByType = (entities: AnyEntity[]): Record<string, number> => {
-    const counts: Record<string, number> = {};
-    for (const entity of entities) {
-        counts[entity.kind] = (counts[entity.kind] || 0) + 1;
-    }
-    return counts;
 };
