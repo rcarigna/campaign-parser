@@ -25,6 +25,7 @@ export const FieldMergeSection: React.FC<FieldMergeSectionProps> = ({
       {allFields.map((fieldName) => {
         const fieldValues = getFieldValues(fieldName);
         if (fieldValues.length <= 1) return null;
+        // Only allow custom if NOT an enum field
         const allowCustom = !isEnumField(fieldName);
         return (
           <div key={fieldName} className='field-merge-group'>

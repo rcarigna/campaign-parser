@@ -133,3 +133,14 @@ export const getAllEntityMetadata = (): EntityMetadata[] => {
         EntityKind.SESSION_SUMMARY,
     ].map(getEntityMetadata);
 };
+
+
+// Outside component for clarity and testability
+export const getIsEnumField = (
+    entityFields: Array<{ key: string; type: string }>
+) => {
+    return (fieldName: string): boolean => {
+        const fieldMeta = entityFields.find((f) => f.key === fieldName);
+        return fieldMeta?.type === 'select';
+    };
+};

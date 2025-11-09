@@ -3,11 +3,23 @@ import { EntityMergeModal } from './EntityMergeModal';
 import { EntityKind, type EntityWithId } from '@/types';
 import { getEntityIcon } from '@/lib/utils/entity';
 import userEvent from '@testing-library/user-event';
+import { FieldMetadata } from '@/lib/utils';
 
 // Mock the entity utils
-jest.mock('@/lib/utils/entity', () => ({
-  getEntityIcon: jest.fn(),
-}));
+jest.mock('@/lib/utils/entity', () => {
+  const getEntityIcon = jest.fn();
+  const getIsEnumField = jest.fn((entityFields) => (fieldName: string) => {
+    const fieldMeta = entityFields.find(
+      (f: FieldMetadata) => f.key === fieldName
+    );
+    return fieldMeta?.type === 'select';
+  });
+  return {
+    getEntityIcon,
+    getIsEnumField,
+    __esModule: true,
+  };
+});
 
 const mockGetEntityIcon = getEntityIcon as jest.MockedFunction<
   typeof getEntityIcon
@@ -277,7 +289,7 @@ describe('EntityMergeModal', () => {
 
   describe('Modal interactions', () => {
     beforeEach(() => {
-      jest.resetAllMocks();
+      jest.restoreAllMocks();
     });
     it('should close modal when cancel button is clicked', async () => {
       render(

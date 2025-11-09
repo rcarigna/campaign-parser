@@ -8,6 +8,7 @@ import { FieldMergeSection } from './FieldMergeSection';
 import { ModalHeader } from './ModalHeader';
 import { ModalFooter } from './ModalFooter';
 import { InsufficientEntitiesMessage } from './InsufficientEntitiesMessage';
+import { getIsEnumField } from '@/lib/utils';
 
 type EntityMergeModalProps = {
   entities: EntityWithId[];
@@ -35,10 +36,9 @@ export const EntityMergeModal = ({
 
   // Get entity field metadata to check for enums
   const entityFields = primaryEntity ? getEntityFields(primaryEntity.kind) : [];
-  const isEnumField = (fieldName: string): boolean => {
-    const fieldMeta = entityFields.find((f) => f.key === fieldName);
-    return fieldMeta?.type === 'select';
-  };
+
+  // Extracted helper for enum field detection
+  const isEnumField = getIsEnumField(entityFields);
 
   // Helper function to render entity details safely
   const renderEntityDetail = (
