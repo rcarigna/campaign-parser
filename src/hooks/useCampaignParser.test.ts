@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useCampaignParser } from './useCampaignParser';
 import { uploadDocument } from '@/client/api';
-import { SerializedParsedDocument, DocumentType, Player, Location, EntityKind } from '@/types';
+import { SerializedParsedDocument, DocumentType, Player, Location, EntityKind, EntityWithId } from '@/types';
 
 // Mock the client API
 jest.mock('@/client/api', () => ({
@@ -253,13 +253,14 @@ describe('useCampaignParser', () => {
 
         const mergedPrimaryEntity = {
             kind: EntityKind.PLAYER,
-            title: 'Merged Character',
-            character_name: 'Merged Character',
-            id: 'player-0'
+            title: 'Primary Character',
+            character_name: 'Primary Character',
+            id: 'player-0',
+
         };
 
         act(() => {
-            result.current.mergeEntities(mergedPrimaryEntity, ['player-1', 'player-2']);
+            result.current.mergeEntities(result.current.entities[0], ['player-1', 'player-2']);
         });
 
         expect(result.current.entities).toHaveLength(2);
@@ -290,11 +291,20 @@ describe('useCampaignParser', () => {
 
         expect(result.current.entities).toHaveLength(2);
 
-        const newPrimaryEntity = {
+        const newPrimaryEntity: Player & EntityWithId = {
             kind: EntityKind.PLAYER,
             title: 'New Primary',
             character_name: 'New Primary',
-            id: 'character-0'
+            id: 'character-0',
+            player_name: 'New Player',
+            tags: [],
+            status: '',
+            race: '',
+            class: '',
+            level: '',
+            background: '',
+            affiliations: [],
+            aliases: [],
         };
 
         act(() => {

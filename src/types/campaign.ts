@@ -52,7 +52,6 @@ export enum QuestType {
 }
 
 export type BaseEntity = {
-    id?: string;
     kind: EntityKind;
     title: string;              // or character_name for players
     sourceSessions?: number[];  // which session numbers referenced this
