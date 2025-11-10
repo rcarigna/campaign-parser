@@ -1,7 +1,7 @@
 import { FieldValues, UseFormRegister } from 'react-hook-form';
 import { FieldLabel } from './FieldLabel';
 
-type TextAreaFieldProps = {
+export type TextAreaFieldProps = {
   fieldKey: string;
   label: string;
   required?: boolean;

@@ -20,7 +20,10 @@ export const EntitySchemaView = ({
   if (!entityMetadata) return null;
 
   return (
-    <div className='bg-white rounded-lg border-2 border-blue-300 shadow-lg overflow-hidden'>
+    <div
+      data-testid='entity-schema-view'
+      className='bg-white rounded-lg border-2 border-blue-300 shadow-lg overflow-hidden'
+    >
       {/* Schema Header */}
       <div className='bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4 flex items-center justify-between'>
         <div className='flex items-center gap-3'>

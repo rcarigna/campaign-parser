@@ -111,4 +111,32 @@ describe('DocumentViewer', () => {
     expect(preElement).toBeInTheDocument();
     expect(preElement?.textContent).toContain('Word document content');
   });
+
+  it('shows formatted view when toggling back from raw markdown', async () => {
+    render(<DocumentViewer parsedData={mockMarkdownData} />);
+    const rawButton = screen.getByRole('button', { name: /raw markdown/i });
+    await userEvent.click(rawButton);
+
+    const formattedButton = screen.getByRole('button', { name: /formatted/i });
+    await userEvent.click(formattedButton);
+
+    // Should show formatted view again
+    expect(formattedButton).toHaveClass('bg-blue-600');
+    expect(document.querySelector('pre')).not.toBeInTheDocument();
+    expect(screen.getByText('Test Header')).toBeInTheDocument();
+  });
+
+  it('shows rendered view when toggling back from plain text for word documents', async () => {
+    render(<DocumentViewer parsedData={mockWordData} />);
+    const plainTextButton = screen.getByRole('button', { name: /plain text/i });
+    await userEvent.click(plainTextButton);
+
+    const renderedButton = screen.getByRole('button', { name: /rendered/i });
+    await userEvent.click(renderedButton);
+
+    // Should show rendered view again
+    expect(renderedButton).toHaveClass('bg-blue-600');
+    expect(document.querySelector('pre')).not.toBeInTheDocument();
+    expect(screen.getByText('Word document content')).toBeInTheDocument();
+  });
 });
