@@ -1,14 +1,13 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { EntityKind, type EntityWithId, getEntityFields } from '@/types';
+import { EntityKind, type EntityWithId } from '@/types';
 import { PrimaryEntitySelector } from './PrimaryEntitySelector';
 import { MergedEntityPreview } from './MergedEntityPreview';
 import { FieldMergeSection } from './FieldMergeSection';
 import { ModalHeader } from './ModalHeader';
 import { ModalFooter } from './ModalFooter';
 import { InsufficientEntitiesMessage } from './InsufficientEntitiesMessage';
-import { getIsEnumField } from '@/lib/utils';
 
 type EntityMergeModalProps = {
   entities: EntityWithId[];
@@ -33,12 +32,6 @@ export const EntityMergeModal = ({
   const [mergedFields, setMergedFields] = useState<Record<string, unknown>>({});
 
   const primaryEntity = entities.find((e) => e.id === primaryEntityId);
-
-  // Get entity field metadata to check for enums
-  const entityFields = primaryEntity ? getEntityFields(primaryEntity.kind) : [];
-
-  // Extracted helper for enum field detection
-  const isEnumField = getIsEnumField(entityFields);
 
   // Helper function to render entity details safely
   const renderEntityDetail = (

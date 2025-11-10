@@ -11,7 +11,7 @@ import {
     type ValidatedNPC,
     type ValidatedLocation,
 } from './entity';
-import { EntityKind, Item, ItemRarity, ItemType } from '@/types';
+import { EntityKind, EntityWithId, Item, ItemRarity, ItemType } from '@/types';
 
 describe('entityValidation (Zod-based)', () => {
     describe('validateEntity', () => {
@@ -268,7 +268,7 @@ describe('entityValidation (Zod-based)', () => {
         });
 
         it('should validate item entities correctly', () => {
-            const validItem: Item = {
+            const validItem: Item & EntityWithId = {
                 id: 'item-1',
                 kind: EntityKind.ITEM,
                 title: 'Excalibur',
