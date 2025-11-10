@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { FieldMergeSection, FieldMergeSectionProps } from './FieldMergeSection';
+import { EntityKind } from '@/types';
 
 const defaultProps: FieldMergeSectionProps = {
   allFields: ['name', 'type', 'description'],
@@ -21,7 +22,7 @@ const defaultProps: FieldMergeSectionProps = {
     }
     return [];
   },
-  isEnumField: (fieldName) => fieldName === 'type',
+  entityKind: EntityKind.UNKNOWN,
   onFieldChange: jest.fn(),
 };
 
@@ -62,13 +63,5 @@ describe('FieldMergeSection', () => {
     expect(
       screen.queryByTestId('field-merge-group-description')
     ).not.toBeInTheDocument();
-  });
-
-  it('passes allowCustom=false for enum fields', () => {
-    // We mock FieldMergeGroup, so test that isEnumField is called
-    const isEnumField = jest.fn((fieldName) => fieldName === 'type');
-    render(<FieldMergeSection {...defaultProps} isEnumField={isEnumField} />);
-    expect(isEnumField).toHaveBeenCalledWith('name');
-    expect(isEnumField).toHaveBeenCalledWith('type');
   });
 });

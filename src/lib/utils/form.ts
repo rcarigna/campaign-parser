@@ -1,6 +1,6 @@
+import { FieldType } from '@/types';
 import { z } from 'zod';
 
-export type FieldType = 'text' | 'textarea' | 'number' | 'boolean' | 'select' | 'array';
 
 const TERMINAL_FIELD_TYPES: FieldType[] = ['text', 'textarea', 'number', 'boolean', 'select', 'array'];
 

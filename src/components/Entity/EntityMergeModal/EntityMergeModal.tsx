@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { type EntityWithId, getEntityFields } from '@/types';
+import { EntityKind, type EntityWithId, getEntityFields } from '@/types';
 import { PrimaryEntitySelector } from './PrimaryEntitySelector';
 import { MergedEntityPreview } from './MergedEntityPreview';
 import { FieldMergeSection } from './FieldMergeSection';
@@ -132,9 +132,10 @@ export const EntityMergeModal = ({
           <FieldMergeSection
             allFields={allFields}
             getFieldValues={getFieldValues}
-            isEnumField={isEnumField}
             onFieldChange={handleFieldChange}
+            entityKind={primaryEntity?.kind || EntityKind.UNKNOWN}
           />
+
           <div className='merge-section'>
             <h3>3. Preview Merged Entity</h3>
             <MergedEntityPreview

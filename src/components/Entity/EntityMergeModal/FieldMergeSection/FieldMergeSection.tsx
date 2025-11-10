@@ -1,20 +1,21 @@
 import React from 'react';
 import { FieldMergeGroup } from '../FieldMergeGroup';
+import { EntityKind } from '@/types';
 
 export type FieldMergeSectionProps = {
   allFields: string[];
   getFieldValues: (
     fieldName: string
   ) => Array<{ entityId: string; entityTitle: string; value: unknown }>;
-  isEnumField: (fieldName: string) => boolean;
   onFieldChange: (fieldName: string, value: unknown) => void;
+  entityKind: EntityKind;
 };
 
 export const FieldMergeSection: React.FC<FieldMergeSectionProps> = ({
   allFields,
   getFieldValues,
-  isEnumField,
   onFieldChange,
+  entityKind,
 }) => {
   return (
     <div className='merge-section'>
@@ -26,14 +27,12 @@ export const FieldMergeSection: React.FC<FieldMergeSectionProps> = ({
         {allFields.map((fieldName) => {
           const fieldValues = getFieldValues(fieldName);
           if (fieldValues.length <= 1) return null;
-          // Only allow custom if NOT an enum field
-          const allowCustom = !isEnumField(fieldName);
           return (
             <div key={fieldName} className='field-merge-group'>
               <FieldMergeGroup
                 fieldName={fieldName}
                 fieldValues={fieldValues}
-                allowCustom={allowCustom}
+                entityKind={entityKind}
                 onChange={(value) => onFieldChange(fieldName, value)}
               />
             </div>

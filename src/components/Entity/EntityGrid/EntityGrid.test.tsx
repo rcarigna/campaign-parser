@@ -67,7 +67,7 @@ describe('EntityGrid', () => {
 
     expect(screen.getByText('Missing:')).toBeInTheDocument();
     expect(
-      screen.getByText('character_name, role, faction')
+      screen.getByText('character_name, role, faction, importance')
     ).toBeInTheDocument();
   });
 

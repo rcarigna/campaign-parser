@@ -85,3 +85,5 @@ export type ParsedDocumentWithEntities = ParsedDocument & {
 export type SerializedParsedDocumentWithEntities = SerializedParsedDocument & {
     entities?: AnyEntity[];
 };
+
+export type FieldType = 'text' | 'textarea' | 'number' | 'boolean' | 'select' | 'array';

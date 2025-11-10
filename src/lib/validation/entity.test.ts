@@ -11,7 +11,7 @@ import {
     type ValidatedNPC,
     type ValidatedLocation,
 } from './entity';
-import { EntityKind } from '@/types';
+import { EntityKind, Item, ItemRarity, ItemType } from '@/types';
 
 describe('entityValidation (Zod-based)', () => {
     describe('validateEntity', () => {
@@ -77,8 +77,8 @@ describe('entityValidation (Zod-based)', () => {
 
             const missing = getMissingFields(incompleteNPC);
             expect(missing).toContain('faction');
-            // expect(missing).toContain('importance'); // importance is not required
-            expect(missing.length).toBe(1);
+            expect(missing).toContain('importance');
+            expect(missing.length).toBe(2);
         });
 
         it('should handle empty string values as missing', () => {
@@ -268,16 +268,19 @@ describe('entityValidation (Zod-based)', () => {
         });
 
         it('should validate item entities correctly', () => {
-            const validItem = {
+            const validItem: Item = {
                 id: 'item-1',
                 kind: EntityKind.ITEM,
                 title: 'Excalibur',
-                name: 'Legendary Sword',
-                type: 'Weapon',
-                rarity: 'Legendary',
+                type: ItemType.WEAPON,
+                rarity: ItemRarity.LEGENDARY,
             };
 
             expect(isEntityComplete(validItem)).toBe(true);
+
+        });
+
+        it('should validate invalid item entities correctly', () => {
 
             const incompleteItem = {
                 id: 'item-2',
@@ -386,8 +389,8 @@ describe('entityValidation (Zod-based)', () => {
                     kind: EntityKind.ITEM,
                     title: 'Test Item',
                     name: 'Sword',
-                    type: 'Weapon',
-                    rarity: 'Common',
+                    type: ItemType.WEAPON,
+                    rarity: ItemRarity.RARE,
                 },
                 quest: {
                     id: 'quest-1',

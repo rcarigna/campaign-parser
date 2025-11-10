@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { FieldMergeGroup, FieldMergeGroupProps } from './FieldMergeGroup';
+import { EntityKind, ItemRarity } from '@/types';
 
 const defaultProps: FieldMergeGroupProps = {
   fieldName: 'Description',
@@ -7,8 +8,8 @@ const defaultProps: FieldMergeGroupProps = {
     { entityId: '1', entityTitle: 'Entity One', value: 'Value One' },
     { entityId: '2', entityTitle: 'Entity Two', value: 'Value Two' },
   ],
-  allowCustom: true,
   onChange: jest.fn(),
+  entityKind: EntityKind.ITEM,
 };
 
 describe('FieldMergeGroup', () => {
@@ -52,7 +53,19 @@ describe('FieldMergeGroup', () => {
   });
 
   it('does not render custom option if allowCustom is false', () => {
-    render(<FieldMergeGroup {...defaultProps} allowCustom={false} />);
+    render(
+      <FieldMergeGroup
+        {...defaultProps}
+        fieldName='rarity'
+        fieldValues={[
+          {
+            entityId: '1',
+            entityTitle: 'Entity One',
+            value: ItemRarity.COMMON,
+          },
+        ]}
+      />
+    );
     expect(screen.queryByText(/Custom \/ Combined/i)).not.toBeInTheDocument();
   });
 

@@ -9,7 +9,8 @@ export enum EntityKind {
     PLAYER = "player",
     QUEST = "quest",
     SESSION_PREP = "session_prep",
-    SESSION_SUMMARY = "session_summary"
+    SESSION_SUMMARY = "session_summary",
+    UNKNOWN = "unknown"
 }
 
 export enum ItemRarity {
@@ -51,6 +52,7 @@ export enum QuestType {
 }
 
 export type BaseEntity = {
+    id?: string;
     kind: EntityKind;
     title: string;              // or character_name for players
     sourceSessions?: number[];  // which session numbers referenced this
@@ -194,7 +196,13 @@ export const EntityFieldMap: Record<EntityKind, () => FieldMetadata[]> = {
             fieldCache[EntityKind.SESSION_SUMMARY] = generateFieldsFromSchema(sessionSummarySchema);
         }
         return fieldCache[EntityKind.SESSION_SUMMARY]!;
-    }
+    },
+    [EntityKind.UNKNOWN]: () => {
+        if (!fieldCache[EntityKind.UNKNOWN]) {
+            fieldCache[EntityKind.UNKNOWN] = [];
+        }
+        return fieldCache[EntityKind.UNKNOWN]!;
+    },
 };
 
 // Helper to get form fields for any entity type

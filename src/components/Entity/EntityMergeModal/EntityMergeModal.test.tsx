@@ -182,7 +182,7 @@ describe('EntityMergeModal', () => {
         />
       );
 
-      expect(screen.getAllByText('Custom / Combined')).toHaveLength(3);
+      expect(screen.getAllByText('Custom / Combined')).toHaveLength(2);
     });
 
     it.skip('should not show custom option for enum fields', () => {
@@ -222,7 +222,7 @@ describe('EntityMergeModal', () => {
       fireEvent.click(customRadio!);
 
       expect(
-        screen.getByPlaceholderText('Enter custom value for kind...')
+        screen.getByPlaceholderText('Enter custom value for title...')
       ).toBeInTheDocument();
     });
 
@@ -242,11 +242,11 @@ describe('EntityMergeModal', () => {
       fireEvent.click(customRadio!);
 
       const textarea = screen.getByPlaceholderText(
-        'Enter custom value for kind...'
+        'Enter custom value for title...'
       );
-      fireEvent.change(textarea, { target: { value: 'Combined Kind' } });
+      fireEvent.change(textarea, { target: { value: 'Combined Title' } });
 
-      expect(textarea).toHaveValue('Combined Kind');
+      expect(textarea).toHaveValue('Combined Title');
     });
   });
 

@@ -1,18 +1,30 @@
 import React, { useRef, useState } from 'react';
+import { EntityKind, getEntityFields } from '@/types';
 
 export type FieldMergeGroupProps = {
   fieldName: string;
   fieldValues: Array<{ entityId: string; entityTitle: string; value: unknown }>;
-  allowCustom: boolean;
+  entityKind: EntityKind;
   onChange: (value: unknown) => void;
+};
+
+const shouldAllowCustomInput = (entityKind: EntityKind, fieldName: string) => {
+  if (fieldName === 'kind') return false; // Don't allow custom input for 'kind' field
+  // otherwise, lookup the type of the field in the entity metadata to determine if it's an enum
+  const fieldType = getEntityFields(entityKind).find(
+    (f) => f.key === fieldName
+  )?.type;
+  if (fieldType === 'select') return false; // Don't allow custom input for enum fields
+  return true;
 };
 
 export const FieldMergeGroup: React.FC<FieldMergeGroupProps> = ({
   fieldName,
   fieldValues,
-  allowCustom,
+  entityKind,
   onChange,
 }) => {
+  const allowCustom = shouldAllowCustomInput(entityKind, fieldName);
   const [selected, setSelected] = useState<string>('');
   const [customValue, setCustomValue] = useState<string>('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
