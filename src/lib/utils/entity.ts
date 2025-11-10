@@ -140,6 +140,9 @@ export const getIsEnumField = (
     entityFields: Array<{ key: string; type: string }>
 ) => {
     return (fieldName: string): boolean => {
+        if (fieldName === 'kind') {
+            return true;
+        }
         const fieldMeta = entityFields.find((f) => f.key === fieldName);
         return fieldMeta?.type === 'select';
     };

@@ -27,7 +27,6 @@ export const EntityEditModal = ({
       ...data,
       kind: entityKind, // Update the kind
     } as EntityWithId;
-    console.log('Saving entity:', updatedEntity);
     onSave(updatedEntity);
   };
 
