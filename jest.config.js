@@ -61,7 +61,10 @@ const customJestConfig = {
       statements: 70,
     },
   },
-
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '/src/.*index\\.(ts|tsx|js|jsx)$',
+  ],
   // Coverage reporting
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],

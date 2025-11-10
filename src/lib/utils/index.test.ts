@@ -9,4 +9,5 @@ describe('utils/index exports', () => {
         expect(utils.getEntityIcon).toBeDefined();
         expect(utils.generateFieldsFromSchema).toBeDefined();
     });
+
 });
