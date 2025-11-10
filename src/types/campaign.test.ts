@@ -1,5 +1,5 @@
 import { FieldMetadata } from '@/lib/utils';
-import { EntityKind, EntityFieldMap, NPC, Location, Item, Quest, ItemRarity, ItemType, LocationType, QuestType, getEntityFields } from './campaign';
+import { EntityKind, NPC, Location, Item, Quest, ItemRarity, ItemType, LocationType, QuestType, getEntityFields } from './campaign';
 
 
 describe('Campaign Types', () => {
@@ -157,7 +157,7 @@ describe('Campaign Types', () => {
         }));
 
         jest.mock('@/lib/utils/form', () => ({
-            generateFieldsFromSchema: jest.fn((schema) => [
+            generateFieldsFromSchema: jest.fn(() => [
                 { name: 'field1', label: 'Field 1', type: 'text' },
                 { name: 'field2', label: 'Field 2', type: 'text' }
             ]),
