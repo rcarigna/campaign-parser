@@ -1,4 +1,4 @@
-import { AnyEntity, EntityKind, EntityWithId } from '@/types';
+import { AnyEntity, EntityKind } from '@/types';
 
 /**
  * Gets the appropriate emoji icon for an entity kind
@@ -153,14 +153,6 @@ export const mergeEntities = (entities: AnyEntity[], fieldsToMerge: string[]): A
 
     const merged: AnyEntity = { ...entities[0] };
 
-    // const mergedFields: Record<string, unknown> = {};
-
-    // fieldsToMerge.forEach((field) => {
-    //     const values = entities.map((e) => (e as Record<string, unknown>)[field]).filter((v) => v !== undefined);
-    //     if (values.length > 0) {
-    //         mergedFields[field] = Array.from(new Set(values));
-    //     }
-    // });
     const mergedFields = fieldsToMerge.reduce<Record<string, unknown>>((acc, field) => {
         const values = entities.map((e) => (e as Record<string, unknown>)[field]).filter((v) => v !== undefined);
         if (values.length > 0) {
