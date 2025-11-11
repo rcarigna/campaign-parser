@@ -88,6 +88,7 @@ export const EntityMergeModal = ({
     Object.keys(mergedFields).forEach((fieldName) => {
       (merged as Record<string, unknown>)[fieldName] = mergedFields[fieldName];
     });
+    // need to make sure the string representation of the array types are correctly merged
 
     return merged;
   };

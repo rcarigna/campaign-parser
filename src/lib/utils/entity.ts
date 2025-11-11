@@ -1,4 +1,4 @@
-import { EntityKind } from '@/types';
+import { AnyEntity, EntityKind, EntityWithId } from '@/types';
 
 /**
  * Gets the appropriate emoji icon for an entity kind
@@ -147,3 +147,36 @@ export const getIsEnumField = (
         return fieldMeta?.type === 'select';
     };
 };
+
+export const mergeEntities = (entities: AnyEntity[], fieldsToMerge: string[]): AnyEntity | null => {
+    if (entities.length === 0) return null;
+
+    const merged: AnyEntity = { ...entities[0] };
+
+    // const mergedFields: Record<string, unknown> = {};
+
+    // fieldsToMerge.forEach((field) => {
+    //     const values = entities.map((e) => (e as Record<string, unknown>)[field]).filter((v) => v !== undefined);
+    //     if (values.length > 0) {
+    //         mergedFields[field] = Array.from(new Set(values));
+    //     }
+    // });
+    const mergedFields = fieldsToMerge.reduce<Record<string, unknown>>((acc, field) => {
+        const values = entities.map((e) => (e as Record<string, unknown>)[field]).filter((v) => v !== undefined);
+        if (values.length > 0) {
+            if (Array.isArray(values[0])) {
+                // If the field is an array, merge and deduplicate
+                acc[field] = Array.from(new Set(values.flat()));
+            } else {
+                acc[field] = Array.from(new Set(values));
+            }
+        }
+        return acc;
+    }, {});
+
+    Object.keys(mergedFields).forEach((fieldName) => {
+        (merged as Record<string, unknown>)[fieldName] = mergedFields[fieldName];
+    });
+
+    return merged;
+}
