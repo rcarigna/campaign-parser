@@ -1,34 +1,18 @@
 import { render, screen } from '@testing-library/react';
 import { FieldMergeSection, FieldMergeSectionProps } from './FieldMergeSection';
+import { getFieldValuesMock } from '../../../__mocks__/fieldMergeSectionMocks';
 import { EntityKind } from '@/types';
 
-const defaultProps: FieldMergeSectionProps = {
+export const defaultFieldMergeSectionProps: FieldMergeSectionProps = {
+  entityKind: EntityKind.ITEM,
   allFields: ['name', 'type', 'description'],
-  getFieldValues: (fieldName) => {
-    if (fieldName === 'name') {
-      return [
-        { entityId: '1', entityTitle: 'Entity 1', value: 'Alice' },
-        { entityId: '2', entityTitle: 'Entity 2', value: 'Alicia' },
-      ];
-    }
-    if (fieldName === 'type') {
-      return [
-        { entityId: '1', entityTitle: 'Entity 1', value: 'Person' },
-        { entityId: '2', entityTitle: 'Entity 2', value: 'Person' },
-      ];
-    }
-    if (fieldName === 'description') {
-      return [{ entityId: '1', entityTitle: 'Entity 1', value: 'Desc 1' }];
-    }
-    return [];
-  },
-  entityKind: EntityKind.UNKNOWN,
+  getFieldValues: getFieldValuesMock,
   onFieldChange: jest.fn(),
 };
 
 describe('FieldMergeSection', () => {
   it('renders the section title and help text', () => {
-    render(<FieldMergeSection {...defaultProps} />);
+    render(<FieldMergeSection {...defaultFieldMergeSectionProps} />);
     expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
       '2. Merge Fields'
     );
@@ -38,19 +22,17 @@ describe('FieldMergeSection', () => {
   });
 
   it('renders FieldMergeGroup for fields with more than one value', () => {
-    render(<FieldMergeSection {...defaultProps} />);
+    render(<FieldMergeSection {...defaultFieldMergeSectionProps} />);
     expect(screen.getByTestId('field-merge-group-name')).toBeInTheDocument();
-    // 'type' has two values, but both are the same, still should render
     expect(screen.getByTestId('field-merge-group-type')).toBeInTheDocument();
-    // 'description' has only one value, should not render
     expect(
       screen.queryByTestId('field-merge-group-description')
     ).not.toBeInTheDocument();
   });
 
   it('does not render FieldMergeGroup for fields with one or zero values', () => {
-    const props: FieldMergeSectionProps = {
-      ...defaultProps,
+    const props = {
+      ...defaultFieldMergeSectionProps,
       allFields: ['description'],
     };
     render(<FieldMergeSection {...props} />);
