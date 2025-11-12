@@ -1,15 +1,24 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { EntityCard } from './EntityCard';
+import { EntityCard, EntityCardProps } from './EntityCard';
 import { EntityKind, LocationType, EntityWithId } from '@/types';
-
-const mockEntity: EntityWithId = {
-  id: 'test-id',
-  kind: EntityKind.NPC,
-  title: 'Test NPC',
-  role: 'warrior',
-};
+import { mockEntity } from '../../__mocks__';
 
 const mockOnClick = jest.fn();
+const mockOnDiscard = jest.fn();
+const mockOnSelect = jest.fn();
+
+const getDefaultProps: (
+  overrides?: Partial<EntityCardProps>
+) => EntityCardProps = (overrides = {}) => ({
+  entity: mockEntity,
+  isDuplicate: false,
+  missingFields: [],
+  onClick: mockOnClick,
+  ...overrides,
+});
+
+const renderEntityCard = (props = {}) =>
+  render(<EntityCard {...getDefaultProps(props)} />);
 
 describe('EntityCard', () => {
   beforeEach(() => {
@@ -17,15 +26,7 @@ describe('EntityCard', () => {
   });
 
   it('renders entity card with basic information', () => {
-    render(
-      <EntityCard
-        entity={mockEntity}
-        isDuplicate={false}
-        missingFields={[]}
-        onClick={mockOnClick}
-      />
-    );
-
+    renderEntityCard();
     expect(screen.getByText('Test NPC')).toBeInTheDocument();
     expect(screen.getByText('👤')).toBeInTheDocument();
     expect(screen.getByText('npc')).toBeInTheDocument();
@@ -33,31 +34,12 @@ describe('EntityCard', () => {
   });
 
   it('renders duplicate badge when isDuplicate is true', () => {
-    render(
-      <EntityCard
-        entity={mockEntity}
-        isDuplicate={true}
-        missingFields={[]}
-        onClick={mockOnClick}
-      />
-    );
-
+    renderEntityCard({ isDuplicate: true });
     expect(screen.getByText('DUPE')).toBeInTheDocument();
   });
 
   it('renders discard button when onDiscard handler is provided', () => {
-    const mockOnDiscard = jest.fn();
-
-    render(
-      <EntityCard
-        entity={mockEntity}
-        isDuplicate={false}
-        missingFields={[]}
-        onClick={mockOnClick}
-        onDiscard={mockOnDiscard}
-      />
-    );
-
+    renderEntityCard({ onDiscard: mockOnDiscard });
     const discardButton = screen.getByRole('button', {
       name: /discard test npc/i,
     });
@@ -66,69 +48,32 @@ describe('EntityCard', () => {
   });
 
   it('calls onDiscard when discard button is clicked', () => {
-    const mockOnDiscard = jest.fn();
-
-    render(
-      <EntityCard
-        entity={mockEntity}
-        isDuplicate={false}
-        missingFields={[]}
-        onClick={mockOnClick}
-        onDiscard={mockOnDiscard}
-      />
-    );
-
+    renderEntityCard({ onDiscard: mockOnDiscard });
     const discardButton = screen.getByRole('button', {
       name: /discard test npc/i,
     });
     fireEvent.click(discardButton);
-
     expect(mockOnDiscard).toHaveBeenCalledWith(mockEntity);
-    expect(mockOnClick).not.toHaveBeenCalled(); // Should not trigger card click
+    expect(mockOnClick).not.toHaveBeenCalled();
   });
 
   it('does not render discard button when onDiscard handler is not provided', () => {
-    render(
-      <EntityCard
-        entity={mockEntity}
-        isDuplicate={false}
-        missingFields={[]}
-        onClick={mockOnClick}
-      />
-    );
-
+    renderEntityCard();
     expect(
       screen.queryByRole('button', { name: /discard/i })
     ).not.toBeInTheDocument();
   });
 
   it('shows missing fields when provided', () => {
-    render(
-      <EntityCard
-        entity={mockEntity}
-        isDuplicate={false}
-        missingFields={['faction', 'importance']}
-        onClick={mockOnClick}
-      />
-    );
-
+    renderEntityCard({ missingFields: ['faction', 'importance'] });
     expect(screen.getByText('Missing:')).toBeInTheDocument();
     expect(screen.getByText('faction, importance')).toBeInTheDocument();
   });
 
   it('calls onClick when card is clicked', () => {
-    render(
-      <EntityCard
-        entity={mockEntity}
-        isDuplicate={false}
-        missingFields={[]}
-        onClick={mockOnClick}
-      />
-    );
-
+    renderEntityCard();
     const card = screen.getByText('Test NPC').closest('.entity-card');
     fireEvent.click(card!);
-
     expect(mockOnClick).toHaveBeenCalledWith(mockEntity);
   });
 
@@ -139,16 +84,7 @@ describe('EntityCard', () => {
       title: 'Test Location',
       type: LocationType.DUNGEON,
     };
-
-    render(
-      <EntityCard
-        entity={locationEntity}
-        isDuplicate={false}
-        missingFields={[]}
-        onClick={mockOnClick}
-      />
-    );
-
+    renderEntityCard({ entity: locationEntity });
     expect(screen.getByText('🗺️')).toBeInTheDocument();
     expect(screen.getByText('Type: dungeon')).toBeInTheDocument();
   });
@@ -159,99 +95,52 @@ describe('EntityCard', () => {
       kind: EntityKind.SESSION_SUMMARY,
       title: 'Session 1 Summary',
     };
-
-    render(
-      <EntityCard
-        entity={sessionSummaryEntity}
-        isDuplicate={false}
-        missingFields={[]}
-        onClick={mockOnClick}
-      />
-    );
-
+    renderEntityCard({ entity: sessionSummaryEntity });
     expect(screen.getByText('📜')).toBeInTheDocument();
     expect(screen.getByText(sessionSummaryEntity.title)).toBeInTheDocument();
   });
 
   it('renders checkbox when isSelectable is true', () => {
-    const mockOnSelect = jest.fn();
-
-    render(
-      <EntityCard
-        entity={mockEntity}
-        isDuplicate={false}
-        missingFields={[]}
-        onClick={mockOnClick}
-        isSelectable={true}
-        isSelected={false}
-        onSelect={mockOnSelect}
-      />
-    );
-
+    renderEntityCard({
+      isSelectable: true,
+      isSelected: false,
+      onSelect: mockOnSelect,
+    });
     const checkbox = screen.getByRole('checkbox');
     expect(checkbox).toBeInTheDocument();
     expect(checkbox).not.toBeChecked();
   });
 
   it('renders checked checkbox when isSelected is true', () => {
-    const mockOnSelect = jest.fn();
-
-    render(
-      <EntityCard
-        entity={mockEntity}
-        isDuplicate={false}
-        missingFields={[]}
-        onClick={mockOnClick}
-        isSelectable={true}
-        isSelected={true}
-        onSelect={mockOnSelect}
-      />
-    );
-
+    renderEntityCard({
+      isSelectable: true,
+      isSelected: true,
+      onSelect: mockOnSelect,
+    });
     const checkbox = screen.getByRole('checkbox');
     expect(checkbox).toBeChecked();
   });
 
   it('calls onSelect when checkbox is changed', () => {
-    const mockOnSelect = jest.fn();
-
-    render(
-      <EntityCard
-        entity={mockEntity}
-        isDuplicate={false}
-        missingFields={[]}
-        onClick={mockOnClick}
-        isSelectable={true}
-        isSelected={false}
-        onSelect={mockOnSelect}
-      />
-    );
-
+    renderEntityCard({
+      isSelectable: true,
+      isSelected: false,
+      onSelect: mockOnSelect,
+    });
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
-
     expect(mockOnSelect).toHaveBeenCalledWith('test-id', true);
-    expect(mockOnClick).not.toHaveBeenCalled(); // Should not trigger card click
+    expect(mockOnClick).not.toHaveBeenCalled();
   });
 
   it('does not call onClick when checkbox is clicked', () => {
-    const mockOnSelect = jest.fn();
-
-    render(
-      <EntityCard
-        entity={mockEntity}
-        isDuplicate={false}
-        missingFields={[]}
-        onClick={mockOnClick}
-        isSelectable={true}
-        isSelected={false}
-        onSelect={mockOnSelect}
-      />
-    );
-
+    renderEntityCard({
+      isSelectable: true,
+      isSelected: false,
+      onSelect: mockOnSelect,
+    });
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
-
     expect(mockOnClick).not.toHaveBeenCalled();
   });
 
@@ -260,30 +149,12 @@ describe('EntityCard', () => {
       ...mockEntity,
       sourceSessions: [1, 2],
     };
-
-    render(
-      <EntityCard
-        entity={entityWithSessions}
-        isDuplicate={false}
-        missingFields={[]}
-        onClick={mockOnClick}
-      />
-    );
-
+    renderEntityCard({ entity: entityWithSessions });
     expect(screen.getByText(/Sessions: 1, 2/)).toBeInTheDocument();
   });
 
   it('applies correct CSS classes based on props', () => {
-    render(
-      <EntityCard
-        entity={mockEntity}
-        isDuplicate={true}
-        missingFields={[]}
-        onClick={mockOnClick}
-        isSelected={true}
-      />
-    );
-
+    renderEntityCard({ isDuplicate: true, isSelected: true });
     const card = screen.getByText('Test NPC').closest('.entity-card');
     expect(card).toHaveClass('entity-card', 'duplicate', 'selected');
   });

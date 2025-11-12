@@ -1,7 +1,7 @@
 import { type EntityWithId } from '@/types';
 import { getEntityIcon, getEntityColor } from '@/lib/utils/entity';
 
-type EntityCardProps = {
+export type EntityCardProps = {
   entity: EntityWithId;
   isDuplicate: boolean;
   missingFields: string[];
