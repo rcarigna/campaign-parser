@@ -1,6 +1,11 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { EntityCard, EntityCardProps } from './EntityCard';
-import { EntityKind, LocationType, EntityWithId } from '@/types';
+import { EntityCard } from './EntityCard';
+import {
+  EntityKind,
+  LocationType,
+  EntityWithId,
+  EntityCardProps,
+} from '@/types';
 import { mockEntity } from '../../__mocks__';
 
 const mockOnClick = jest.fn();

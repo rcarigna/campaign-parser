@@ -1,15 +1,6 @@
 import React from 'react';
 import { FieldMergeGroup } from './FieldMergeGroup';
-import { EntityKind } from '@/types';
-
-export type FieldMergeSectionProps = {
-  allFields: string[];
-  getFieldValues: (
-    fieldName: string
-  ) => Array<{ entityId: string; entityTitle: string; value: string }>;
-  onFieldChange: (fieldName: string, value: string) => void;
-  entityKind: EntityKind;
-};
+import { FieldMergeSectionProps } from '@/types';
 
 export const FieldMergeSection: React.FC<FieldMergeSectionProps> = ({
   allFields,

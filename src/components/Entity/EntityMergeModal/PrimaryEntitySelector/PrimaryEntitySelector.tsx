@@ -1,17 +1,6 @@
 import React from 'react';
-import { type EntityWithId } from '@/types';
+import { PrimaryEntitySelectorProps } from '@/types';
 import { getEntityIcon } from '@/lib/utils/entity';
-
-export type PrimaryEntitySelectorProps = {
-  entities: EntityWithId[];
-  primaryEntityId: string;
-  setPrimaryEntityId: (id: string) => void;
-  renderEntityDetail: (
-    entity: EntityWithId,
-    field: string,
-    label: string
-  ) => React.ReactNode;
-};
 
 export const PrimaryEntitySelector: React.FC<PrimaryEntitySelectorProps> = ({
   entities,

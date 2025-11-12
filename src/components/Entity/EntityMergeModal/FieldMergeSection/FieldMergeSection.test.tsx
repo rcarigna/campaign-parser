@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { FieldMergeSection, FieldMergeSectionProps } from './FieldMergeSection';
+import { FieldMergeSection } from './FieldMergeSection';
 import { getFieldValuesMock } from '../../../__mocks__';
-import { EntityKind } from '@/types';
+import { EntityKind, FieldMergeSectionProps } from '@/types';
 
 export const defaultFieldMergeSectionProps: FieldMergeSectionProps = {
   entityKind: EntityKind.ITEM,

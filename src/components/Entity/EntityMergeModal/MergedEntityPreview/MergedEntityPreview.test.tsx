@@ -1,9 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import {
-  MergedEntityPreview,
-  type MergedEntityPreviewProps,
-} from './MergedEntityPreview';
+import { MergedEntityPreview } from './MergedEntityPreview';
 import { mockNPCEntity } from '@/components/__mocks__/mockedEntities';
+import { MergedEntityPreviewProps } from '@/types';
 
 jest.mock('@/lib/utils/entity', () => ({
   getEntityIcon: jest.fn().mockReturnValue('🗂️'),

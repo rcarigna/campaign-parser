@@ -1,10 +1,8 @@
 import { screen, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import {
-  ProcessingWorkflow,
-  ProcessingWorkflowProps,
-} from './ProcessingWorkflow';
+import { ProcessingWorkflow } from './ProcessingWorkflow';
 import { mockFileDocx, mockFileMd } from '../../__mocks__/mockedDocuments';
+import { ProcessingWorkflowProps } from '@/types';
 
 jest.mock('@/components', () => ({
   FileUpload: ({ selectedFile }: { selectedFile?: File | null }) => (

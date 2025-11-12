@@ -1,12 +1,5 @@
 import React from 'react';
-
-export type ModalFooterProps = {
-  onCancel: () => void;
-  onConfirm: () => void;
-  confirmLabel: string;
-  cancelLabel?: string;
-  disabled?: boolean;
-};
+import { ModalFooterProps } from '@/types';
 
 export const ModalFooter: React.FC<ModalFooterProps> = ({
   onCancel,

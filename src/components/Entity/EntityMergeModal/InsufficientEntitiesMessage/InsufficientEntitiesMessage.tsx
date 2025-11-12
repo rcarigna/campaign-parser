@@ -1,10 +1,7 @@
 import React from 'react';
 import { ModalHeader } from '../ModalHeader';
 import { ModalFooter } from '../ModalFooter';
-
-export type InsufficientEntitiesMessageProps = {
-  onClose: () => void;
-};
+import { InsufficientEntitiesMessageProps } from '@/types';
 
 export const InsufficientEntitiesMessage: React.FC<
   InsufficientEntitiesMessageProps

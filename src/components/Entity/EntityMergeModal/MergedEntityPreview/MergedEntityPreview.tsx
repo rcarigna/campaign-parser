@@ -1,12 +1,6 @@
 import React from 'react';
-import { type EntityWithId } from '@/types';
+import { MergedEntityPreviewProps } from '@/types';
 import { getEntityIcon } from '@/lib/utils/entity';
-
-export type MergedEntityPreviewProps = {
-  primaryEntity: EntityWithId | undefined;
-  allFields: string[];
-  mergedFields: Record<string, unknown>;
-};
 
 export const MergedEntityPreview: React.FC<MergedEntityPreviewProps> = ({
   primaryEntity,

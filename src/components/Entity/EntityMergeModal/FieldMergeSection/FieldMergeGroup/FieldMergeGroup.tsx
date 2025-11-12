@@ -1,16 +1,9 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { EntityKind, getEntityFields } from '@/types';
+import { EntityKind, FieldMergeGroupProps, getEntityFields } from '@/types';
 import {
   FieldValueOption,
   CustomValueOption,
 } from './FieldMergeOption/FieldMergeOption';
-
-export type FieldMergeGroupProps = {
-  fieldName: string;
-  fieldValues: Array<{ entityId: string; entityTitle: string; value: string }>;
-  entityKind: EntityKind;
-  onChange: (value: unknown) => void;
-};
 
 export const shouldAllowCustomInput = (
   entityKind: EntityKind,

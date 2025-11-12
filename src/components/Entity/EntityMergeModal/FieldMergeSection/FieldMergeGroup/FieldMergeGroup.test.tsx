@@ -1,11 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import {
-  FieldMergeGroup,
-  FieldMergeGroupProps,
-  generateValueKey,
-} from './FieldMergeGroup';
+import { FieldMergeGroup, generateValueKey } from './FieldMergeGroup';
 import { FieldValueOption, CustomValueOption } from './FieldMergeOption';
-import { EntityKind, ItemRarity } from '@/types';
+import { EntityKind, ItemRarity, FieldMergeGroupProps } from '@/types';
 import userEvent from '@testing-library/user-event';
 import {
   fieldValueOptionMock,

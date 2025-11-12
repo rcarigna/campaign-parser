@@ -1,10 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import {
-  PrimaryEntitySelector,
-  type PrimaryEntitySelectorProps,
-} from '../PrimaryEntitySelector';
+import { PrimaryEntitySelector } from '../PrimaryEntitySelector';
 import { mockPrimaryEntities } from '@/components/__mocks__/mergeModalMocks/primaryEntitySelectorMocks';
-import { EntityWithId } from '@/types';
+import { EntityWithId, PrimaryEntitySelectorProps } from '@/types';
 import userEvent from '@testing-library/user-event';
 
 export const renderEntityDetailMock = (

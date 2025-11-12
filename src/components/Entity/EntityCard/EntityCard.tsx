@@ -1,16 +1,5 @@
-import { type EntityWithId } from '@/types';
+import { EntityCardProps } from '@/types';
 import { getEntityIcon, getEntityColor } from '@/lib/utils/entity';
-
-export type EntityCardProps = {
-  entity: EntityWithId;
-  isDuplicate: boolean;
-  missingFields: string[];
-  onClick: (entity: EntityWithId) => void;
-  isSelectable?: boolean;
-  isSelected?: boolean;
-  onSelect?: (entityId: string, isSelected: boolean) => void;
-  onDiscard?: (entity: EntityWithId) => void;
-};
 
 export const EntityCard = ({
   entity,
