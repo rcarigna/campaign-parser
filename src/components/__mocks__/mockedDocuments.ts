@@ -1,8 +1,15 @@
-import { DocumentType } from '@/types';
 
+
+export const mockFileDocx = new File(['test'], 'test.docx', {
+    type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+});
+
+export const mockFileMd = new File(['# Test Header'], 'test.md', {
+    type: 'text/markdown',
+});
 export const mockMarkdownData = {
     filename: 'test.md',
-    type: DocumentType.MARKDOWN,
+    type: 'markdown',
     content: {
         raw: '# Test Header\n\nThis is test content.',
         html: '<h1>Test Header</h1><p>This is test content.</p>',
@@ -22,7 +29,7 @@ export const mockMarkdownData = {
 
 export const mockWordData = {
     filename: 'test.docx',
-    type: DocumentType.WORD_DOCUMENT,
+    type: 'word',
     content: {
         html: '<p>Word document content</p>',
         text: 'Word document content',

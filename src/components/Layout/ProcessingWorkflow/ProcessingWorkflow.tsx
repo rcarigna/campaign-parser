@@ -3,7 +3,7 @@
 import { FileUpload, ActionButtons } from '@/components';
 import { ALLOWED_EXTENSIONS } from '@/types';
 
-type ProcessingWorkflowProps = {
+export type ProcessingWorkflowProps = {
   selectedFile: File | null;
   loading: boolean;
   error: string | null;
