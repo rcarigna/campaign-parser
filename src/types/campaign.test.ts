@@ -1,4 +1,4 @@
-import { FieldMetadata } from '@/lib/utils';
+import { FieldMetadata } from './document';
 import { EntityKind, NPC, Location, Item, Quest, ItemRarity, ItemType, LocationType, QuestType, getEntityFields } from './campaign';
 
 
