@@ -1,13 +1,13 @@
 import React from 'react';
-import { FieldMergeGroup } from '../FieldMergeGroup';
+import { FieldMergeGroup } from './FieldMergeGroup';
 import { EntityKind } from '@/types';
 
 export type FieldMergeSectionProps = {
   allFields: string[];
   getFieldValues: (
     fieldName: string
-  ) => Array<{ entityId: string; entityTitle: string; value: unknown }>;
-  onFieldChange: (fieldName: string, value: unknown) => void;
+  ) => Array<{ entityId: string; entityTitle: string; value: string }>;
+  onFieldChange: (fieldName: string, value: string) => void;
   entityKind: EntityKind;
 };
 
@@ -28,12 +28,16 @@ export const FieldMergeSection: React.FC<FieldMergeSectionProps> = ({
           const fieldValues = getFieldValues(fieldName);
           if (fieldValues.length <= 1) return null;
           return (
-            <div key={fieldName} className='field-merge-group'>
+            <div
+              key={fieldName}
+              className='field-merge-group'
+              data-testid={`field-merge-group-${fieldName}`}
+            >
               <FieldMergeGroup
                 fieldName={fieldName}
                 fieldValues={fieldValues}
                 entityKind={entityKind}
-                onChange={(value) => onFieldChange(fieldName, value)}
+                onChange={(value) => onFieldChange(fieldName, value as string)}
               />
             </div>
           );

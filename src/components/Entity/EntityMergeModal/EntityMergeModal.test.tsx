@@ -1,9 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { EntityMergeModal } from './EntityMergeModal';
 import { EntityKind, type EntityWithId } from '@/types';
 import { getEntityIcon } from '@/lib/utils/entity';
 import userEvent from '@testing-library/user-event';
-import { FieldMetadata } from '@/lib/utils';
+import { FieldMetadata } from '@/types';
 
 // Mock the entity utils
 jest.mock('@/lib/utils/entity', () => {
@@ -53,6 +53,8 @@ describe('EntityMergeModal', () => {
     mockedGetEntityFields.mockReturnValue([
       { key: 'role', type: 'text' },
       { key: 'description', type: 'text' },
+      { key: 'kind', type: 'select' },
+      { key: 'race', type: 'select' },
     ]);
   });
 
@@ -72,7 +74,7 @@ describe('EntityMergeModal', () => {
       ).toBeInTheDocument();
     });
 
-    it('should close modal when close button clicked in insufficient entities state', () => {
+    it('should close modal when close button clicked in insufficient entities state', async () => {
       render(
         <EntityMergeModal
           entities={[mockEntities[0]]}
@@ -81,11 +83,11 @@ describe('EntityMergeModal', () => {
         />
       );
 
-      fireEvent.click(screen.getByText('Close'));
+      await userEvent.click(screen.getByText('Close'));
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
 
-    it('should close modal when overlay clicked in insufficient entities state', () => {
+    it('should close modal when overlay clicked in insufficient entities state', async () => {
       render(
         <EntityMergeModal
           entities={[mockEntities[0]]}
@@ -94,7 +96,7 @@ describe('EntityMergeModal', () => {
         />
       );
 
-      fireEvent.click(screen.getByRole('button', { name: '×' }));
+      await userEvent.click(screen.getByRole('button', { name: '×' }));
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
   });
@@ -114,7 +116,7 @@ describe('EntityMergeModal', () => {
       expect(screen.getAllByText('John Doe')).toHaveLength(1);
     });
 
-    it('should allow changing primary entity selection', () => {
+    it('should allow changing primary entity selection', async () => {
       render(
         <EntityMergeModal
           entities={mockEntities}
@@ -124,7 +126,7 @@ describe('EntityMergeModal', () => {
       );
 
       const secondRadio = screen.getByDisplayValue('2');
-      fireEvent.click(secondRadio);
+      await userEvent.click(secondRadio);
 
       expect(screen.getByDisplayValue('2')).toBeChecked();
       expect(screen.getByDisplayValue('1')).not.toBeChecked();
@@ -144,6 +146,10 @@ describe('EntityMergeModal', () => {
   });
 
   describe('Field merging', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     it('should display fields with conflicting values', () => {
       render(
         <EntityMergeModal
@@ -155,10 +161,10 @@ describe('EntityMergeModal', () => {
 
       //   expect(screen.getByText('player_name')).toBeInTheDocument();
       expect(screen.getByText('character_name')).toBeInTheDocument();
-      expect(screen.getByText(/race/)).toBeInTheDocument();
+      expect(screen.getAllByText(/race/).length).toBeGreaterThan(0);
     });
 
-    it('should allow selecting field values from different entities', () => {
+    it('should allow selecting field values from different entities', async () => {
       render(
         <EntityMergeModal
           entities={mockEntities}
@@ -168,7 +174,7 @@ describe('EntityMergeModal', () => {
       );
 
       const heroRadio = screen.getByDisplayValue('Player 2');
-      fireEvent.click(heroRadio);
+      await userEvent.click(heroRadio);
 
       expect(heroRadio).toBeChecked();
     });
@@ -181,6 +187,7 @@ describe('EntityMergeModal', () => {
           onMerge={mockOnMerge}
         />
       );
+      screen.debug();
 
       expect(screen.getAllByText('Custom / Combined')).toHaveLength(2);
     });
@@ -206,7 +213,7 @@ describe('EntityMergeModal', () => {
       expect(customOptions).toHaveLength(0);
     });
 
-    it('should show custom input when custom mode is selected', () => {
+    it('should show custom input when custom mode is selected', async () => {
       render(
         <EntityMergeModal
           entities={mockEntities}
@@ -219,14 +226,14 @@ describe('EntityMergeModal', () => {
         .getAllByText('Custom / Combined')[0]
         .closest('label')
         ?.querySelector('input');
-      fireEvent.click(customRadio!);
+      await userEvent.click(customRadio!);
 
       expect(
         screen.getByPlaceholderText('Enter custom value for title...')
       ).toBeInTheDocument();
     });
 
-    it('should handle custom value input', () => {
+    it('should handle custom value input', async () => {
       render(
         <EntityMergeModal
           entities={mockEntities}
@@ -239,12 +246,12 @@ describe('EntityMergeModal', () => {
         .getAllByText('Custom / Combined')[0]
         .closest('label')
         ?.querySelector('input');
-      fireEvent.click(customRadio!);
+      await userEvent.click(customRadio!);
 
       const textarea = screen.getByPlaceholderText(
         'Enter custom value for title...'
       );
-      fireEvent.change(textarea, { target: { value: 'Combined Title' } });
+      await userEvent.type(textarea, 'Combined Title');
 
       expect(textarea).toHaveValue('Combined Title');
     });
@@ -276,13 +283,15 @@ describe('EntityMergeModal', () => {
         />
       );
       expect(screen.getByTestId('preview-character_name')).toHaveTextContent(
-        /Jane Doe/
+        /character_name: Jane Doe/
       );
-      await userEvent.click(screen.getByDisplayValue('John Doe'));
+      await userEvent.click(screen.getByLabelText(/John Doe/));
 
       // The preview should reflect the selected value
-      expect(screen.getByTestId('preview-character_name')).toHaveTextContent(
-        /John Doe/
+      await waitFor(() =>
+        expect(screen.getByTestId('preview-character_name')).toHaveTextContent(
+          /character_name: John Doe/
+        )
       );
     });
   });
@@ -305,7 +314,7 @@ describe('EntityMergeModal', () => {
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
 
-    it('should close modal when close button (×) is clicked', () => {
+    it('should close modal when close button (×) is clicked', async () => {
       render(
         <EntityMergeModal
           entities={mockEntities}
@@ -314,11 +323,11 @@ describe('EntityMergeModal', () => {
         />
       );
 
-      fireEvent.click(screen.getByRole('button', { name: '×' }));
+      await userEvent.click(screen.getByRole('button', { name: '×' }));
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
 
-    it('should not close modal when modal content is clicked', () => {
+    it('should not close modal when modal content is clicked', async () => {
       render(
         <EntityMergeModal
           entities={mockEntities}
@@ -327,11 +336,11 @@ describe('EntityMergeModal', () => {
         />
       );
 
-      fireEvent.click(screen.getByText('🔄 Merge Duplicate Entities'));
+      await userEvent.click(screen.getByText('🔄 Merge Duplicate Entities'));
       expect(mockOnClose).not.toHaveBeenCalled();
     });
 
-    it.skip('should call onMerge with correct data when merge button is clicked', () => {
+    it.skip('should call onMerge with correct data when merge button is clicked', async () => {
       render(
         <EntityMergeModal
           entities={mockEntities}
@@ -342,10 +351,10 @@ describe('EntityMergeModal', () => {
 
       // Select a different value for role
       const heroRadio = screen.getByDisplayValue('player');
-      fireEvent.click(heroRadio);
+      await userEvent.click(heroRadio);
 
       // Click merge button
-      fireEvent.click(screen.getByText('🔄 Merge 2 Entities'));
+      await userEvent.click(screen.getByText('🔄 Merge 2 Entities'));
 
       expect(mockOnMerge).toHaveBeenCalledWith(
         expect.objectContaining({

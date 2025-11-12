@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { EntityKind, type EntityWithId } from '@/types';
+import { EntityKind, getEntityFields, type EntityWithId } from '@/types';
 import { PrimaryEntitySelector } from './PrimaryEntitySelector';
 import { MergedEntityPreview } from './MergedEntityPreview';
 import { FieldMergeSection } from './FieldMergeSection';
@@ -48,30 +48,37 @@ export const EntityMergeModal = ({
     );
   };
 
-  // Get all unique fields across all entities
-  const allFields = Array.from(
-    new Set(
-      entities.flatMap((entity) =>
-        Object.keys(entity).filter((key) => key !== 'id')
-      )
-    )
-  );
+  // Get all possible fields for hte given entity type
+  const allFields = getEntityFields(
+    primaryEntity?.kind || EntityKind.UNKNOWN
+  ).map((f) => f.key);
 
   // Get field values from all entities for comparison
-  const getFieldValues = (fieldName: string) => {
+  const getFieldValues = (
+    fieldName: string
+  ): Array<{ entityId: string; entityTitle: string; value: string }> => {
     return entities
-      .map((entity) => ({
-        entityId: entity.id,
-        entityTitle: entity.title,
-        value: (entity as Record<string, unknown>)[fieldName],
-      }))
+      .map((entity) => {
+        const rawValue = (entity as Record<string, unknown>)[fieldName];
+        let value: string = '';
+        if (typeof rawValue === 'string') {
+          value = rawValue;
+        } else if (rawValue !== undefined && rawValue !== null) {
+          value = String(rawValue);
+        }
+        return {
+          entityId: entity.id,
+          entityTitle: entity.title,
+          value,
+        };
+      })
       .filter(
         (item) =>
           item.value !== undefined && item.value !== null && item.value !== ''
       );
   };
 
-  const handleFieldChange = (fieldName: string, value: unknown) => {
+  const handleFieldChange = (fieldName: string, value: string) => {
     setMergedFields((prev) => ({
       ...prev,
       [fieldName]: value,

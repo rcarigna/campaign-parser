@@ -1,5 +1,9 @@
-import { FieldMetadata } from '@/lib/utils/form';
-import { getEntityFields, type EntityWithId, EntityKind } from '@/types';
+import {
+  getEntityFields,
+  type EntityWithId,
+  EntityKind,
+  type FieldMetadata,
+} from '@/types';
 import { FormField } from './FormField';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
