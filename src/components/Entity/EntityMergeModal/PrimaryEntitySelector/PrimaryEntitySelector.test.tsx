@@ -3,7 +3,7 @@ import {
   PrimaryEntitySelector,
   type PrimaryEntitySelectorProps,
 } from '../PrimaryEntitySelector';
-import { mockPrimaryEntities } from '@/components/__mocks__/primaryEntitySelectorMocks';
+import { mockPrimaryEntities } from '@/components/__mocks__/mergeModalMocks/primaryEntitySelectorMocks';
 import { EntityWithId } from '@/types';
 import userEvent from '@testing-library/user-event';
 

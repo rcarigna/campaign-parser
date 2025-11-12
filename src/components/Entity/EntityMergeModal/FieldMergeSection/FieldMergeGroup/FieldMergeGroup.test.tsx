@@ -6,14 +6,12 @@ import {
 } from './FieldMergeGroup';
 import { FieldValueOption, CustomValueOption } from './FieldMergeOption';
 import { EntityKind, ItemRarity } from '@/types';
-import {
-  fieldValuesMock,
-  rarityFieldValuesMock,
-} from '@/components/__mocks__/fieldMergeGroupMocks';
 import userEvent from '@testing-library/user-event';
 import {
   fieldValueOptionMock,
   customValueOptionMock,
+  fieldValuesMock,
+  rarityFieldValuesMock,
 } from '../../../../__mocks__';
 
 export const defaultFieldMergeGroupProps: FieldMergeGroupProps = {

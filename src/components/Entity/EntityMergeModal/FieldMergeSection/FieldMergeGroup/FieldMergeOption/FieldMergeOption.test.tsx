@@ -4,7 +4,7 @@ import { FieldValueOption, CustomValueOption } from './FieldMergeOption';
 import {
   fieldValueOptionMock,
   customValueOptionMock,
-} from '@/components/__mocks__/fieldMergeOptionMocks';
+} from '@/components/__mocks__';
 
 describe('FieldValueOption', () => {
   const getProps = (overrides = {}) => ({
