@@ -1,3 +1,7 @@
+
+
+import { DocumentType, MarkdownContent, SerializedParsedDocumentWithEntities } from '@/types';
+
 import { EntityKind, EntityWithId, LocationType } from "@/types";
 
 export const mockEntity: EntityWithId = {
@@ -42,4 +46,21 @@ export const mockLocationEntity: EntityWithId = {
     status: 'active',
     tags: ['tavern', 'famous', 'undermountain-entrance'],
     sourceSessions: [1, 2, 5],
+};
+
+export const defaultMockEntities: EntityWithId[] = [
+    { ...mockNPCEntity, id: '1', title: 'Guard NPC', role: 'Guard', faction: 'City Watch', importance: 'minor' as const },
+    { ...mockLocationEntity, id: '2', title: 'Test Location', region: 'Northern Kingdom' },
+    { ...mockNPCEntity, id: '3', title: 'Captain NPC', role: 'Captain', faction: 'City Watch', importance: 'major' as const },
+];
+export const mockParsedDocument: SerializedParsedDocumentWithEntities = {
+    type: DocumentType.MARKDOWN,
+    filename: 'test.md',
+    content: {} as MarkdownContent,
+    metadata: {
+        size: 1234,
+        lastModified: new Date().toISOString(),
+        mimeType: 'text/markdown',
+    },
+    entities: defaultMockEntities,
 };
