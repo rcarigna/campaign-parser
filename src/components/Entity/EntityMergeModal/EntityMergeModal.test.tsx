@@ -187,7 +187,6 @@ describe('EntityMergeModal', () => {
           onMerge={mockOnMerge}
         />
       );
-      screen.debug();
 
       expect(screen.getAllByText('Custom / Combined')).toHaveLength(2);
     });

@@ -210,7 +210,6 @@ describe('FieldValueOption', () => {
 
 describe('CustomValueOption', () => {
   const customValueOptionProps = {
-    key: 'customOption',
     onChange: jest.fn(),
     selected: false,
     groupName: 'testGroup',

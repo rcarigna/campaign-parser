@@ -56,15 +56,6 @@ export const FieldMergeGroup: React.FC<FieldMergeGroupProps> = ({
 
   const handleOptionChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      console.log('Option changed value: ', event.target.value);
-      console.log('Option changed name: ', event.target.name);
-      console.log('Option changed other: ', event.target.id);
-      console.log('Option changed type: ', event.target.type);
-      console.log('Option changed checked: ', event.target.checked);
-      // console.log(
-      //   'Option changed source: ',
-      //   event.target.getAttribute('source')
-      // );
       setSelectedKey(event.target.id);
       onChange(event.target.value);
     },

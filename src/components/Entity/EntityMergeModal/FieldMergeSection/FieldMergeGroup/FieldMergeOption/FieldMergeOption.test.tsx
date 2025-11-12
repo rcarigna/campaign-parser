@@ -4,7 +4,6 @@ import { FieldValueOption, CustomValueOption } from './FieldMergeOption';
 
 describe('FieldValueOption', () => {
   const defaultProps = {
-    key: 'option1',
     optionKey: 'option1',
     value: 'Value 1',
     source: 'Entity A',
