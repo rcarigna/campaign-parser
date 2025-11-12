@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { EntityMergeModal } from './EntityMergeModal';
-import { EntityKind, type EntityWithId } from '@/types';
+import { EntityKind, EntityWithId } from '@/types';
+import { mockPlayerEntity } from '@/components/__mocks__/mockedEntities';
 import { getEntityIcon } from '@/lib/utils/entity';
 import userEvent from '@testing-library/user-event';
 import { FieldMetadata } from '@/types';
@@ -30,17 +31,17 @@ describe('EntityMergeModal', () => {
   const mockOnMerge = jest.fn();
   const mockedGetEntityFields = jest.fn();
 
-  const mockEntities: EntityWithId[] = [
+  const mockEntities = [
     {
+      ...mockPlayerEntity,
       id: '1',
-      kind: EntityKind.PLAYER,
       title: 'Player 1',
       character_name: 'Jane Doe',
       race: 'Elf',
     },
     {
+      ...mockPlayerEntity,
       id: '2',
-      kind: EntityKind.PLAYER,
       title: 'Player 2',
       character_name: 'John Doe',
       player_name: 'John',
@@ -188,28 +189,7 @@ describe('EntityMergeModal', () => {
         />
       );
 
-      expect(screen.getAllByText('Custom / Combined')).toHaveLength(2);
-    });
-
-    it.skip('should not show custom option for enum fields', () => {
-      //   mockedGetEntityFields.mockReturnValue([
-      //     { key: 'role', type: 'select' },
-      //     { key: 'description', type: 'text' },
-      //   ]);
-
-      render(
-        <EntityMergeModal
-          entities={mockEntities}
-          onClose={mockOnClose}
-          onMerge={mockOnMerge}
-        />
-      );
-
-      const kindSection = screen
-        .getByText('kind')
-        .closest('.field-merge-group');
-      const customOptions = kindSection?.querySelectorAll('.custom-option');
-      expect(customOptions).toHaveLength(0);
+      expect(screen.getAllByText('Custom / Combined')).toHaveLength(3);
     });
 
     it('should show custom input when custom mode is selected', async () => {
@@ -421,33 +401,6 @@ describe('EntityMergeModal', () => {
       // Should only show fields that have values in multiple entities
       expect(screen.queryByText('role')).not.toBeInTheDocument();
       expect(screen.queryByText('description')).not.toBeInTheDocument();
-    });
-
-    it.skip('should handle entities with empty string values', () => {
-      const entitiesWithEmptyStrings: EntityWithId[] = [
-        {
-          id: '1',
-          kind: EntityKind.PLAYER,
-          title: 'John Doe',
-          character_name: '',
-        },
-        {
-          id: '2',
-          kind: EntityKind.PLAYER,
-          title: 'John Doe',
-          character_name: 'Hero',
-        },
-      ];
-
-      render(
-        <EntityMergeModal
-          entities={entitiesWithEmptyStrings}
-          onClose={mockOnClose}
-          onMerge={mockOnMerge}
-        />
-      );
-
-      expect(screen.getByText(/character_name/)).toBeInTheDocument();
     });
   });
 });

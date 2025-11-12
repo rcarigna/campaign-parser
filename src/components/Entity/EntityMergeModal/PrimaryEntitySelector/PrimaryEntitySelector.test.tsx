@@ -1,24 +1,13 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import {
   PrimaryEntitySelector,
   type PrimaryEntitySelectorProps,
 } from '../PrimaryEntitySelector';
-import { EntityKind, type EntityWithId } from '@/types';
+import { mockPrimaryEntities } from '@/components/__mocks__/primaryEntitySelectorMocks';
+import { EntityWithId } from '@/types';
+import userEvent from '@testing-library/user-event';
 
-const mockEntities: EntityWithId[] = [
-  {
-    id: '1',
-    kind: EntityKind.NPC,
-    title: 'Alice',
-  },
-  {
-    id: '2',
-    kind: EntityKind.LOCATION,
-    title: 'Wonderland',
-  },
-];
-
-const renderEntityDetail = (
+export const renderEntityDetailMock = (
   entity: EntityWithId,
   field: string,
   label: string
@@ -30,10 +19,10 @@ const renderEntityDetail = (
 
 const setup = (primaryEntityId = '1', setPrimaryEntityId = jest.fn()) => {
   const props: PrimaryEntitySelectorProps = {
-    entities: mockEntities,
+    entities: mockPrimaryEntities,
     primaryEntityId,
     setPrimaryEntityId,
-    renderEntityDetail,
+    renderEntityDetail: renderEntityDetailMock,
   };
   render(<PrimaryEntitySelector {...props} />);
   return { setPrimaryEntityId };
@@ -42,7 +31,7 @@ const setup = (primaryEntityId = '1', setPrimaryEntityId = jest.fn()) => {
 describe('PrimaryEntitySelector', () => {
   it('renders all entities as radio options', () => {
     setup();
-    mockEntities.forEach((entity) => {
+    mockPrimaryEntities.forEach((entity) => {
       expect(
         screen.getByRole('radio', { name: new RegExp(entity.title, 'i') })
       ).toBeInTheDocument();
@@ -52,18 +41,18 @@ describe('PrimaryEntitySelector', () => {
   it('checks the radio for the selected primary entity', () => {
     setup('2');
     const radio = screen.getByRole('radio', {
-      name: new RegExp(mockEntities[1].title, 'i'),
+      name: new RegExp(mockPrimaryEntities[1].title, 'i'),
     }) as HTMLInputElement;
     expect(radio.checked).toBe(true);
   });
 
-  it('calls setPrimaryEntityId when a radio is selected', () => {
+  it('calls setPrimaryEntityId when a radio is selected', async () => {
     const setPrimaryEntityId = jest.fn();
     setup('1', setPrimaryEntityId);
     const radio = screen.getByRole('radio', {
-      name: new RegExp(mockEntities[1].title, 'i'),
+      name: new RegExp(mockPrimaryEntities[1].title, 'i'),
     }) as HTMLInputElement;
-    fireEvent.click(radio);
+    await userEvent.click(radio);
     expect(setPrimaryEntityId).toHaveBeenCalledWith('2');
   });
 

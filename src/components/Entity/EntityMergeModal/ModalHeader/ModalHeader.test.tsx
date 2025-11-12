@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { ModalHeader, ModalHeaderProps } from './ModalHeader';
+import userEvent from '@testing-library/user-event';
 
 describe('ModalHeader', () => {
   const defaultProps: ModalHeaderProps = {
@@ -22,10 +23,10 @@ describe('ModalHeader', () => {
     expect(closeButton).toHaveTextContent('×');
   });
 
-  it('calls onClose when close button is clicked', () => {
+  it('calls onClose when close button is clicked', async () => {
     render(<ModalHeader {...defaultProps} />);
     const closeButton = screen.getByRole('button');
-    fireEvent.click(closeButton);
+    await userEvent.click(closeButton);
     expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
   });
 });

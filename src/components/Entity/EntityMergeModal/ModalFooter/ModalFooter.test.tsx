@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { ModalFooter, ModalFooterProps } from './ModalFooter';
+import userEvent from '@testing-library/user-event';
 
 const defaultProps: ModalFooterProps = {
   onCancel: jest.fn(),
@@ -19,15 +20,15 @@ describe('ModalFooter', () => {
     expect(screen.getByText('Dismiss')).toBeInTheDocument();
   });
 
-  it('calls onCancel when cancel button is clicked', () => {
+  it('calls onCancel when cancel button is clicked', async () => {
     render(<ModalFooter {...defaultProps} />);
-    fireEvent.click(screen.getByText('Cancel'));
+    await userEvent.click(screen.getByText('Cancel'));
     expect(defaultProps.onCancel).toHaveBeenCalledTimes(1);
   });
 
-  it('calls onConfirm when confirm button is clicked', () => {
+  it('calls onConfirm when confirm button is clicked', async () => {
     render(<ModalFooter {...defaultProps} />);
-    fireEvent.click(screen.getByText('Merge'));
+    await userEvent.click(screen.getByText('Merge'));
     expect(defaultProps.onConfirm).toHaveBeenCalledTimes(1);
   });
 
