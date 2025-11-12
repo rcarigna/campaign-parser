@@ -1,4 +1,4 @@
-import type { FieldMetadata } from '@/lib/utils/form';
+import type { FieldMetadata } from '@/types';
 
 type SchemaFieldProps = {
   field: FieldMetadata;

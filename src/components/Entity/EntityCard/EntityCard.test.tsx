@@ -230,7 +230,7 @@ describe('EntityCard', () => {
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
 
-    expect(mockOnSelect).toHaveBeenCalledWith(true);
+    expect(mockOnSelect).toHaveBeenCalledWith('test-id', true);
     expect(mockOnClick).not.toHaveBeenCalled(); // Should not trigger card click
   });
 

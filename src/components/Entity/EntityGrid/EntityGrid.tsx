@@ -46,7 +46,8 @@ export const EntityGrid = ({
             isSelected={selectedEntityIds.has(entity.id)}
             onSelect={
               onEntitySelect
-                ? (isSelected: boolean) => onEntitySelect(entity.id, isSelected)
+                ? (entityId: string, isSelected: boolean) =>
+                    onEntitySelect(entityId, isSelected)
                 : undefined
             }
             onDiscard={onEntityDiscard}

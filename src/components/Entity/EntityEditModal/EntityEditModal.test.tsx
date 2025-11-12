@@ -196,5 +196,33 @@ describe('EntityEditModal', () => {
 
       expect(stopPropagationSpy).toHaveBeenCalled();
     });
+
+    it('updates entity type when selector is changed', async () => {
+      renderComponent();
+
+      const select = screen.getByLabelText(/Entity Type/i);
+      // Find a different entity type option
+      const locationOption = screen.getByRole('option', { name: /Location/i });
+      await userEvent.selectOptions(select, locationOption);
+
+      // Should show warning about changing entity type
+      expect(
+        screen.getByText(/Changing entity type will preserve existing fields/i)
+      ).toBeInTheDocument();
+    });
+
+    it('shows changed entity type label when type is changed', async () => {
+      renderComponent();
+
+      const select = screen.getByLabelText(/Entity Type/i);
+      // Select a different type
+      await userEvent.selectOptions(
+        select,
+        screen.getByRole('option', { name: /Location/i })
+      );
+
+      // Should show "(Changed from ...)" label
+      expect(screen.getByText(/Changed from PLAYER/i)).toBeInTheDocument();
+    });
   });
 });

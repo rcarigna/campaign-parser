@@ -32,9 +32,9 @@ const locationSchema = baseEntitySchema.extend({
 
 const itemSchema = baseEntitySchema.extend({
     kind: z.literal('item'),
-    name: z.string().min(1, 'Item name is required'),
-    type: z.string().min(1, 'Item type is required'),
-    rarity: z.string().min(1, 'Rarity is required'),
+    name: z.string().min(1, 'Item name is required').optional(),
+    type: z.string().optional(),
+    rarity: z.enum(['common', 'uncommon', 'rare', 'very_rare', 'legendary']),
     attunement: z.boolean().optional(),
     owner: z.string().optional(),
     status: z.string().optional(),
@@ -114,9 +114,8 @@ export const getMissingFields = (entity: unknown): string[] => {
 
     // Extract field names from Zod error paths
     return result.error.issues
-        .filter(issue => issue.code === 'invalid_type' || issue.code === 'too_small')
         .map(issue => issue.path[issue.path.length - 1] as string)
-        .filter((field, index, arr) => arr.indexOf(field) === index); // Remove duplicates
+        ; // Remove duplicates
 };
 
 export const getValidationErrors = (entity: unknown): Record<string, string> => {
@@ -136,7 +135,11 @@ export const getValidationErrors = (entity: unknown): Record<string, string> => 
 };
 
 export const isEntityComplete = (entity: unknown): boolean => {
-    return entitySchema.safeParse(entity).success;
+    const result = entitySchema.safeParse(entity);
+    if (!result.success) {
+        console.log('Validation errors:', result.error.issues);
+    }
+    return result.success;
 };
 
 // Type helpers
