@@ -1,17 +1,7 @@
-import { FieldType } from '@/types';
+import { FieldType, TERMINAL_FIELD_TYPES, FieldMetadata } from '@/types';
 import { z } from 'zod';
 
 
-const TERMINAL_FIELD_TYPES: FieldType[] = ['text', 'textarea', 'number', 'boolean', 'select', 'array'];
-
-export type FieldMetadata = {
-    key: string;
-    type: FieldType;
-    label: string;
-    required: boolean;
-    placeholder?: string;
-    options?: Array<{ value: string; label: string }>;
-};
 
 // Recursively unwrap schema wrappers to find the terminal type
 const unwrapToTerminalType = (schema: z.ZodTypeAny): {
@@ -54,7 +44,7 @@ const isOptional = (schema: z.ZodTypeAny): boolean => {
     return optional;
 };
 
-const inferFieldType = (fieldKey: string, schema: z.ZodTypeAny): FieldType => {
+export const inferFieldType = (fieldKey: string, schema: z.ZodTypeAny): FieldType => {
     const { terminalSchema } = unwrapToTerminalType(schema);
     const typeName = (terminalSchema as z.ZodTypeAny)._def?.type;
 

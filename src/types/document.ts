@@ -87,3 +87,14 @@ export type SerializedParsedDocumentWithEntities = SerializedParsedDocument & {
 };
 
 export type FieldType = 'text' | 'textarea' | 'number' | 'boolean' | 'select' | 'array';
+
+export const TERMINAL_FIELD_TYPES: FieldType[] = ['text', 'textarea', 'number', 'boolean', 'select', 'array'];
+
+export type FieldMetadata = {
+    key: string;
+    type: FieldType;
+    label: string;
+    required: boolean;
+    placeholder?: string;
+    options?: Array<{ value: string; label: string }>;
+};

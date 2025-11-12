@@ -1,5 +1,6 @@
 import { itemSchema, locationSchema, npcSchema, playerSchema, questSchema, sessionPrepSchema, sessionSummarySchema } from "@/lib/validation/entity";
-import { FieldMetadata, generateFieldsFromSchema } from "@/lib/utils/form";
+import { generateFieldsFromSchema } from "@/lib/utils/form";
+import { FieldMetadata } from "@/types";
 
 // Campaign Entity Types
 export enum EntityKind {
@@ -208,4 +209,14 @@ export const EntityFieldMap: Record<EntityKind, () => FieldMetadata[]> = {
 export const getEntityFields = (entityKind: EntityKind) => {
     const getter = EntityFieldMap[entityKind];
     return getter ? getter() : [];
+};
+/**
+ * Entity metadata type for UI display
+ */
+export type EntityMetadata = {
+    kind: EntityKind;
+    emoji: string;
+    label: string;
+    description: string;
+    color: string;
 };
