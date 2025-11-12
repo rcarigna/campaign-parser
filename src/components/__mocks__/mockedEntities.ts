@@ -7,6 +7,14 @@ export const mockEntity: EntityWithId = {
     role: 'warrior',
 };
 
+export const mockPlayerEntity: EntityWithId = {
+    id: 'test-id',
+    kind: EntityKind.PLAYER,
+    title: 'Test Player Title',
+    character_name: 'Test Character',
+    tags: ['hero'],
+};
+
 // Realistic NPC entity based on actual schema
 export const mockNPCEntity: EntityWithId = {
     id: 'npc-1',
