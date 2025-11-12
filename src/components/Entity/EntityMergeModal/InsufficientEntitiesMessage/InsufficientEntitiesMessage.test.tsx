@@ -1,4 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { InsufficientEntitiesMessage } from './InsufficientEntitiesMessage';
 
 describe('InsufficientEntitiesMessage', () => {
@@ -25,13 +26,13 @@ describe('InsufficientEntitiesMessage', () => {
     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
   });
 
-  it('calls onClose when Close button is clicked', () => {
+  it('calls onClose when Close button is clicked', async () => {
     render(<InsufficientEntitiesMessage onClose={onClose} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('calls onClose when ModalHeader close is triggered', () => {
+  it('calls onClose when ModalHeader close is triggered', async () => {
     // ModalHeader's close button should call onClose
     // Find the button by its accessible name (usually "Close" or aria-label)
     render(<InsufficientEntitiesMessage onClose={onClose} />);
@@ -42,14 +43,14 @@ describe('InsufficientEntitiesMessage', () => {
           btn.textContent === '' || btn.getAttribute('aria-label') === 'Close'
       );
     if (closeButton) {
-      fireEvent.click(closeButton);
+      await userEvent.click(closeButton);
       expect(onClose).toHaveBeenCalled();
     }
   });
 
-  it('does not close modal when modal-content is clicked', () => {
+  it('does not close modal when modal-content is clicked', async () => {
     render(<InsufficientEntitiesMessage onClose={onClose} />);
-    fireEvent.click(
+    await userEvent.click(
       screen.getByText('At least 2 entities are required for merging.')
     );
     expect(onClose).not.toHaveBeenCalled();

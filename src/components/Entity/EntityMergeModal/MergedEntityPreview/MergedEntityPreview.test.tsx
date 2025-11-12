@@ -3,25 +3,29 @@ import {
   MergedEntityPreview,
   type MergedEntityPreviewProps,
 } from './MergedEntityPreview';
-import { EntityKind } from '@/types';
+import { mockNPCEntity } from '@/components/__mocks__/mockedEntities';
 
 jest.mock('@/lib/utils/entity', () => ({
   getEntityIcon: jest.fn().mockReturnValue('🗂️'),
 }));
 
-const baseEntity = {
-  id: '1',
-  kind: EntityKind.NPC,
+const testEntity = {
+  ...mockNPCEntity,
   title: 'John Doe',
-  description: 'A mysterious stranger',
-  age: 42,
-} as const;
-
-const defaultProps: MergedEntityPreviewProps = {
-  primaryEntity: baseEntity,
-  allFields: ['kind', 'title', 'description', 'age'],
-  mergedFields: {},
+  // Only add fields that exist on NPC type
+  // For this test, let's use 'role' and 'faction' as extra fields
+  role: 'Stranger',
+  faction: 'Unknown',
 };
+
+const getProps = (
+  overrides: Partial<MergedEntityPreviewProps> = {}
+): MergedEntityPreviewProps => ({
+  primaryEntity: testEntity,
+  allFields: ['kind', 'title', 'role', 'faction'],
+  mergedFields: {},
+  ...overrides,
+});
 
 describe('MergedEntityPreview', () => {
   it('renders nothing if primaryEntity is undefined', () => {
@@ -36,43 +40,53 @@ describe('MergedEntityPreview', () => {
   });
 
   it('renders entity icon, type, and title', () => {
-    render(<MergedEntityPreview {...defaultProps} />);
+    const props = getProps();
+    render(<MergedEntityPreview {...props} />);
     expect(screen.getByText('🗂️')).toBeInTheDocument();
-    expect(screen.getByText(baseEntity.kind)).toBeInTheDocument();
-    expect(screen.getByText(baseEntity.title)).toBeInTheDocument();
+    expect(screen.getByText(props.primaryEntity!.kind)).toBeInTheDocument();
+    expect(screen.getByText(props.primaryEntity!.title)).toBeInTheDocument();
   });
 
   it('renders all non-kind/title fields from primaryEntity', () => {
-    render(<MergedEntityPreview {...defaultProps} />);
-    expect(screen.getByTestId('preview-description')).toHaveTextContent(
-      'description: A mysterious stranger'
+    const props = getProps();
+    render(<MergedEntityPreview {...props} />);
+    expect(screen.getByTestId('preview-role')).toHaveTextContent(
+      'role: Stranger'
     );
-    expect(screen.getByTestId('preview-age')).toHaveTextContent('age: 42');
+    expect(screen.getByTestId('preview-faction')).toHaveTextContent(
+      'faction: Unknown'
+    );
     expect(screen.queryByTestId('preview-kind')).not.toBeInTheDocument();
     expect(screen.queryByTestId('preview-title')).not.toBeInTheDocument();
   });
 
   it('renders mergedFields values over primaryEntity values', () => {
-    const mergedFields = { description: 'Merged desc', age: 99 };
-    render(
-      <MergedEntityPreview {...defaultProps} mergedFields={mergedFields} />
+    const props = getProps({
+      mergedFields: { role: 'Merged Role', faction: 'Merged Faction' },
+    });
+    render(<MergedEntityPreview {...props} />);
+    expect(screen.getByTestId('preview-role')).toHaveTextContent(
+      'role: Merged Role'
     );
-    expect(screen.getByTestId('preview-description')).toHaveTextContent(
-      'description: Merged desc'
+    expect(screen.getByTestId('preview-faction')).toHaveTextContent(
+      'faction: Merged Faction'
     );
-    expect(screen.getByTestId('preview-age')).toHaveTextContent('age: 99');
   });
 
   it('does not render fields with falsy values', () => {
-    const entity = { ...baseEntity, description: '', age: null };
+    const entity = {
+      ...getProps().primaryEntity!,
+      role: '',
+      faction: '',
+    };
     render(
       <MergedEntityPreview
         primaryEntity={entity}
-        allFields={['description', 'age']}
+        allFields={['role', 'faction']}
         mergedFields={{}}
       />
     );
-    expect(screen.queryByTestId('preview-description')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('preview-age')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('preview-role')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('preview-faction')).not.toBeInTheDocument();
   });
 });
