@@ -1,4 +1,4 @@
-type ActionButtonsProps = {
+export type ActionButtonsProps = {
   selectedFile: File | null;
   loading: boolean;
   onProcess: (file: File) => Promise<void>;

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-type FileUploadProps = {
+export type FileUploadProps = {
   onFileSelect: (file: File) => void;
   selectedFile: File | null;
   error: string | null;

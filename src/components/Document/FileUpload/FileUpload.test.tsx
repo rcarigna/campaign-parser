@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { FileUpload } from './FileUpload';
+import { FileUpload, FileUploadProps } from './FileUpload';
 
 const mockOnFileSelect = jest.fn();
 
-const defaultProps = {
+const defaultProps: FileUploadProps = {
   onFileSelect: mockOnFileSelect,
   selectedFile: null,
   error: null,
