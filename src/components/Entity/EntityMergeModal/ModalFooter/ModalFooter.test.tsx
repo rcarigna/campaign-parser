@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { ModalFooter, ModalFooterProps } from './ModalFooter';
+import { ModalFooter } from './ModalFooter';
 import userEvent from '@testing-library/user-event';
+import { ModalFooterProps } from '@/types';
 
 const defaultProps: ModalFooterProps = {
   onCancel: jest.fn(),

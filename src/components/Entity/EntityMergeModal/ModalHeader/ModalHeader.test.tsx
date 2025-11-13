@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { ModalHeader, ModalHeaderProps } from './ModalHeader';
+import { ModalHeader } from './ModalHeader';
 import userEvent from '@testing-library/user-event';
+import { ModalHeaderProps } from '@/types';
 
 describe('ModalHeader', () => {
   const defaultProps: ModalHeaderProps = {

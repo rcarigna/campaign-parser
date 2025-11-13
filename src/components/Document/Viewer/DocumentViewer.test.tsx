@@ -3,10 +3,17 @@ import { userEvent } from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { DocumentViewer } from './DocumentViewer';
 import { mockMarkdownData, mockWordData } from '../../__mocks__/index';
+import { DocumentType } from '@/types';
 
+const markdownProps = {
+  parsedData: { ...mockMarkdownData, type: DocumentType.MARKDOWN },
+};
+const mockWordProps = {
+  parsedData: { ...mockWordData, type: DocumentType.WORD_DOCUMENT },
+};
 describe('DocumentViewer', () => {
   it('renders markdown document with formatted view by default', () => {
-    render(<DocumentViewer parsedData={mockMarkdownData} />);
+    render(<DocumentViewer {...markdownProps} />);
 
     expect(screen.getByText('📄 Document Content')).toBeInTheDocument();
     expect(screen.getByText('test.md • Markdown')).toBeInTheDocument();
@@ -19,7 +26,7 @@ describe('DocumentViewer', () => {
   });
 
   it('toggles between formatted and raw markdown views', async () => {
-    render(<DocumentViewer parsedData={mockMarkdownData} />);
+    render(<DocumentViewer {...markdownProps} />);
 
     // Initially should show formatted view
     expect(screen.getByRole('button', { name: /formatted/i })).toHaveClass(
@@ -40,7 +47,7 @@ describe('DocumentViewer', () => {
   });
 
   it('renders word document with appropriate labels', () => {
-    render(<DocumentViewer parsedData={mockWordData} />);
+    render(<DocumentViewer {...mockWordProps} />);
 
     expect(screen.getByText('📄 Document Content')).toBeInTheDocument();
     expect(screen.getByText('test.docx • Word Document')).toBeInTheDocument();
@@ -53,7 +60,7 @@ describe('DocumentViewer', () => {
   });
 
   it('toggles between rendered and plain text views for word documents', async () => {
-    render(<DocumentViewer parsedData={mockWordData} />);
+    render(<DocumentViewer {...mockWordProps} />);
 
     // Initially should show rendered view
     expect(screen.getByRole('button', { name: /rendered/i })).toHaveClass(
@@ -74,7 +81,7 @@ describe('DocumentViewer', () => {
   });
 
   it('shows formatted view when toggling back from raw markdown', async () => {
-    render(<DocumentViewer parsedData={mockMarkdownData} />);
+    render(<DocumentViewer {...markdownProps} />);
     const rawButton = screen.getByRole('button', { name: /raw markdown/i });
     await userEvent.click(rawButton);
 
@@ -88,7 +95,7 @@ describe('DocumentViewer', () => {
   });
 
   it('shows rendered view when toggling back from plain text for word documents', async () => {
-    render(<DocumentViewer parsedData={mockWordData} />);
+    render(<DocumentViewer {...mockWordProps} />);
     const plainTextButton = screen.getByRole('button', { name: /plain text/i });
     await userEvent.click(plainTextButton);
 

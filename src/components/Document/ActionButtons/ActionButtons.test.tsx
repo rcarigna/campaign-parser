@@ -1,5 +1,7 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { ActionButtons, ActionButtonsProps } from './ActionButtons';
+import { render, screen } from '@testing-library/react';
+import { ActionButtons } from './ActionButtons';
+import { ActionButtonsProps } from '@/types';
+import userEvent from '@testing-library/user-event';
 
 describe('ActionButtons', () => {
   const mockOnProcess = jest.fn();
@@ -57,21 +59,21 @@ describe('ActionButtons', () => {
     expect(processButton).toBeDisabled();
   });
 
-  it('should call onProcess when process button is clicked', () => {
+  it('should call onProcess when process button is clicked', async () => {
     render(<ActionButtons {...markdownProps} />);
 
     const processButton = screen.getByText('Parse Document');
-    fireEvent.click(processButton);
+    await userEvent.click(processButton);
 
     expect(mockOnProcess).toHaveBeenCalledTimes(1);
     expect(mockOnProcess).toHaveBeenCalledWith(markdownMock);
   });
 
-  it('should call onReset when reset button is clicked', () => {
+  it('should call onReset when reset button is clicked', async () => {
     render(<ActionButtons {...markdownProps} />);
 
     const resetButton = screen.getByText('Reset');
-    fireEvent.click(resetButton);
+    await userEvent.click(resetButton);
 
     expect(mockOnReset).toHaveBeenCalledTimes(1);
   });
