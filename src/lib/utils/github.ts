@@ -1,5 +1,6 @@
 import { EntityKind } from '@/types';
 import type { FieldMetadata } from '@/types';
+import { getEntityLabel } from '@/lib/utils/entity';
 
 /**
  * GitHub repository information
@@ -7,19 +8,6 @@ import type { FieldMetadata } from '@/types';
 const GITHUB_REPO_OWNER = 'rcarigna';
 const GITHUB_REPO_NAME = 'campaign-parser';
 
-/**
- * Entity kind to display name mapping
- */
-const ENTITY_KIND_LABELS: Record<EntityKind, string> = {
-  [EntityKind.NPC]: 'NPC (Non-Player Character)',
-  [EntityKind.LOCATION]: 'Location',
-  [EntityKind.ITEM]: 'Item',
-  [EntityKind.QUEST]: 'Quest',
-  [EntityKind.PLAYER]: 'Player',
-  [EntityKind.SESSION_SUMMARY]: 'Session Summary',
-  [EntityKind.SESSION_PREP]: 'Session Prep',
-  [EntityKind.UNKNOWN]: 'Unknown',
-};
 
 /**
  * Generates a GitHub issue URL for schema suggestions
@@ -33,7 +21,7 @@ export const generateSchemaIssueUrl = (params: {
   const { entityKind, fieldName, currentBehavior, proposedChange } = params;
 
   const baseUrl = `https://github.com/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/issues/new`;
-  const templateParam = 'template=schema_suggestion.yml';
+  const templateParam = 'template=schema_suggestion.md';
 
   // Build query parameters
   const queryParams: string[] = [templateParam];
@@ -41,7 +29,7 @@ export const generateSchemaIssueUrl = (params: {
   // Add title
   const titleParts: string[] = ['[Schema]'];
   if (entityKind) {
-    titleParts.push(ENTITY_KIND_LABELS[entityKind]);
+    titleParts.push(getEntityLabel(entityKind));
   }
   if (fieldName) {
     titleParts.push(`- ${fieldName}`);
@@ -51,7 +39,7 @@ export const generateSchemaIssueUrl = (params: {
 
   // Add entity type
   if (entityKind) {
-    queryParams.push(`entity-type=${encodeURIComponent(ENTITY_KIND_LABELS[entityKind])}`);
+    queryParams.push(`entity-type=${encodeURIComponent(getEntityLabel(entityKind))}`);
   }
 
   // Add field name
@@ -100,7 +88,7 @@ export const getFieldDescription = (field: FieldMetadata): string => {
 export const generateNewFieldIssueUrl = (entityKind: EntityKind): string => {
   return generateSchemaIssueUrl({
     entityKind,
-    proposedChange: `Add a new field to ${ENTITY_KIND_LABELS[entityKind]} schema`,
+    proposedChange: `Add a new field to ${getEntityLabel(entityKind)} schema`,
   });
 };
 
@@ -130,7 +118,7 @@ export const generateSchemaEnhancementIssueUrl = (
 ): string => {
   return generateSchemaIssueUrl({
     entityKind,
-    proposedChange: `Suggest enhancements to the ${ENTITY_KIND_LABELS[entityKind]} schema`,
+    proposedChange: `Suggest enhancements to the ${getEntityLabel(entityKind)} schema`,
     currentBehavior: currentSchema ? currentSchema.map(getFieldDescription).join(';') : undefined,
   });
 };
