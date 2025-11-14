@@ -1,20 +1,7 @@
 'use client';
 
 import { FileUpload, ActionButtons } from '@/components';
-import { ALLOWED_EXTENSIONS } from '@/types';
-
-type ProcessingWorkflowProps = {
-  selectedFile: File | null;
-  loading: boolean;
-  error: string | null;
-  hasContent: boolean; // New prop to determine if content is loaded
-  onFileSelect: (file: File) => void;
-  onProcess: (file: File) => Promise<void>;
-  onReset: () => void;
-  onClearError: () => void;
-  additionalLoading?: boolean;
-  additionalLoadingMessage?: string;
-};
+import { ALLOWED_EXTENSIONS, ProcessingWorkflowProps } from '@/types';
 
 export const ProcessingWorkflow = ({
   selectedFile,

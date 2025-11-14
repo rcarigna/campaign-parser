@@ -1,5 +1,6 @@
 import { itemSchema, locationSchema, npcSchema, playerSchema, questSchema, sessionPrepSchema, sessionSummarySchema } from "@/lib/validation/entity";
-import { FieldMetadata, generateFieldsFromSchema } from "@/lib/utils/form";
+import { generateFieldsFromSchema } from "@/lib/utils/form";
+import { FieldMetadata } from "@/types";
 
 // Campaign Entity Types
 export enum EntityKind {
@@ -9,7 +10,8 @@ export enum EntityKind {
     PLAYER = "player",
     QUEST = "quest",
     SESSION_PREP = "session_prep",
-    SESSION_SUMMARY = "session_summary"
+    SESSION_SUMMARY = "session_summary",
+    UNKNOWN = "unknown"
 }
 
 export enum ItemRarity {
@@ -194,11 +196,27 @@ export const EntityFieldMap: Record<EntityKind, () => FieldMetadata[]> = {
             fieldCache[EntityKind.SESSION_SUMMARY] = generateFieldsFromSchema(sessionSummarySchema);
         }
         return fieldCache[EntityKind.SESSION_SUMMARY]!;
-    }
+    },
+    [EntityKind.UNKNOWN]: () => {
+        if (!fieldCache[EntityKind.UNKNOWN]) {
+            fieldCache[EntityKind.UNKNOWN] = [];
+        }
+        return fieldCache[EntityKind.UNKNOWN]!;
+    },
 };
 
 // Helper to get form fields for any entity type
 export const getEntityFields = (entityKind: EntityKind) => {
     const getter = EntityFieldMap[entityKind];
     return getter ? getter() : [];
+};
+/**
+ * Entity metadata type for UI display
+ */
+export type EntityMetadata = {
+    kind: EntityKind;
+    emoji: string;
+    label: string;
+    description: string;
+    color: string;
 };

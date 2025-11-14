@@ -49,7 +49,7 @@ const customJestConfig = {
     '!src/lib/services/documentParser/**',
     '!src/lib/services/entityExtractor/**',
     // Exclude components that need integration testing
-    '!src/components/Entity/EntityMergeModal/**',
+    // '!src/components/Entity/EntityMergeModal/**',
   ],
 
   // Coverage thresholds (adjusted for current codebase)
@@ -61,7 +61,10 @@ const customJestConfig = {
       statements: 70,
     },
   },
-
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '/src/.*index\\.(ts|tsx|js|jsx)$',
+  ],
   // Coverage reporting
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],

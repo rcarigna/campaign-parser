@@ -1,9 +1,4 @@
-type ActionButtonsProps = {
-  selectedFile: File | null;
-  loading: boolean;
-  onProcess: (file: File) => Promise<void>;
-  onReset: () => void;
-};
+import { ActionButtonsProps } from '@/types';
 
 export const ActionButtons = ({
   selectedFile,

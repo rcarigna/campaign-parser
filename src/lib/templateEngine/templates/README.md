@@ -44,7 +44,7 @@ Exports Quest entities with:
 - Consequence tracking
 - Related entity links
 
-### 📘 Session Summaries (`session-summary.md`)
+### 📘 Session Summaries (`session_summary.md`)
 
 Exports Session Summary entities with:
 

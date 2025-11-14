@@ -1,6 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ProcessingWorkflow } from './ProcessingWorkflow';
+import { mockFileDocx, mockFileMd } from '../../__mocks__/mockedDocuments';
+import { ProcessingWorkflowProps } from '@/types';
 
 jest.mock('@/components', () => ({
   FileUpload: ({ selectedFile }: { selectedFile?: File | null }) => (
@@ -9,55 +11,58 @@ jest.mock('@/components', () => ({
   ActionButtons: () => <div data-testid='action-buttons'>Action Buttons</div>,
 }));
 
-jest.mock('@/types', () => ({
-  ALLOWED_EXTENSIONS: ['.docx', '.md'],
-}));
+export const defaultProcessingWorkflowProps: ProcessingWorkflowProps = {
+  selectedFile: null,
+  loading: false,
+  error: null,
+  hasContent: false,
+  onFileSelect: jest.fn(),
+  onProcess: jest.fn(),
+  onReset: jest.fn(),
+  onClearError: jest.fn(),
+};
+
+export const setupProcessingWorkflowTest = (
+  overrides: Partial<ProcessingWorkflowProps> = {}
+) => {
+  const props: ProcessingWorkflowProps = {
+    ...defaultProcessingWorkflowProps,
+    ...overrides,
+  };
+  const utils = render(<ProcessingWorkflow {...props} />);
+  return {
+    props,
+    ...utils,
+    mockFileDocx,
+    mockFileMd,
+  };
+};
 
 describe('ProcessingWorkflow', () => {
-  const defaultProps = {
-    selectedFile: null,
-    loading: false,
-    error: null,
-    hasContent: false,
-    onFileSelect: jest.fn(),
-    onProcess: jest.fn(),
-    onReset: jest.fn(),
-    onClearError: jest.fn(),
-  };
-
   it('renders file upload section', () => {
-    render(<ProcessingWorkflow {...defaultProps} />);
-
+    setupProcessingWorkflowTest();
     expect(screen.getByText('📤 Upload Document')).toBeInTheDocument();
     expect(screen.getByTestId('file-upload')).toBeInTheDocument();
   });
 
   it('shows action buttons when file is selected', () => {
-    const file = new File(['test'], 'test.docx', {
-      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    });
-
-    render(<ProcessingWorkflow {...defaultProps} selectedFile={file} />);
-
+    setupProcessingWorkflowTest({ selectedFile: mockFileDocx });
     expect(screen.getByTestId('action-buttons')).toBeInTheDocument();
   });
 
   it('shows loading state', () => {
-    render(<ProcessingWorkflow {...defaultProps} loading={true} />);
-
+    setupProcessingWorkflowTest({ loading: true });
     expect(screen.getByText(/processing document/i)).toBeInTheDocument();
   });
 
   it('shows error message', () => {
-    render(<ProcessingWorkflow {...defaultProps} error='Test error' />);
-
+    setupProcessingWorkflowTest({ error: 'Test error' });
     expect(screen.getByText('❌ Error:')).toBeInTheDocument();
     expect(screen.getByText('Test error')).toBeInTheDocument();
   });
 
   it('shows reset state when content is loaded', () => {
-    render(<ProcessingWorkflow {...defaultProps} hasContent={true} />);
-
+    setupProcessingWorkflowTest({ hasContent: true });
     expect(screen.getByText('Content Loaded Successfully')).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /start over/i })

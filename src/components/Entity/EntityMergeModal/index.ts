@@ -1,1 +1,1 @@
-export { EntityMergeModal } from './EntityMergeModal';
+export * from './EntityMergeModal';

@@ -5,3 +5,5 @@ export * from './nlp';
 
 // Re-export validation types from lib
 export * from '../lib/validation/file';
+
+export * from './components';

@@ -19,7 +19,7 @@ export const initializeTemplates = async (): Promise<void> => {
         'location.md',
         'item.md',
         'quest.md',
-        'session-summary.md'
+        'session_summary.md'
     ];
 
     // Load and compile templates
@@ -103,7 +103,7 @@ const getTemplateKey = (kind: string): string => {
         'location': 'location',
         'item': 'item',
         'quest': 'quest',
-        'session_summary': 'session-summary'
+        'session_summary': 'session_summary'
     };
 
     return kindMap[kind] || kind;

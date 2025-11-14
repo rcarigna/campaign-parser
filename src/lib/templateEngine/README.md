@@ -26,7 +26,7 @@ src/lib/templateEngine/
     ├── location.md       # Location entity template
     ├── item.md           # Item entity template
     ├── quest.md          # Quest entity template
-    ├── session-summary.md # Session summary template
+    ├── session_summary.md # Session summary template
     └── README.md         # Template system documentation
 ```
 

@@ -1,23 +1,37 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { ActionButtons } from './ActionButtons';
+import { ActionButtonsProps } from '@/types';
+import userEvent from '@testing-library/user-event';
 
 describe('ActionButtons', () => {
   const mockOnProcess = jest.fn();
   const mockOnReset = jest.fn();
+  const mockProps: ActionButtonsProps = {
+    selectedFile: null,
+    loading: false,
+    onProcess: mockOnProcess,
+    onReset: mockOnReset,
+  };
+
+  const markdownMock = new File(['content'], 'test.md', {
+    type: 'text/markdown',
+  });
+
+  const markdownProps = {
+    ...mockProps,
+    selectedFile: markdownMock,
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('should render empty actions div when no file is selected', () => {
-    const { container } = render(
-      <ActionButtons
-        selectedFile={null}
-        loading={false}
-        onProcess={mockOnProcess}
-        onReset={mockOnReset}
-      />
-    );
+    const { container } = render(<ActionButtons {...mockProps} />);
 
     const actionsDiv = container.querySelector('.actions');
     expect(actionsDiv).toHaveClass('actions');
@@ -25,131 +39,54 @@ describe('ActionButtons', () => {
   });
 
   it('should render process and reset buttons when file is selected', () => {
-    const mockFile = new File(['content'], 'test.md', {
-      type: 'text/markdown',
-    });
-
-    render(
-      <ActionButtons
-        selectedFile={mockFile}
-        loading={false}
-        onProcess={mockOnProcess}
-        onReset={mockOnReset}
-      />
-    );
+    render(<ActionButtons {...mockProps} selectedFile={markdownMock} />);
 
     expect(screen.getByText('Parse Document')).toBeInTheDocument();
     expect(screen.getByText('Reset')).toBeInTheDocument();
   });
 
   it('should enable process button when file is selected', () => {
-    const mockFile = new File(['content'], 'test.md', {
-      type: 'text/markdown',
-    });
-
-    render(
-      <ActionButtons
-        selectedFile={mockFile}
-        loading={false}
-        onProcess={mockOnProcess}
-        onReset={mockOnReset}
-      />
-    );
+    render(<ActionButtons {...markdownProps} />);
 
     const processButton = screen.getByText('Parse Document');
     expect(processButton).toBeEnabled();
   });
 
   it('should disable process button when loading', () => {
-    const mockFile = new File(['content'], 'test.md', {
-      type: 'text/markdown',
-    });
-
-    render(
-      <ActionButtons
-        selectedFile={mockFile}
-        loading={true}
-        onProcess={mockOnProcess}
-        onReset={mockOnReset}
-      />
-    );
+    render(<ActionButtons {...markdownProps} loading={true} />);
 
     const processButton = screen.getByText('Parsing...');
     expect(processButton).toBeDisabled();
   });
 
-  it('should call onProcess when process button is clicked', () => {
-    const mockFile = new File(['content'], 'test.md', {
-      type: 'text/markdown',
-    });
-
-    render(
-      <ActionButtons
-        selectedFile={mockFile}
-        loading={false}
-        onProcess={mockOnProcess}
-        onReset={mockOnReset}
-      />
-    );
+  it('should call onProcess when process button is clicked', async () => {
+    render(<ActionButtons {...markdownProps} />);
 
     const processButton = screen.getByText('Parse Document');
-    fireEvent.click(processButton);
+    await userEvent.click(processButton);
 
     expect(mockOnProcess).toHaveBeenCalledTimes(1);
-    expect(mockOnProcess).toHaveBeenCalledWith(mockFile);
+    expect(mockOnProcess).toHaveBeenCalledWith(markdownMock);
   });
 
-  it('should call onReset when reset button is clicked', () => {
-    const mockFile = new File(['content'], 'test.md', {
-      type: 'text/markdown',
-    });
-
-    render(
-      <ActionButtons
-        selectedFile={mockFile}
-        loading={false}
-        onProcess={mockOnProcess}
-        onReset={mockOnReset}
-      />
-    );
+  it('should call onReset when reset button is clicked', async () => {
+    render(<ActionButtons {...markdownProps} />);
 
     const resetButton = screen.getByText('Reset');
-    fireEvent.click(resetButton);
+    await userEvent.click(resetButton);
 
     expect(mockOnReset).toHaveBeenCalledTimes(1);
   });
 
   it('should show loading text when processing', () => {
-    const mockFile = new File(['content'], 'test.md', {
-      type: 'text/markdown',
-    });
-
-    render(
-      <ActionButtons
-        selectedFile={mockFile}
-        loading={true}
-        onProcess={mockOnProcess}
-        onReset={mockOnReset}
-      />
-    );
+    render(<ActionButtons {...markdownProps} loading={true} />);
 
     expect(screen.getByText('Parsing...')).toBeInTheDocument();
     expect(screen.queryByText('Parse Document')).not.toBeInTheDocument();
   });
 
   it('should always enable reset button regardless of loading state', () => {
-    const mockFile = new File(['content'], 'test.md', {
-      type: 'text/markdown',
-    });
-
-    render(
-      <ActionButtons
-        selectedFile={mockFile}
-        loading={true}
-        onProcess={mockOnProcess}
-        onReset={mockOnReset}
-      />
-    );
+    render(<ActionButtons {...markdownProps} loading={true} />);
 
     const resetButton = screen.getByText('Reset');
     expect(resetButton).toBeEnabled();

@@ -1,5 +1,5 @@
 import { EntityKind } from '@/types';
-import type { EntityMetadata } from '@/lib/utils/entity';
+import type { EntityMetadata } from '@/types';
 
 type EntityTypeCardProps = {
   metadata: EntityMetadata;

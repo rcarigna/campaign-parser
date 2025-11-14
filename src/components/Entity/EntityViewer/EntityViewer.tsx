@@ -4,6 +4,7 @@ import {
   type EntityWithId,
   type SerializedParsedDocumentWithEntities,
 } from '@/types';
+import { exportEntities } from '@/client/api';
 import { EntityFilters } from '../EntityFilters';
 import { EntityGrid } from '../EntityGrid';
 import { EntityEditModal } from '../EntityEditModal';
@@ -30,6 +31,7 @@ export const EntityViewer = ({
     null
   );
   const [view, setView] = useState<'entities' | 'json'>('entities');
+  const [isExporting, setIsExporting] = useState(false);
 
   // Custom hooks for different concerns
   const filtering = useEntityFiltering(entities);
@@ -94,26 +96,76 @@ export const EntityViewer = ({
       { duration: 5000 }
     );
   };
+
+  const handleExport = async (): Promise<void> => {
+    if (entities.length === 0) {
+      toast.error('No entities to export');
+      return;
+    }
+
+    setIsExporting(true);
+    const toastId = toast.loading(
+      `Exporting ${entities.length} entities to Obsidian format...`
+    );
+
+    try {
+      const blob = await exportEntities(entities);
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'obsidian-vault.zip';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success(
+        `Successfully exported ${entities.length} entities as Obsidian vault!`,
+        { id: toastId, duration: 5000 }
+      );
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to export entities';
+      toast.error(errorMessage, { id: toastId, duration: 5000 });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <div className='entity-viewer'>
       <div className='entity-header'>
         <div className='entity-title-row'>
           <h3>📋 Extracted Entities ({entities.length})</h3>
 
-          {/* View Toggle */}
-          <div className='view-toggle'>
+          <div className='header-controls'>
+            {/* Export Button */}
             <button
-              className={`toggle-btn ${view === 'entities' ? 'active' : ''}`}
-              onClick={() => setView('entities')}
+              className='btn btn-primary export-btn'
+              onClick={handleExport}
+              disabled={isExporting || entities.length === 0}
+              title='Export all entities to Obsidian vault format'
             >
-              📋 Entity View
+              {isExporting ? '⏳ Exporting...' : '📦 Export to Obsidian'}
             </button>
-            <button
-              className={`toggle-btn ${view === 'json' ? 'active' : ''}`}
-              onClick={() => setView('json')}
-            >
-              📄 Raw Data
-            </button>
+
+            {/* View Toggle */}
+            <div className='view-toggle'>
+              <button
+                className={`toggle-btn ${view === 'entities' ? 'active' : ''}`}
+                onClick={() => setView('entities')}
+              >
+                📋 Entity View
+              </button>
+              <button
+                className={`toggle-btn ${view === 'json' ? 'active' : ''}`}
+                onClick={() => setView('json')}
+              >
+                📄 Raw Data
+              </button>
+            </div>
           </div>
         </div>
 
@@ -170,10 +222,22 @@ export const EntityViewer = ({
           <EntityGrid
             entities={filtering.filteredEntities}
             duplicateIds={filtering.duplicateIds}
-            onEntityClick={handleEntityClick}
+            onEntityClick={
+              selection.isSelectionMode
+                ? (entity) =>
+                    selection.handleEntitySelect(
+                      entity.id,
+                      !selection.selectedEntityIds.has(entity.id)
+                    )
+                : handleEntityClick
+            }
             isSelectionMode={selection.isSelectionMode}
             selectedEntityIds={selection.selectedEntityIds}
-            onEntitySelect={selection.handleEntitySelect}
+            onEntitySelect={
+              selection.isSelectionMode
+                ? selection.handleEntitySelect
+                : undefined
+            }
             onEntityDiscard={handleEntityDiscard}
           />
         </>

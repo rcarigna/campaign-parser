@@ -4,9 +4,10 @@ import {
     getEntityLabel,
     getEntityDescription,
     getEntityMetadata,
-    getAllEntityMetadata
+    getAllEntityMetadata,
+    mergeEntities
 } from './entity';
-import { EntityKind } from '@/types';
+import { AnyEntity, EntityKind, EntityWithId } from '@/types';
 
 describe('entityUtils', () => {
     describe('getEntityIcon', () => {
@@ -144,6 +145,43 @@ describe('entityUtils', () => {
                 expect(typeof metadata.label).toBe('string');
                 expect(typeof metadata.description).toBe('string');
                 expect(metadata.color).toMatch(/^#[0-9A-Fa-f]{6}$/);
+            });
+        });
+    });
+
+    describe('mergeEntities', () => {
+        it('should merge specified fields from multiple entities', () => {
+            const entities: Array<AnyEntity & EntityWithId> = [
+                { id: '1', title: 'Entity One', kind: EntityKind.NPC, tags: ['tag1', 'tag2'] },
+                { id: '2', title: 'Entity Two', kind: EntityKind.NPC, tags: ['tag2', 'tag3'] },
+            ];
+            const merged = mergeEntities(entities, ['tags']);
+
+            expect(merged).toEqual({
+                id: '1',
+                title: 'Entity One',
+                kind: EntityKind.NPC,
+                tags: ['tag1', 'tag2', 'tag3'],
+            });
+        });
+
+        it('should return null if no entities are provided', () => {
+            const merged = mergeEntities([], ['tags']);
+            expect(merged).toBeNull();
+        });
+
+        it('should handle cases where some entities do not have the field to merge', () => {
+            const entities: Array<AnyEntity & EntityWithId> = [
+                { id: '1', title: 'Entity One', kind: EntityKind.ITEM },
+                { id: '2', title: 'Entity Two', tags: ['tag2', 'tag3'], kind: EntityKind.ITEM },
+            ];
+            const merged = mergeEntities(entities, ['tags']);
+
+            expect(merged).toEqual({
+                id: '1',
+                title: 'Entity One',
+                tags: ['tag2', 'tag3'],
+                kind: EntityKind.ITEM,
             });
         });
     });

@@ -1,4 +1,6 @@
-import { EntityKind, NPC, Location, Item, Quest, ItemRarity, ItemType, LocationType, QuestType } from './campaign';
+import { FieldMetadata } from './document';
+import { EntityKind, NPC, Location, Item, Quest, ItemRarity, ItemType, LocationType, QuestType, getEntityFields } from './campaign';
+
 
 describe('Campaign Types', () => {
     describe('EntityKind enum', () => {
@@ -142,6 +144,91 @@ describe('Campaign Types', () => {
             expect(quest.tags).toContain('magic');
             expect(quest.owner).toBe('Wizard Aldric');
             expect(quest.faction).toBe('Mages Guild');
+        });
+
+        jest.mock('@/lib/validation/entity', () => ({
+            itemSchema: { mock: 'itemSchema' },
+            locationSchema: { mock: 'locationSchema' },
+            npcSchema: { mock: 'npcSchema' },
+            playerSchema: { mock: 'playerSchema' },
+            questSchema: { mock: 'questSchema' },
+            sessionPrepSchema: { mock: 'sessionPrepSchema' },
+            sessionSummarySchema: { mock: 'sessionSummarySchema' },
+        }));
+
+        jest.mock('@/lib/utils/form', () => ({
+            generateFieldsFromSchema: jest.fn(() => [
+                { name: 'field1', label: 'Field 1', type: 'text' },
+                { name: 'field2', label: 'Field 2', type: 'text' }
+            ]),
+            FieldMetadata: jest.requireActual('@/lib/utils/form').FieldMetadata
+        }));
+
+        describe('EntityFieldMap', () => {
+            const hasBaseFields = (fields: FieldMetadata[]) => {
+                return fields.some((field) => field.label === 'Title');
+            };
+            it('should generate fields for ITEM kind', () => {
+                const fields = getEntityFields(EntityKind.ITEM);
+                expect(Array.isArray(fields)).toBe(true);
+                expect(fields.length).toBeGreaterThan(0);
+                expect(hasBaseFields(fields)).toBe(true);
+                expect(fields.some((field) => field.label === 'Type')).toBe(true);
+            });
+
+            it('should generate fields for LOCATION kind', () => {
+                const fields = getEntityFields(EntityKind.LOCATION);
+                expect(Array.isArray(fields)).toBe(true);
+                expect(hasBaseFields(fields)).toBe(true);
+                expect(fields.some((field) => field.label === 'Region')).toBe(true);
+            });
+
+            it('should generate fields for NPC kind', () => {
+                const fields = getEntityFields(EntityKind.NPC);
+                expect(Array.isArray(fields)).toBe(true);
+                expect(hasBaseFields(fields)).toBe(true);
+                expect(fields.some((field) => field.label === 'Role')).toBe(true);
+            });
+
+            it('should generate fields for PLAYER kind', () => {
+                const fields = getEntityFields(EntityKind.PLAYER);
+                expect(Array.isArray(fields)).toBe(true);
+                expect(hasBaseFields(fields)).toBe(true);
+                expect(fields.some((field) => field.label === 'Character Name')).toBe(true);
+            });
+
+            it('should generate fields for QUEST kind', () => {
+                const fields = getEntityFields(EntityKind.QUEST);
+                expect(Array.isArray(fields)).toBe(true);
+                expect(hasBaseFields(fields)).toBe(true);
+                expect(fields.some((field) => field.label === 'Status')).toBe(true);
+            });
+
+            it('should generate fields for SESSION_PREP kind', () => {
+                const fields = getEntityFields(EntityKind.SESSION_PREP);
+                expect(Array.isArray(fields)).toBe(true);
+                expect(hasBaseFields(fields)).toBe(true);
+                expect(fields.some((field) => field.label === 'Planned Date')).toBe(true);
+            });
+
+            it('should generate fields for SESSION_SUMMARY kind', () => {
+                const fields = getEntityFields(EntityKind.SESSION_SUMMARY);
+                expect(Array.isArray(fields)).toBe(true);
+                expect(hasBaseFields(fields)).toBe(true);
+                expect(fields.some((field) => field.label === 'Summary')).toBe(true);
+            });
+
+            it('should return empty array for UNKNOWN kind', () => {
+                const fields = getEntityFields(EntityKind.UNKNOWN);
+                expect(Array.isArray(fields)).toBe(true);
+                expect(fields.length).toBe(0);
+            });
+
+            it('should memoize fields per entity kind', () => {
+                const firstCall = getEntityFields(EntityKind.ITEM);
+                const secondCall = getEntityFields(EntityKind.ITEM);
+                expect(secondCall).toBe(firstCall);
+            });
         });
     });
 });

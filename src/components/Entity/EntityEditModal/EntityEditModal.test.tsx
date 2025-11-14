@@ -1,69 +1,35 @@
 import { render, screen } from '@testing-library/react';
 import { EntityEditModal } from './EntityEditModal';
-import { EntityKind, EntityWithId } from '@/types';
+import { EntityKind } from '@/types';
 import userEvent from '@testing-library/user-event';
+import { mockPlayerEntity } from '@/components/__mocks__';
 
-// Mock the formGenerator module
-// jest.mock('@/lib/formGenerator', () => ({
-//     getEntityFields: jest.fn(),
-// }));
+const mockOnClose = jest.fn();
+const mockOnSave = jest.fn();
+const getDefaultProps = (overrides = {}) => ({
+  entity: mockPlayerEntity,
+  onClose: mockOnClose,
+  onSave: mockOnSave,
+  ...overrides,
+});
+const renderEditModal = (props = {}) =>
+  render(<EntityEditModal {...getDefaultProps(props)} />);
 
-// Mock console.log to avoid noise in tests
 const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
 
+beforeEach(() => jest.clearAllMocks());
+afterAll(() => mockConsoleLog.mockRestore());
+
 describe('EntityEditModal', () => {
-  const mockEntity: EntityWithId = {
-    id: 'test-id',
-    kind: EntityKind.PLAYER,
-    title: 'Test Player Title',
-    character_name: 'Test Character',
-    // description: 'A test player character',
-    tags: ['hero'],
-    // connections: [],
-  };
-
-  const mockOnClose = jest.fn();
-  const mockOnSave = jest.fn();
-  //   const mockGetEntityFields =
-  //     formGenerator.getEntityFields as jest.MockedFunction<
-  //       typeof formGenerator.getEntityFields
-  //     >;
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    // mockGetEntityFields.mockReturnValue([
-    //   { name: 'title', type: 'text', required: true },
-    //   { name: 'description', type: 'textarea', required: false },
-    // ]);
-  });
-
-  afterAll(() => {
-    mockConsoleLog.mockRestore();
-  });
-
-  const renderComponent = (props = {}) => {
-    return render(
-      <EntityEditModal
-        entity={mockEntity}
-        onClose={mockOnClose}
-        onSave={mockOnSave}
-        {...props}
-      />
-    );
-  };
-
   describe('Rendering', () => {
     it('renders the modal with entity information', () => {
-      renderComponent();
-
+      renderEditModal();
       expect(screen.getByText(/Edit Entity: Test Player/)).toBeInTheDocument();
       expect(screen.getByText(/Test Player Title/)).toBeInTheDocument();
       expect(screen.getByDisplayValue('Test Player Title')).toBeInTheDocument();
     });
-
     it('renders action buttons', () => {
-      renderComponent();
-
+      renderEditModal();
       expect(
         screen.getByRole('button', { name: 'Cancel' })
       ).toBeInTheDocument();
@@ -74,11 +40,8 @@ describe('EntityEditModal', () => {
         screen.getByRole('button', { name: 'Close modal' })
       ).toBeInTheDocument();
     });
-
     it('renders entity information correctly', () => {
-      renderComponent();
-
-      // Verify the modal renders with correct entity information
+      renderEditModal();
       expect(
         screen.getByText(/Edit Entity: Test Player Title/)
       ).toBeInTheDocument();
@@ -87,33 +50,25 @@ describe('EntityEditModal', () => {
 
   describe('User Interactions', () => {
     it('calls onClose when close button is clicked', async () => {
-      renderComponent();
-
+      renderEditModal();
       await userEvent.click(
         screen.getByRole('button', { name: 'Close modal' })
       );
-
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
-
     it('calls onClose when cancel button is clicked', async () => {
-      renderComponent();
-
+      renderEditModal();
       await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
-
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
-
     it('calls onSave with entity when save button is clicked', async () => {
-      renderComponent();
-
+      renderEditModal();
       await userEvent.click(
         screen.getByRole('button', { name: 'Save Changes' })
       );
-
       expect(mockOnSave).toHaveBeenCalledTimes(1);
       expect(mockOnSave).toHaveBeenCalledWith({
-        ...mockEntity,
+        ...mockPlayerEntity,
         class: '',
         level: '',
         player_name: '',
@@ -122,79 +77,64 @@ describe('EntityEditModal', () => {
         tags: 'hero',
       });
     });
-
     it('calls onClose when modal overlay is clicked', async () => {
-      renderComponent();
-
+      renderEditModal();
       await userEvent.click(screen.getByTestId('modal-overlay'));
-
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
-
     it('does not call onClose when modal content is clicked', async () => {
-      renderComponent();
-
+      renderEditModal();
       await userEvent.click(screen.getByTestId('modal-content'));
-
       expect(mockOnClose).not.toHaveBeenCalled();
     });
   });
 
-  describe('Different Entity Types', () => {
-    it('renders correctly for location entity', () => {
-      const locationEntity: EntityWithId = {
-        ...mockEntity,
-        kind: EntityKind.LOCATION,
-        title: 'Test Location',
-      };
-
-      renderComponent({ entity: locationEntity });
-
-      expect(
-        screen.getByText(/Edit Entity: Test Location/)
-      ).toBeInTheDocument();
-    });
-
-    it('renders correctly for item entity', () => {
-      const itemEntity: EntityWithId = {
-        ...mockEntity,
-        kind: EntityKind.ITEM,
-        title: 'Test Item',
-      };
-
-      renderComponent({ entity: itemEntity });
-
-      expect(screen.getByText(/Edit Entity: Test Item/)).toBeInTheDocument();
-    });
+  it.each([
+    [EntityKind.LOCATION, 'Test Location'],
+    [EntityKind.ITEM, 'Test Item'],
+  ])('renders correctly for %s entity', (kind, title) => {
+    renderEditModal({ entity: { ...mockPlayerEntity, kind, title } });
+    expect(
+      screen.getByText(new RegExp(`Edit Entity: ${title}`))
+    ).toBeInTheDocument();
   });
 
   describe('Accessibility', () => {
     it('has proper modal structure with test ids', () => {
-      renderComponent();
-
+      renderEditModal();
       const overlay = screen.getByTestId('modal-overlay');
       const content = screen.getByTestId('modal-content');
-
       expect(overlay).toBeInTheDocument();
       expect(content).toBeInTheDocument();
     });
-
     it('stops propagation when clicking modal content', async () => {
-      renderComponent();
-
-      // Mock the stopPropagation method on the event
+      renderEditModal();
       const stopPropagationSpy = jest.fn();
       const modalContent = screen.getByTestId('modal-content');
-
-      // Simulate a click event with stopPropagation spy
       modalContent.addEventListener('click', (e) => {
         e.stopPropagation = stopPropagationSpy;
         e.stopPropagation();
       });
-
       await userEvent.click(modalContent);
-
       expect(stopPropagationSpy).toHaveBeenCalled();
+    });
+    it('updates entity type when selector is changed', async () => {
+      renderEditModal();
+      const select = screen.getByLabelText(/Entity Type/i);
+      const locationOption = screen.getByRole('option', { name: /Location/i });
+      await userEvent.selectOptions(select, locationOption);
+      expect(
+        screen.getByText(/Changing entity type will preserve existing fields/i)
+      ).toBeInTheDocument();
+    });
+    it('shows changed entity type label when type is changed', async () => {
+      renderEditModal();
+      const select = screen.getByLabelText(/Entity Type/i);
+      await userEvent.selectOptions(
+        select,
+        screen.getByRole('option', { name: /Location/i })
+      );
+      expect(screen.getByText(/Changed from PLAYER/i)).toBeInTheDocument();
     });
   });
 });

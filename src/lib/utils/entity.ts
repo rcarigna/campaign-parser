@@ -1,4 +1,32 @@
-import { EntityKind } from '@/types';
+import { inferFieldType } from '@/lib/utils/form';
+import { z } from 'zod';
+import { npcSchema, locationSchema, itemSchema, questSchema, playerSchema, sessionPrepSchema, sessionSummarySchema } from '@/lib/validation/entity';
+// Map EntityKind to its Zod schema
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const entityKindToSchema: Record<string, z.ZodObject<any>> = {
+    npc: npcSchema,
+    location: locationSchema,
+    item: itemSchema,
+    quest: questSchema,
+    player: playerSchema,
+    session_prep: sessionPrepSchema,
+    session_summary: sessionSummarySchema,
+};
+
+// Get field type for a given entity kind and field name
+export function getFieldTypeForEntity(entityKind: string, fieldName: string): string | undefined {
+    const schema = entityKindToSchema[entityKind];
+    if (!schema) return undefined;
+    try {
+        const shape = schema.shape || schema._def.shape();
+        const fieldSchema = shape[fieldName];
+        if (!fieldSchema) return undefined;
+        return inferFieldType(fieldName, fieldSchema);
+    } catch {
+        return undefined;
+    }
+}
+import { AnyEntity, EntityKind, EntityMetadata } from '@/types';
 
 /**
  * Gets the appropriate emoji icon for an entity kind
@@ -96,16 +124,6 @@ export const getEntityDescription = (kind: EntityKind): string => {
     }
 };
 
-/**
- * Entity metadata type for UI display
- */
-export type EntityMetadata = {
-    kind: EntityKind;
-    emoji: string;
-    label: string;
-    description: string;
-    color: string;
-};
 
 /**
  * Gets complete metadata for an entity kind
@@ -133,3 +151,48 @@ export const getAllEntityMetadata = (): EntityMetadata[] => {
         EntityKind.SESSION_SUMMARY,
     ].map(getEntityMetadata);
 };
+
+
+// Outside component for clarity and testability
+export const getIsEnumField = (
+    entityFields: Array<{ key: string; type: string }>
+) => {
+    return (fieldName: string): boolean => {
+        if (fieldName === 'kind') {
+            return true;
+        }
+        const fieldMeta = entityFields.find((f) => f.key === fieldName);
+        return fieldMeta?.type === 'select';
+    };
+};
+
+/**
+ * Merges multiple entities into one, picking the user confirmed values for each field.
+ * @param entities the entities to merge
+ * @param fieldsToMerge an array of property names (keys) from the entity type that you want to merge.
+ * @returns the merged entity or null if no entities provided
+ */
+export const mergeEntities = (entities: AnyEntity[], fieldsToMerge: string[]): AnyEntity | null => {
+    if (entities.length === 0) return null;
+
+    const merged: AnyEntity = { ...entities[0] };
+
+    const mergedFields = fieldsToMerge.reduce<Record<string, unknown>>((acc, field) => {
+        const values = entities.map((e) => (e as Record<string, unknown>)[field]).filter((v) => v !== undefined);
+        if (values.length > 0) {
+            if (Array.isArray(values[0])) {
+                // If the field is an array, merge and deduplicate
+                acc[field] = Array.from(new Set(values.flat()));
+            } else {
+                acc[field] = Array.from(new Set(values));
+            }
+        }
+        return acc;
+    }, {});
+
+    Object.keys(mergedFields).forEach((fieldName) => {
+        (merged as Record<string, unknown>)[fieldName] = mergedFields[fieldName];
+    });
+
+    return merged;
+}
