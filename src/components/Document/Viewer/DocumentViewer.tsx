@@ -39,37 +39,27 @@ export const DocumentViewer = ({ parsedData }: DocumentViewerProps) => {
   const { raw, formatted, isMarkdown } = getDisplayContent();
 
   return (
-    <div className='document-viewer bg-white rounded-lg shadow-sm border border-gray-200 p-6'>
-      <div className='flex items-center justify-between mb-4'>
-        <div>
-          <h3 className='text-xl font-semibold text-gray-800'>
-            📄 Document Content
-          </h3>
-          <p className='text-sm text-gray-600 mt-1'>
+    <div className='document-viewer'>
+      <div className='document-header'>
+        <div className='document-header-info'>
+          <h3 className='document-title'>📄 Document Content</h3>
+          <p className='document-meta'>
             {parsedData.filename} •{' '}
             {parsedData.type === DocumentType.MARKDOWN
               ? 'Markdown'
               : 'Word Document'}
           </p>
         </div>
-        <div className='flex gap-2'>
+        <div className='document-header-controls'>
           <button
             onClick={() => setShowRaw(false)}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              !showRaw
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
+            className={`document-toggle-btn ${!showRaw ? 'active' : ''}`}
           >
             {isMarkdown ? 'Formatted' : 'Rendered'}
           </button>
           <button
             onClick={() => setShowRaw(true)}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              showRaw
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
+            className={`document-toggle-btn ${showRaw ? 'active' : ''}`}
           >
             {isMarkdown ? 'Raw Markdown' : 'Plain Text'}
           </button>
@@ -77,11 +67,9 @@ export const DocumentViewer = ({ parsedData }: DocumentViewerProps) => {
       </div>
 
       {showRaw ? (
-        <pre className='bg-gray-50 rounded-lg p-4 overflow-x-auto text-sm text-gray-800 whitespace-pre-wrap max-h-96 overflow-y-auto'>
-          {raw}
-        </pre>
+        <pre className='document-raw-content'>{raw}</pre>
       ) : (
-        <div className='bg-gray-50 rounded-lg p-4 overflow-y-auto max-h-96'>
+        <div className='document-formatted-content'>
           {isMarkdown ? (
             <MarkdownRenderer markdown={formatted} />
           ) : (

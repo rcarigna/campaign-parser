@@ -1,3 +1,122 @@
+/* ...existing code... */
+
+/* Centralized Styles for Refactored Components */
+
+.entity-type-card {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.entity-type-card.selected {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 2px #bfdbfe;
+}
+.entity-type-card:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.entity-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #6b7280;
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.entity-card.duplicate {
+  border-left-color: #ef4444;
+  background: #fef2f2;
+}
+.entity-card.selected {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+/* Example for entity kind color override */
+[class*="entity-kind-"] {
+  border-left-color: #6b7280;
+}
+.entity-kind-NPC { border-left-color: #3b82f6 !important; }
+.entity-kind-LOCATION { border-left-color: #10b981 !important; }
+.entity-kind-ITEM { border-left-color: #f59e0b !important; }
+.entity-kind-QUEST { border-left-color: #ef4444 !important; }
+
+.document-viewer {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  padding: 20px;
+}
+.document-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.document-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+.document-meta {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+.document-header-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+.document-toggle-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 1rem;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  transition: all 0.2s;
+}
+.document-toggle-btn.active {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+.document-raw-content {
+  background: #f1f5f9;
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 0.95rem;
+  color: #334155;
+  font-family: 'Courier New', monospace;
+  max-height: 24rem;
+  margin-bottom: 1rem;
+}
+.document-formatted-content {
+  background: #f1f5f9;
+  border-radius: 8px;
+  padding: 16px;
+  overflow-y: auto;
+  max-height: 24rem;
+}
+
+.file-input-hidden {
+  display: none;
+}
+.file-input-label {
+  cursor: pointer;
+}
 @import "tailwindcss";
 
 :root {
