@@ -125,10 +125,12 @@ export const generateFieldModificationIssueUrl = (
  * Generates a GitHub issue URL for general schema enhancement
  */
 export const generateSchemaEnhancementIssueUrl = (
-  entityKind: EntityKind
+  entityKind: EntityKind,
+  currentSchema?: FieldMetadata[]
 ): string => {
   return generateSchemaIssueUrl({
     entityKind,
     proposedChange: `Suggest enhancements to the ${ENTITY_KIND_LABELS[entityKind]} schema`,
+    currentBehavior: currentSchema ? currentSchema.map(getFieldDescription).join(';') : undefined,
   });
 };

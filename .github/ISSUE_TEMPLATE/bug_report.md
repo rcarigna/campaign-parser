@@ -1,38 +1,55 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
-
+name: 🐛 Bug Report
+about: Report a bug to help us improve the campaign parser
+labels: bug, needs-triage
+assignees: []
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+# What happened?
 
-**To Reproduce**
+A clear and concise description of the bug.
+
+## Steps to Reproduce
+
 Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
 
-**Expected behavior**
+1. Upload document '...'
+2. Click on '...'
+3. See error
+
+## Expected Behavior
+
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+## Component
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+Which part of the system is affected?
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+- [ ] Document Upload
+- [ ] Entity Extraction
+- [ ] Entity Deduplication
+- [ ] Campaign Management
+- [ ] API Endpoints
+- [ ] User Interface
+- [ ] Other
 
-**Additional context**
-Add any other context about the problem here.
+## Environment
+
+Please provide your environment details:
+
+- Browser: [e.g. Chrome 120, Firefox 118]
+- OS: [e.g. Windows 11, macOS 14]
+- Node.js version: [e.g. 20.10.0]
+- App version/commit: [e.g. main branch, commit abc123]
+
+## Relevant Log Output
+
+Please copy and paste any relevant log output or error messages:
+
+```plaintext
+
+```
+
+## Code of Conduct
+
+- [ ] I agree to follow this project's Code of Conduct
