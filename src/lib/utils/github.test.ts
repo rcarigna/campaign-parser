@@ -1,5 +1,4 @@
-import { EntityKind } from '@/types';
-import type { FieldMetadata } from '@/lib/utils/form';
+import { EntityKind, FieldMetadata } from '@/types';
 import {
   generateSchemaIssueUrl,
   getFieldDescription,

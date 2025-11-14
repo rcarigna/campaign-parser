@@ -19,7 +19,7 @@ export const EntitySchemaView = ({
   const optionalCount = fields.filter((f) => !f.required).length;
 
   const handleSuggestEnhancement = () => {
-    const url = generateSchemaEnhancementIssueUrl(entityKind);
+    const url = generateSchemaEnhancementIssueUrl(entityKind, fields);
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
@@ -82,8 +82,8 @@ export const EntitySchemaView = ({
               />
             </svg>
             <span>
-              Fields marked with <span className='text-red-500 font-bold'>*</span>{' '}
-              are required
+              Fields marked with{' '}
+              <span className='text-red-500 font-bold'>*</span> are required
             </span>
           </div>
           <button
@@ -111,7 +111,11 @@ export const EntitySchemaView = ({
         {/* Field List */}
         <div className='space-y-3'>
           {fields.map((field) => (
-            <SchemaField key={field.key} field={field} entityKind={entityKind} />
+            <SchemaField
+              key={field.key}
+              field={field}
+              entityKind={entityKind}
+            />
           ))}
         </div>
       </div>
