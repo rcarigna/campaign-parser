@@ -12,7 +12,7 @@ describe('GitHub utility functions', () => {
     it('should generate a basic URL with template', () => {
       const url = generateSchemaIssueUrl({});
       expect(url).toContain('github.com/rcarigna/campaign-parser/issues/new');
-      expect(url).toContain('template=schema_suggestion.yml');
+      expect(url).toContain('template=schema_suggestion.md');
     });
 
     it('should include entity kind in URL', () => {
@@ -148,7 +148,7 @@ describe('GitHub utility functions', () => {
     it('should generate URL for adding new field to Location', () => {
       const url = generateNewFieldIssueUrl(EntityKind.LOCATION);
       expect(url).toContain('entity-type=Location');
-      expect(url).toContain('Location%20schema');
+      expect(url).toContain('Locations%20schema');
     });
   });
 
@@ -201,7 +201,7 @@ describe('GitHub utility functions', () => {
     it('should generate URL for Quest schema enhancement', () => {
       const url = generateSchemaEnhancementIssueUrl(EntityKind.QUEST);
       expect(url).toContain('entity-type=Quest');
-      expect(url).toContain('Quest%20schema');
+      expect(url).toContain('Quests%20schema');
     });
 
     it('should generate URL for all entity types', () => {
@@ -218,7 +218,7 @@ describe('GitHub utility functions', () => {
       entityTypes.forEach((entityKind) => {
         const url = generateSchemaEnhancementIssueUrl(entityKind);
         expect(url).toContain('github.com/rcarigna/campaign-parser/issues/new');
-        expect(url).toContain('template=schema_suggestion.yml');
+        expect(url).toContain('template=schema_suggestion.md');
         expect(url).toContain('entity-type=');
       });
     });

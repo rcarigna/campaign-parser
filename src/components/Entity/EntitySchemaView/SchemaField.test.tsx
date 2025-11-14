@@ -141,7 +141,7 @@ describe('SchemaField', () => {
     expect(mockOpen).toHaveBeenCalledTimes(1);
     const url = mockOpen.mock.calls[0][0];
     expect(url).toContain('github.com/rcarigna/campaign-parser/issues/new');
-    expect(url).toContain('template=schema_suggestion.yml');
+    expect(url).toContain('template=schema_suggestion.md');
     expect(url).toContain('entity-type=NPC');
     expect(url).toContain('field-name=importance');
   });
