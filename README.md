@@ -240,11 +240,13 @@ Our comprehensive documentation covers every aspect of the system:
 
 ### 🎯 GitHub Integration
 
-- **[🐛 Bug Reports](.github/ISSUE_TEMPLATE/bug_report.yml)** - Structured issue templates
-- **[✨ Feature Requests](.github/ISSUE_TEMPLATE/feature_request.yml)** - Enhancement proposals
-- **[📝 Schema Suggestions](.github/ISSUE_TEMPLATE/schema_suggestion.yml)** - Propose improvements to entity schemas
+- **[🐛 Bug Reports](.github/ISSUE_TEMPLATE/bug_report.md)** - Report bugs using the Markdown template
+- **[✨ Feature Requests](.github/ISSUE_TEMPLATE/feature_request.md)** - Suggest new features and enhancements
+- **[📝 Schema Suggestions](.github/ISSUE_TEMPLATE/schema_suggestion.md)** - Propose improvements to entity schemas
 - **[💬 Discussions](https://github.com/YOUR_USERNAME/obsidian-parser/discussions)** - Community questions and ideas
 - **[📋 Pull Request Template](.github/pull_request_template.md)** - Standardized contribution process
+
+> **Note:** Issue templates now use Markdown format for better compatibility with GitHub's pre-fill and automation features. YAML issue forms are still available for structured UI, but Markdown templates support auto-population via URL parameters.
 
 ---
 
