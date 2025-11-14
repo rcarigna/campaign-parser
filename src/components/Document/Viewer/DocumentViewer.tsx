@@ -39,7 +39,7 @@ export const DocumentViewer = ({ parsedData }: DocumentViewerProps) => {
   const { raw, formatted, isMarkdown } = getDisplayContent();
 
   return (
-    <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6'>
+    <div className='document-viewer bg-white rounded-lg shadow-sm border border-gray-200 p-6'>
       <div className='flex items-center justify-between mb-4'>
         <div>
           <h3 className='text-xl font-semibold text-gray-800'>
