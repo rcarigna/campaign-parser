@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { SchemaField } from './SchemaField';
-import { EntityKind } from '@/types';
-import type { FieldMetadata } from '@/lib/utils/form';
+import { EntityKind, FieldMetadata } from '@/types';
 
 // Mock window.open
 const mockOpen = jest.fn();
