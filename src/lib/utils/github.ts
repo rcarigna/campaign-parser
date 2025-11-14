@@ -1,5 +1,5 @@
 import { EntityKind } from '@/types';
-import type { FieldMetadata } from './form';
+import type { FieldMetadata } from '@/types';
 
 /**
  * GitHub repository information
@@ -18,6 +18,7 @@ const ENTITY_KIND_LABELS: Record<EntityKind, string> = {
   [EntityKind.PLAYER]: 'Player',
   [EntityKind.SESSION_SUMMARY]: 'Session Summary',
   [EntityKind.SESSION_PREP]: 'Session Prep',
+  [EntityKind.UNKNOWN]: 'Unknown',
 };
 
 /**
