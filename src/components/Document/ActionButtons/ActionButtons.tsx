@@ -1,3 +1,4 @@
+import { Button, Box } from '@mui/material';
 import { ActionButtonsProps } from '@/types';
 
 export const ActionButtons = ({
@@ -17,13 +18,13 @@ export const ActionButtons = ({
   }
 
   return (
-    <div className='actions'>
-      <button onClick={handleProcess} disabled={loading} className='upload-btn'>
+    <Box className='actions'>
+      <Button onClick={handleProcess} disabled={loading} className='upload-btn'>
         {loading ? 'Parsing...' : 'Parse Document'}
-      </button>
-      <button onClick={onReset} className='reset-btn'>
+      </Button>
+      <Button onClick={onReset} className='reset-btn'>
         Reset
-      </button>
-    </div>
+      </Button>
+    </Box>
   );
 };
