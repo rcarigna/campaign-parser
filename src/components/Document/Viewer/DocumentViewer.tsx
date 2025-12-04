@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Box, Typography, Button } from '@mui/material';
 import { MarkdownRenderer } from '../../MarkdownRenderer/MarkdownRenderer';
 import {
   type SerializedParsedDocumentWithEntities,
@@ -66,38 +67,44 @@ export const DocumentViewer = ({ parsedData }: DocumentViewerProps) => {
   const { raw, formatted, isMarkdown } = getDisplayContent();
 
   return (
-    <div className='document-viewer'>
-      <div className='document-header'>
-        <div className='document-header-info'>
-          <h3 className='document-title'>📄 Document Content</h3>
-          <p className='document-meta'>
+    <Box className='document-viewer'>
+      <Box className='document-header'>
+        <Box className='document-header-info'>
+          <Typography variant='h3' className='document-title'>
+            📄 Document Content
+          </Typography>
+          <Typography variant='body2' className='document-meta'>
             {parsedData.filename} •{' '}
             {parsedData.type === DocumentType.MARKDOWN
               ? 'Markdown'
               : 'Word Document'}
-          </p>
-        </div>
-        <DocumentHeaderControls
-          showRaw={showRaw}
-          setShowRaw={setShowRaw}
-          isMarkdown={isMarkdown}
-        />
-      </div>
+          </Typography>
+        </Box>
+        <Box className='document-header-controls'>
+          <DocumentHeaderControls
+            showRaw={showRaw}
+            setShowRaw={setShowRaw}
+            isMarkdown={isMarkdown}
+          />
+        </Box>
+      </Box>
 
       {showRaw ? (
-        <pre className='document-raw-content'>{raw}</pre>
+        <Box component='pre' className='document-raw-content'>
+          {raw}
+        </Box>
       ) : (
-        <div className='document-formatted-content'>
+        <Box className='document-formatted-content'>
           {isMarkdown ? (
             <MarkdownRenderer markdown={formatted} />
           ) : (
-            <div
+            <Box
               className='prose prose-sm max-w-none'
               dangerouslySetInnerHTML={{ __html: formatted }}
             />
           )}
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
