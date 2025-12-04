@@ -1,5 +1,5 @@
 import { EntityCardProps } from '@/types';
-import { getEntityIcon, getEntityColor } from '@/lib/utils/entity';
+import { getEntityIcon } from '@/lib/utils/entity';
 
 export const EntityCard = ({
   entity,
