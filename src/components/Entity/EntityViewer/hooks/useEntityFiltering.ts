@@ -3,7 +3,7 @@ import { type EntityWithId, EntityKind } from '@/types';
 
 type EntityFilterType = 'all' | EntityKind;
 
-type UseEntityFilteringReturn = {
+export type UseEntityFilteringReturn = {
     filterType: EntityFilterType;
     setFilterType: (type: EntityFilterType) => void;
     showDuplicates: boolean;

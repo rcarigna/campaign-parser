@@ -3,7 +3,7 @@ import { getEntityIcon } from '@/lib/utils/entity';
 
 type EntityFilterType = 'all' | EntityKind;
 
-type EntityFiltersProps = {
+export type EntityFiltersProps = {
   filterType: EntityFilterType;
   onFilterChange: (filter: EntityFilterType) => void;
   showDuplicates: boolean;
