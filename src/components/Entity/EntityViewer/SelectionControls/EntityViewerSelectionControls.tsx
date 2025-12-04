@@ -28,6 +28,7 @@ export const EntityViewerSelectionControls: React.FC<
           onClick={onMarkDuplicates}
           disabled={selectedEntityCount < 2}
           className='btn btn-primary'
+          data-testid='mark-duplicates'
         >
           Mark {selectedEntityCount} as Duplicates
         </button>

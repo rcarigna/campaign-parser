@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { EntityViewerEntitiesView } from './EntityViewerEntitiesView';
 import { UseEntityFilteringReturn, UseEntitySelectionReturn } from '../hooks';
 import { defaultMockEntities as mockEntities } from '../../../__mocks__/mockedEntities';
@@ -128,5 +128,130 @@ describe('EntityViewerEntitiesView', () => {
       />
     );
     expect(screen.getByText(/Merge Duplicate Entities/)).toBeInTheDocument();
+  });
+  it('clears entity selection when merge modal is closed', async () => {
+    const selectionWithMerge = {
+      ...selection,
+      mergeModalEntities: [mockEntities[0], mockEntities[1]],
+    };
+    render(
+      <EntityViewerEntitiesView
+        entities={mockEntities}
+        filtering={filtering}
+        selection={selectionWithMerge}
+        handleEntityClick={handleEntityClick}
+        handleEntityDiscard={handleEntityDiscard}
+        selectedEntity={null}
+        setSelectedEntity={setSelectedEntity}
+        handleEntitySave={handleEntitySave}
+        handleEntityMerge={handleEntityMerge}
+      />
+    );
+
+    // Simulate merging entities
+    await userEvent.click(screen.getByTestId('close-button'));
+
+    await waitFor(() =>
+      expect(selectionWithMerge.setMergeModalEntities).toHaveBeenCalled()
+    );
+  });
+  it('clears entity sselection when edit modal is closed', async () => {
+    render(
+      <EntityViewerEntitiesView
+        entities={mockEntities}
+        filtering={filtering}
+        selection={selection}
+        handleEntityClick={handleEntityClick}
+        handleEntityDiscard={handleEntityDiscard}
+        selectedEntity={mockEntities[0]}
+        setSelectedEntity={setSelectedEntity}
+        handleEntitySave={handleEntitySave}
+        handleEntityMerge={handleEntityMerge}
+      />
+    );
+
+    // Simulate closing the edit modal
+    await userEvent.click(screen.getByTestId('close-button'));
+
+    await waitFor(() => expect(setSelectedEntity).toHaveBeenCalledWith(null));
+  });
+  it('cancels selection when cancel button is clicked', async () => {
+    const selectionInMode = {
+      ...selection,
+      isSelectionMode: true,
+    };
+    render(
+      <EntityViewerEntitiesView
+        entities={mockEntities}
+        filtering={filtering}
+        selection={selectionInMode}
+        handleEntityClick={handleEntityClick}
+        handleEntityDiscard={handleEntityDiscard}
+        selectedEntity={null}
+        setSelectedEntity={setSelectedEntity}
+        handleEntitySave={handleEntitySave}
+        handleEntityMerge={handleEntityMerge}
+      />
+    );
+
+    // Simulate clicking the cancel selection button
+    await userEvent.click(screen.getByText('Cancel'));
+
+    await waitFor(() =>
+      expect(selectionInMode.handleCancelSelection).toHaveBeenCalled()
+    );
+  });
+
+  it('marks duplicates when mark duplicates button is clicked', async () => {
+    const selectionInMode = {
+      ...selection,
+      selectedEntityIds: new Set(['1', '2']),
+      isSelectionMode: true,
+    };
+    render(
+      <EntityViewerEntitiesView
+        entities={mockEntities}
+        filtering={filtering}
+        selection={selectionInMode}
+        handleEntityClick={handleEntityClick}
+        handleEntityDiscard={handleEntityDiscard}
+        selectedEntity={null}
+        setSelectedEntity={setSelectedEntity}
+        handleEntitySave={handleEntitySave}
+        handleEntityMerge={handleEntityMerge}
+      />
+    );
+
+    // Simulate clicking the mark duplicates button
+    await userEvent.click(screen.getByTestId('mark-duplicates'));
+
+    await waitFor(() =>
+      expect(selectionInMode.handleMarkAsDuplicates).toHaveBeenCalledWith(
+        mockEntities
+      )
+    );
+  });
+
+  it('toggles selection mode when select duplicates button is clicked', async () => {
+    render(
+      <EntityViewerEntitiesView
+        entities={mockEntities}
+        filtering={filtering}
+        selection={selection}
+        handleEntityClick={handleEntityClick}
+        handleEntityDiscard={handleEntityDiscard}
+        selectedEntity={null}
+        setSelectedEntity={setSelectedEntity}
+        handleEntitySave={handleEntitySave}
+        handleEntityMerge={handleEntityMerge}
+      />
+    );
+
+    // Simulate clicking the select duplicates button
+    await userEvent.click(screen.getByText('Select Duplicates'));
+
+    await waitFor(() =>
+      expect(selection.setIsSelectionMode).toHaveBeenCalledWith(true)
+    );
   });
 });
