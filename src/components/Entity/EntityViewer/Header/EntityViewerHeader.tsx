@@ -6,7 +6,7 @@ import { EntityFilters } from '../../EntityFilters';
 import { UseEntityFilteringReturn } from '../hooks/useEntityFiltering';
 import IconButton from '@mui/material/IconButton';
 
-type EntityViewerHeaderProps = {
+export type EntityViewerHeaderProps = {
   entitiesLength: number;
   isExporting: boolean;
   onExport: () => void;
