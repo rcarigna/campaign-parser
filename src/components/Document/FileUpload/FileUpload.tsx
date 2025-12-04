@@ -56,9 +56,9 @@ export const FileUpload = ({
           id='file-input'
           accept={allowedExtensions.join(',')}
           onChange={handleFileChange}
-          style={{ display: 'none' }}
+          className='file-input-hidden'
         />
-        <label htmlFor='file-input' style={{ cursor: 'pointer' }}>
+        <label htmlFor='file-input' className='file-input-label'>
           {selectedFile ? (
             <div>
               <p>Selected: {selectedFile.name}</p>

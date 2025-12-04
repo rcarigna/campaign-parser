@@ -16,11 +16,7 @@ export const EntityTypeCard = ({
 
   return (
     <div
-      className={`p-4 rounded-lg border cursor-pointer transition-all duration-200 ${
-        isSelected
-          ? 'bg-blue-100 border-blue-300 ring-2 ring-blue-200'
-          : 'bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300'
-      }`}
+      className={`entity-type-card ${isSelected ? 'selected' : ''}`}
       onClick={() => onClick(kind)}
       role='button'
       tabIndex={0}

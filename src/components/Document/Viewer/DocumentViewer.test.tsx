@@ -30,7 +30,7 @@ describe('DocumentViewer', () => {
 
     // Initially should show formatted view
     expect(screen.getByRole('button', { name: /formatted/i })).toHaveClass(
-      'bg-blue-600'
+      'document-toggle-btn active'
     );
 
     // Click raw markdown button
@@ -38,7 +38,7 @@ describe('DocumentViewer', () => {
     await userEvent.click(rawButton);
 
     // Should now show raw view
-    expect(rawButton).toHaveClass('bg-blue-600');
+    expect(rawButton).toHaveClass('document-toggle-btn active');
 
     // Should display the raw content in a pre tag
     const preElement = document.querySelector('pre');
@@ -64,7 +64,7 @@ describe('DocumentViewer', () => {
 
     // Initially should show rendered view
     expect(screen.getByRole('button', { name: /rendered/i })).toHaveClass(
-      'bg-blue-600'
+      'document-toggle-btn active'
     );
 
     // Click plain text button
@@ -72,7 +72,7 @@ describe('DocumentViewer', () => {
     await userEvent.click(plainTextButton);
 
     // Should now show plain text view
-    expect(plainTextButton).toHaveClass('bg-blue-600');
+    expect(plainTextButton).toHaveClass('document-toggle-btn active');
 
     // Should display the plain text in a pre tag
     const preElement = document.querySelector('pre');
@@ -89,7 +89,7 @@ describe('DocumentViewer', () => {
     await userEvent.click(formattedButton);
 
     // Should show formatted view again
-    expect(formattedButton).toHaveClass('bg-blue-600');
+    expect(formattedButton).toHaveClass('document-toggle-btn active');
     expect(document.querySelector('pre')).not.toBeInTheDocument();
     expect(screen.getByText('Test Header')).toBeInTheDocument();
   });
@@ -103,7 +103,7 @@ describe('DocumentViewer', () => {
     await userEvent.click(renderedButton);
 
     // Should show rendered view again
-    expect(renderedButton).toHaveClass('bg-blue-600');
+    expect(renderedButton).toHaveClass('document-toggle-btn active');
     expect(document.querySelector('pre')).not.toBeInTheDocument();
     expect(screen.getByText('Word document content')).toBeInTheDocument();
   });

@@ -1,5 +1,5 @@
 import { EntityCardProps } from '@/types';
-import { getEntityIcon, getEntityColor } from '@/lib/utils/entity';
+import { getEntityIcon } from '@/lib/utils/entity';
 
 export const EntityCard = ({
   entity,
@@ -40,10 +40,9 @@ export const EntityCard = ({
   try {
     return (
       <div
-        className={`entity-card ${isDuplicate ? 'duplicate' : ''} ${
-          isSelected ? 'selected' : ''
-        }`}
-        style={{ borderLeftColor: getEntityColor(entity.kind) }}
+        className={`entity-card entity-kind-${entity.kind} ${
+          isDuplicate ? 'duplicate' : ''
+        } ${isSelected ? 'selected' : ''}`}
         onClick={handleCardClick}
       >
         <div className='entity-card-header'>
