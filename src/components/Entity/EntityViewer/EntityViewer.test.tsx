@@ -142,19 +142,22 @@ describe('EntityViewer', () => {
     setupEntityViewerTest((props) => render(<EntityViewer {...props} />), {
       mockParsedDocument,
     });
-    expect(screen.getByText('📋 Entity View')).toHaveClass('active');
+    expect(screen.queryByText('📋 Entity View')).not.toBeInTheDocument();
+    expect(screen.getByText('📄 Raw Data')).toBeInTheDocument();
     expect(screen.getByText('📄 Raw Data')).not.toHaveClass('active');
     const rawDataButton = screen.getByText('📄 Raw Data');
     await userEvent.click(rawDataButton);
-    expect(screen.getByText('📄 Raw Data')).toHaveClass('active');
+    expect(screen.queryByText('📄 Raw Data')).not.toBeInTheDocument();
+    expect(screen.getByText('📋 Entity View')).toBeInTheDocument();
     expect(screen.getByText('📋 Entity View')).not.toHaveClass('active');
     expect(
       screen.getByText((content) => content.includes('"kind": "location"'))
     ).toBeInTheDocument();
     const entityViewButton = screen.getByText('📋 Entity View');
     await userEvent.click(entityViewButton);
-    expect(screen.getByText('📋 Entity View')).toHaveClass('active');
+    expect(screen.queryByText('📋 Entity View')).not.toBeInTheDocument();
     expect(screen.queryByText(/"test": "data"/)).not.toBeInTheDocument();
+    expect(screen.getByText('📄 Raw Data')).toBeInTheDocument();
   });
 
   it('handles entity merge flow', async () => {

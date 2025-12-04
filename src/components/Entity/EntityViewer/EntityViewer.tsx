@@ -151,20 +151,20 @@ export const EntityViewer = ({
               {isExporting ? '⏳ Exporting...' : '📦 Export to Obsidian'}
             </button>
 
-            {/* View Toggle */}
+            {/* View Toggle - only show the button for the other view */}
             <div className='view-toggle'>
-              <button
-                className={`toggle-btn ${view === 'entities' ? 'active' : ''}`}
-                onClick={() => setView('entities')}
-              >
-                📋 Entity View
-              </button>
-              <button
-                className={`toggle-btn ${view === 'json' ? 'active' : ''}`}
-                onClick={() => setView('json')}
-              >
-                📄 Raw Data
-              </button>
+              {view === 'entities' ? (
+                <button className='toggle-btn' onClick={() => setView('json')}>
+                  📄 Raw Data
+                </button>
+              ) : (
+                <button
+                  className='toggle-btn'
+                  onClick={() => setView('entities')}
+                >
+                  📋 Entity View
+                </button>
+              )}
             </div>
           </div>
         </div>
