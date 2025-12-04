@@ -7,7 +7,7 @@ import { UseEntitySelectionReturn } from '../hooks/useEntitySelection';
 import { EntityEditModal } from '../../EntityEditModal';
 import { EntityMergeModal } from '../../EntityMergeModal';
 
-type EntityViewerEntitiesViewProps = {
+type EntitiesViewProps = {
   entities: EntityWithId[];
   filtering: UseEntityFilteringReturn;
   selection: UseEntitySelectionReturn;
@@ -22,9 +22,7 @@ type EntityViewerEntitiesViewProps = {
   ) => void;
 };
 
-export const EntityViewerEntitiesView: React.FC<
-  EntityViewerEntitiesViewProps
-> = ({
+export const EntitiesView: React.FC<EntitiesViewProps> = ({
   entities,
   filtering,
   selection,

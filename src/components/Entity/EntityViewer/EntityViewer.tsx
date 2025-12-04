@@ -14,7 +14,7 @@ import {
   UseEntitySelectionReturn,
 } from './hooks/useEntitySelection';
 import { EntityViewerHeader } from './Header';
-import { EntityViewerEntitiesView } from './EntitiesView';
+import { EntitiesView } from './EntitiesView';
 import { EntityViewerJsonView } from './JsonView';
 
 type EntityViewerProps = {
@@ -151,7 +151,7 @@ export const EntityViewer = ({
       />
 
       {view === 'entities' ? (
-        <EntityViewerEntitiesView
+        <EntitiesView
           entities={entities}
           filtering={filtering}
           selection={selection}

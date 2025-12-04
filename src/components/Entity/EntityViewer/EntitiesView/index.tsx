@@ -1,1 +1,1 @@
-export * from './EntityViewerEntitiesView';
+export * from './EntitiesView';

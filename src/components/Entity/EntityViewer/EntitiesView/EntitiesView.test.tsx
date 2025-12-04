@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { EntityViewerEntitiesView } from './EntityViewerEntitiesView';
+import { EntitiesView } from './EntitiesView';
 import { UseEntityFilteringReturn, UseEntitySelectionReturn } from '../hooks';
 import { defaultMockEntities as mockEntities } from '../../../__mocks__/mockedEntities';
 import userEvent from '@testing-library/user-event';
@@ -27,10 +27,10 @@ const setSelectedEntity = jest.fn();
 const handleEntitySave = jest.fn();
 const handleEntityMerge = jest.fn();
 
-describe('EntityViewerEntitiesView', () => {
-  it('renders EntityViewerSelectionControls and EntityGrid', () => {
+describe('EntitiesView', () => {
+  it('renders SelectionControls and EntityGrid', () => {
     render(
-      <EntityViewerEntitiesView
+      <EntitiesView
         entities={mockEntities}
         filtering={filtering}
         selection={selection}
@@ -48,7 +48,7 @@ describe('EntityViewerEntitiesView', () => {
 
   it('calls handleEntityClick when entity is clicked in non-selection mode', async () => {
     render(
-      <EntityViewerEntitiesView
+      <EntitiesView
         entities={mockEntities}
         filtering={filtering}
         selection={selection}
@@ -73,7 +73,7 @@ describe('EntityViewerEntitiesView', () => {
       selectedEntityIds: new Set(['1']),
     };
     render(
-      <EntityViewerEntitiesView
+      <EntitiesView
         entities={mockEntities}
         filtering={filtering}
         selection={selectionMode}
@@ -92,7 +92,7 @@ describe('EntityViewerEntitiesView', () => {
 
   it('renders EntityEditModal when selectedEntity is set', () => {
     render(
-      <EntityViewerEntitiesView
+      <EntitiesView
         entities={mockEntities}
         filtering={filtering}
         selection={selection}
@@ -115,7 +115,7 @@ describe('EntityViewerEntitiesView', () => {
       mergeModalEntities: [mockEntities[0], mockEntities[1]],
     };
     render(
-      <EntityViewerEntitiesView
+      <EntitiesView
         entities={mockEntities}
         filtering={filtering}
         selection={selectionWithMerge}
@@ -135,7 +135,7 @@ describe('EntityViewerEntitiesView', () => {
       mergeModalEntities: [mockEntities[0], mockEntities[1]],
     };
     render(
-      <EntityViewerEntitiesView
+      <EntitiesView
         entities={mockEntities}
         filtering={filtering}
         selection={selectionWithMerge}
@@ -157,7 +157,7 @@ describe('EntityViewerEntitiesView', () => {
   });
   it('clears entity sselection when edit modal is closed', async () => {
     render(
-      <EntityViewerEntitiesView
+      <EntitiesView
         entities={mockEntities}
         filtering={filtering}
         selection={selection}
@@ -181,7 +181,7 @@ describe('EntityViewerEntitiesView', () => {
       isSelectionMode: true,
     };
     render(
-      <EntityViewerEntitiesView
+      <EntitiesView
         entities={mockEntities}
         filtering={filtering}
         selection={selectionInMode}
@@ -209,7 +209,7 @@ describe('EntityViewerEntitiesView', () => {
       isSelectionMode: true,
     };
     render(
-      <EntityViewerEntitiesView
+      <EntitiesView
         entities={mockEntities}
         filtering={filtering}
         selection={selectionInMode}
@@ -234,7 +234,7 @@ describe('EntityViewerEntitiesView', () => {
 
   it('toggles selection mode when select duplicates button is clicked', async () => {
     render(
-      <EntityViewerEntitiesView
+      <EntitiesView
         entities={mockEntities}
         filtering={filtering}
         selection={selection}
