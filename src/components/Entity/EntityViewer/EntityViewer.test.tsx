@@ -242,7 +242,7 @@ describe('EntityViewer', () => {
 
   it('renders export button', () => {
     setupEntityViewerTest((props) => render(<EntityViewer {...props} />));
-    expect(screen.getByText('📦 Export to Obsidian')).toBeInTheDocument();
+    expect(screen.getByLabelText('Export to Obsidian')).toBeInTheDocument();
   });
 
   it('handles successful export', async () => {
@@ -252,13 +252,13 @@ describe('EntityViewer', () => {
     const { props } = setupEntityViewerTest((p) =>
       render(<EntityViewer {...p} />)
     );
-    const exportButton = screen.getByText('📦 Export to Obsidian');
+    const exportButton = screen.getByLabelText('Export to Obsidian');
     await userEvent.click(exportButton);
     expect(mockToast.loading).toHaveBeenCalledWith(
       'Exporting 3 entities to Obsidian format...'
     );
     expect(mockExportEntities).toHaveBeenCalledWith(props.entities);
-    await screen.findByText('📦 Export to Obsidian');
+    await screen.findByLabelText('Export to Obsidian');
     expect(mockToast.success).toHaveBeenCalledWith(
       'Successfully exported 3 entities as Obsidian vault!',
       { id: 'toast-id', duration: 5000 }
@@ -269,9 +269,9 @@ describe('EntityViewer', () => {
     mockExportEntities.mockRejectedValue(new Error('Export failed'));
     mockToast.loading.mockReturnValue('toast-id');
     setupEntityViewerTest((props) => render(<EntityViewer {...props} />));
-    const exportButton = screen.getByText('📦 Export to Obsidian');
+    const exportButton = screen.getByLabelText('Export to Obsidian');
     await userEvent.click(exportButton);
-    await screen.findByText('📦 Export to Obsidian');
+    await screen.findByLabelText('Export to Obsidian');
     expect(mockToast.error).toHaveBeenCalledWith('Export failed', {
       id: 'toast-id',
       duration: 5000,
@@ -292,9 +292,11 @@ describe('EntityViewer', () => {
     );
     mockToast.loading.mockReturnValue('toast-id');
     setupEntityViewerTest((props) => render(<EntityViewer {...props} />));
-    const exportButton = screen.getByText('📦 Export to Obsidian');
+    const exportButton = screen.getByLabelText('Export to Obsidian');
     await userEvent.click(exportButton);
-    expect(screen.getByText('⏳ Exporting...')).toBeDisabled();
-    await screen.findByText('📦 Export to Obsidian');
+    expect(screen.getByLabelText('Export to Obsidian')).toBeDisabled();
+    await waitFor(() =>
+      expect(screen.getByLabelText('Export to Obsidian')).toBeEnabled()
+    );
   });
 });
