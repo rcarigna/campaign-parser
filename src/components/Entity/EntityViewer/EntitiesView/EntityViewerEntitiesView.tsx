@@ -1,11 +1,11 @@
 import React from 'react';
-import { EntityGrid } from '../EntityGrid';
-import { EntityViewerSelectionControls } from './EntityViewerSelectionControls';
+import { EntityGrid } from '../../EntityGrid';
+import { EntityViewerSelectionControls } from '../SelectionControls/EntityViewerSelectionControls';
 import { EntityWithId } from '@/types';
-import type { UseEntityFilteringReturn } from './hooks/useEntityFiltering';
-import { UseEntitySelectionReturn } from './hooks/useEntitySelection';
-import { EntityEditModal } from '../EntityEditModal';
-import { EntityMergeModal } from '../EntityMergeModal';
+import type { UseEntityFilteringReturn } from '../hooks/useEntityFiltering';
+import { UseEntitySelectionReturn } from '../hooks/useEntitySelection';
+import { EntityEditModal } from '../../EntityEditModal';
+import { EntityMergeModal } from '../../EntityMergeModal';
 
 type EntityViewerEntitiesViewProps = {
   entities: EntityWithId[];

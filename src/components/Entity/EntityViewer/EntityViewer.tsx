@@ -13,9 +13,9 @@ import {
   useEntitySelection,
   UseEntitySelectionReturn,
 } from './hooks/useEntitySelection';
-import { EntityViewerHeader } from './EntityViewerHeader';
-import { EntityViewerEntitiesView } from './EntityViewerEntitiesView';
-import { EntityViewerJsonView } from './EntityViewerJsonView';
+import { EntityViewerHeader } from './Header';
+import { EntityViewerEntitiesView } from './EntitiesView';
+import { EntityViewerJsonView } from './JsonView';
 
 type EntityViewerProps = {
   entities: EntityWithId[];
