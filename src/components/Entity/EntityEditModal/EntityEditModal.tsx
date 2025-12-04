@@ -1,3 +1,4 @@
+import { Box, Typography, Button } from '@mui/material';
 import {
   getEntityFields,
   type EntityWithId,
@@ -35,29 +36,28 @@ export const EntityEditModal = ({
   };
 
   return (
-    <div
+    <Box
       className='fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4'
       data-testid='modal-overlay'
       onClick={onClose}
     >
-      <div
+      <Box
         className='relative bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden'
         data-testid='modal-content'
         onClick={(e) => e.stopPropagation()}
       >
         <form onSubmit={handleSubmit(handleSave)}>
           {/* Header */}
-          <div className='bg-gray-50 px-6 py-4 border-b border-gray-200'>
-            <div className='flex items-center justify-between'>
+          <Box className='bg-gray-50 px-6 py-4 border-b border-gray-200'>
+            <Box className='flex items-center justify-between'>
               <h3 className='text-lg font-medium text-gray-900'>
                 Edit Entity: {entity.title}
               </h3>
-              <button
+              <Button
                 className='text-gray-400 hover:text-gray-600 transition-colors duration-200'
                 onClick={onClose}
                 aria-label='Close modal'
                 data-testid='close-button'
-                type='button'
               >
                 <svg
                   className='h-6 w-6'
@@ -72,14 +72,14 @@ export const EntityEditModal = ({
                     d='M6 18L18 6M6 6l12 12'
                   />
                 </svg>
-              </button>
-            </div>
-          </div>
+              </Button>
+            </Box>
+          </Box>
 
           {/* Body */}
-          <div className='px-6 py-4 overflow-y-auto max-h-[60vh]'>
+          <Box className='px-6 py-4 overflow-y-auto max-h-[60vh]'>
             {/* Entity Type Selector */}
-            <div className='mb-6 pb-4 border-b border-gray-200'>
+            <Box className='mb-6 pb-4 border-b border-gray-200'>
               <label
                 htmlFor='entity-type'
                 className='block text-sm font-medium text-gray-700 mb-2'
@@ -110,11 +110,11 @@ export const EntityEditModal = ({
                   in the new type.
                 </p>
               )}
-            </div>
+            </Box>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <Box className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               {formFields.map((field) => (
-                <div
+                <Box
                   key={field.key}
                   className={field.type === 'textarea' ? 'md:col-span-2' : ''}
                 >
@@ -123,29 +123,28 @@ export const EntityEditModal = ({
                     entity={entity}
                     register={register}
                   />
-                </div>
+                </Box>
               ))}
-            </div>
-          </div>
+            </Box>
+          </Box>
 
           {/* Footer */}
-          <div className='bg-gray-50 px-6 py-3 border-t border-gray-200 flex justify-end space-x-3'>
-            <button
+          <Box className='bg-gray-50 px-6 py-3 border-t border-gray-200 flex justify-end space-x-3'>
+            <Button
               className='inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200'
               onClick={onClose}
-              type='button'
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               className='inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200'
               type='submit'
             >
               Save Changes
-            </button>
-          </div>
+            </Button>
+          </Box>
         </form>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
