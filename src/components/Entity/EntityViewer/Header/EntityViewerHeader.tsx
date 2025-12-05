@@ -5,6 +5,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { EntityFilters } from '../../EntityFilters';
 import { UseEntityFilteringReturn } from '../hooks/useEntityFiltering';
 import IconButton from '@mui/material/IconButton';
+import { Box, Typography } from '@mui/material';
 
 export type EntityViewerHeaderProps = {
   entitiesLength: number;
@@ -47,13 +48,13 @@ export const EntityViewerHeader: React.FC<EntityViewerHeaderProps> = ({
   setView,
   filtering,
 }) => (
-  <div className='entity-header'>
-    <div className='entity-title-row'>
-      <h3 className='flex-shrink-0 whitespace-nowrap'>
+  <Box className='entity-header'>
+    <Box className='entity-title-row'>
+      <Typography variant='h3' className='flex-shrink-0 whitespace-nowrap'>
         📋 Extracted Entities ({entitiesLength})
-      </h3>
-      <div className='header-controls flex items-center gap-6 w-full justify-between'>
-        <span title='Export all entities to Obsidian vault format'>
+      </Typography>
+      <Box className='header-controls flex items-center gap-6 w-full justify-between'>
+        <Box title='Export all entities to Obsidian vault format'>
           <IconButton
             color='primary'
             onClick={onExport}
@@ -63,10 +64,10 @@ export const EntityViewerHeader: React.FC<EntityViewerHeaderProps> = ({
           >
             <FileDownloadIcon />
           </IconButton>
-        </span>
+        </Box>
         <ViewToggle view={view} setView={setView} />
-      </div>
-    </div>
+      </Box>
+    </Box>
     {view === 'entities' && (
       <EntityFilters
         filterType={filtering.filterType}
@@ -78,5 +79,5 @@ export const EntityViewerHeader: React.FC<EntityViewerHeaderProps> = ({
         totalDuplicates={filtering.duplicates.length}
       />
     )}
-  </div>
+  </Box>
 );

@@ -1,3 +1,4 @@
+import { Box, Button, Typography } from '@mui/material';
 import React from 'react';
 
 type EntityViewerSelectionControlsProps = {
@@ -17,32 +18,32 @@ export const EntityViewerSelectionControls: React.FC<
   onCancelSelection,
   onSelectDuplicates,
 }) => (
-  <div className='entity-actions'>
+  <Box className='entity-actions'>
     {!isSelectionMode ? (
-      <button onClick={onSelectDuplicates} className='btn btn-outline'>
+      <Button onClick={onSelectDuplicates} className='btn btn-outline'>
         Select Duplicates
-      </button>
+      </Button>
     ) : (
-      <div className='selection-controls'>
-        <button
+      <Box className='selection-controls'>
+        <Button
           onClick={onMarkDuplicates}
           disabled={selectedEntityCount < 2}
           className='btn btn-primary'
           data-testid='mark-duplicates'
         >
           Mark {selectedEntityCount} as Duplicates
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={onCancelSelection}
           className='btn btn-secondary'
           data-testid='cancel-selection'
         >
           Cancel
-        </button>
-        <p className='selection-help'>
+        </Button>
+        <Typography className='selection-help'>
           Select entities to mark as duplicates. Selected: {selectedEntityCount}
-        </p>
-      </div>
+        </Typography>
+      </Box>
     )}
-  </div>
+  </Box>
 );
