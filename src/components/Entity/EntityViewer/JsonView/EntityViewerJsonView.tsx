@@ -15,7 +15,7 @@ export const EntityViewerJsonView: React.FC<EntityViewerJsonViewProps> = ({
       {JSON.stringify(
         {
           ...parsedData,
-          entities: entities,
+          entities,
         },
         null,
         2
