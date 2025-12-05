@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { FormField } from './FormField';
 import { FieldMetadata, getEntityFields } from '@/types';
 import { EntityKind } from '@/types';
-import { mockNPCEntity, mockLocationEntity } from '../../__mocks__';
+import { mockNPCEntity, mockLocationEntity } from '../../../__mocks__';
 
 const mockRegister = jest.fn();
 

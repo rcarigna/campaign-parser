@@ -14,6 +14,7 @@ import {
   type EntityWithId,
   EntityKind,
   type FieldMetadata,
+  EntityMetadata,
 } from '@/types';
 import { FormField } from './FormField';
 import { useForm } from 'react-hook-form';
@@ -25,7 +26,95 @@ type EntityEditModalProps = {
   onClose: () => void;
   onSave: (entity: EntityWithId) => void;
 };
-
+const EditModalHeader = ({
+  onClose,
+  title,
+}: {
+  onClose: () => void;
+  title: string;
+}) => (
+  <Box className='bg-gray-50 px-6 py-4 border-b border-gray-200'>
+    <Box className='flex items-center justify-between'>
+      <Typography variant='h3' className='text-lg font-medium text-gray-900'>
+        Edit Entity: {title}
+      </Typography>
+      <IconButton
+        className='text-gray-400 hover:text-gray-600 transition-colors duration-200'
+        onClick={onClose}
+        aria-label='Close modal'
+        data-testid='close-button'
+      >
+        <CloseIcon />
+      </IconButton>
+    </Box>
+  </Box>
+);
+const EditModalFooter = ({ onClose }: { onClose: () => void }) => (
+  <Box className='bg-gray-50 px-6 py-3 border-t border-gray-200 flex justify-end space-x-3'>
+    <Button
+      className='inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200'
+      onClick={onClose}
+    >
+      Cancel
+    </Button>
+    <Button
+      className='inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200'
+      type='submit'
+    >
+      Save Changes
+    </Button>
+  </Box>
+);
+const EntityTypeSelector = ({
+  entityKind,
+  setEntityKind,
+  entityTypes,
+  originalKind,
+}: {
+  entityKind: EntityKind;
+  setEntityKind: (kind: EntityKind) => void;
+  entityTypes: EntityMetadata[];
+  originalKind: EntityKind;
+}) => (
+  <Box className='mb-6 pb-4 border-b border-gray-200'>
+    <FormControl fullWidth>
+      <InputLabel id='entity-type-label'>
+        Entity Type
+        {entityKind !== originalKind && (
+          <Box
+            component='span'
+            sx={{
+              color: 'orange',
+              fontSize: '0.8em',
+              ml: 1,
+            }}
+          >
+            (Changed from {originalKind})
+          </Box>
+        )}
+      </InputLabel>
+      <Select
+        labelId='entity-type-label'
+        id='entity-type'
+        value={entityKind}
+        label='Entity Type'
+        onChange={(e) => setEntityKind(e.target.value as EntityKind)}
+      >
+        {entityTypes.map((type) => (
+          <MenuItem key={type.kind} value={type.kind}>
+            {type.emoji} {type.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+    {entityKind !== originalKind && (
+      <Typography variant='body2' className='mt-2 text-xs text-orange-600'>
+        ⚠️ Changing entity type will preserve existing fields where possible,
+        but some fields may be lost if they don&apos;t exist in the new type.
+      </Typography>
+    )}
+  </Box>
+);
 export const EntityEditModal = ({
   entity,
   onClose,
@@ -57,72 +146,15 @@ export const EntityEditModal = ({
         onClick={(e) => e.stopPropagation()}
       >
         <form onSubmit={handleSubmit(handleSave)}>
-          {/* Header */}
-          <Box className='bg-gray-50 px-6 py-4 border-b border-gray-200'>
-            <Box className='flex items-center justify-between'>
-              <Typography
-                variant='h3'
-                className='text-lg font-medium text-gray-900'
-              >
-                Edit Entity: {entity.title}
-              </Typography>
-              <IconButton
-                className='text-gray-400 hover:text-gray-600 transition-colors duration-200'
-                onClick={onClose}
-                aria-label='Close modal'
-                data-testid='close-button'
-              >
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          </Box>
-
-          {/* Body */}
+          <EditModalHeader onClose={onClose} title={entity.title} />
           <Box className='px-6 py-4 overflow-y-auto max-h-[60vh]'>
-            {/* Entity Type Selector */}
-            <Box className='mb-6 pb-4 border-b border-gray-200'>
-              <FormControl fullWidth>
-                <InputLabel id='entity-type-label'>
-                  Entity Type
-                  {entityKind !== entity.kind && (
-                    <Box
-                      component='span'
-                      sx={{
-                        color: 'orange',
-                        fontSize: '0.8em',
-                        ml: 1,
-                      }}
-                    >
-                      (Changed from {entity.kind})
-                    </Box>
-                  )}
-                </InputLabel>
-                <Select
-                  labelId='entity-type-label'
-                  id='entity-type'
-                  value={entityKind}
-                  label='Entity Type'
-                  onChange={(e) => setEntityKind(e.target.value as EntityKind)}
-                >
-                  {entityTypes.map((type) => (
-                    <MenuItem key={type.kind} value={type.kind}>
-                      {type.emoji} {type.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              {entityKind !== entity.kind && (
-                <Typography
-                  variant='body2'
-                  className='mt-2 text-xs text-orange-600'
-                >
-                  ⚠️ Changing entity type will preserve existing fields where
-                  possible, but some fields may be lost if they don&apos;t exist
-                  in the new type.
-                </Typography>
-              )}
-            </Box>
-
+            <EntityTypeSelector
+              entityKind={entityKind}
+              setEntityKind={setEntityKind}
+              entityTypes={entityTypes}
+              originalKind={entity.kind}
+            />
+            {/* Dynamic Form Fields */}
             <Box className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               {formFields.map((field) => (
                 <Box
@@ -138,22 +170,7 @@ export const EntityEditModal = ({
               ))}
             </Box>
           </Box>
-
-          {/* Footer */}
-          <Box className='bg-gray-50 px-6 py-3 border-t border-gray-200 flex justify-end space-x-3'>
-            <Button
-              className='inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200'
-              onClick={onClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              className='inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200'
-              type='submit'
-            >
-              Save Changes
-            </Button>
-          </Box>
+          <EditModalFooter onClose={onClose} />
         </form>
       </Box>
     </Box>
