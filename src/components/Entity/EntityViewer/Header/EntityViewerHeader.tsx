@@ -51,7 +51,6 @@ export const EntityViewerHeader: React.FC<EntityViewerHeaderProps> = ({
   filtering,
 }) => (
   <div className='entity-header'>
-    {/* <div className='entity-title-row flex items-center justify-between gap-4'> */}
     <div className='entity-title-row'>
       <h3 className='flex-shrink-0 whitespace-nowrap'>
         📋 Extracted Entities ({entitiesLength})
