@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { EntityViewer } from './EntityViewer';
-import { EntityKind } from '@/types';
 import {
   setupEntityViewerTest,
   mockToast,

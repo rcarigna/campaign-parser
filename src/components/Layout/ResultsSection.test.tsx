@@ -1,11 +1,6 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { ResultsSection } from './ResultsSection';
-import {
-  type SerializedParsedDocumentWithEntities,
-  type EntityWithId,
-  EntityKind,
-} from '@/types';
+import { type EntityWithId } from '@/types';
 import { mockParsedDocument as mockParsedData } from '../__mocks__';
 import userEvent from '@testing-library/user-event';
 
