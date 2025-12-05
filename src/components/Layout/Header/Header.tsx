@@ -1,3 +1,5 @@
+import { Box, Typography } from '@mui/material';
+
 type HeaderProps = {
   title: string;
   subtitle: string;
@@ -5,9 +7,14 @@ type HeaderProps = {
 
 export const Header = ({ title, subtitle }: HeaderProps) => {
   return (
-    <header role='banner'>
-      <h1 className='text-3xl font-bold text-gray-900 mb-2'>{title}</h1>
-      <p className='text-gray-600 mb-8'>{subtitle}</p>
-    </header>
+    <Box component='header' role='banner'>
+      <Typography
+        component='h1'
+        className='text-3xl font-bold text-gray-900 mb-2'
+      >
+        {title}
+      </Typography>
+      <Typography className='text-gray-600 mb-8'>{subtitle}</Typography>
+    </Box>
   );
 };
