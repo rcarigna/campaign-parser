@@ -8,6 +8,7 @@ import { FieldMergeSection } from './FieldMergeSection';
 import { ModalHeader } from './ModalHeader';
 import { ModalFooter } from './ModalFooter';
 import { InsufficientEntitiesMessage } from './InsufficientEntitiesMessage';
+import { Box, Typography } from '@mui/material';
 
 type EntityMergeModalProps = {
   entities: EntityWithId[];
@@ -112,8 +113,8 @@ export const EntityMergeModal = ({
   }
 
   return (
-    <div className='modal-overlay' data-testid='modal-overlay'>
-      <div
+    <Box className='modal-overlay' data-testid='modal-overlay'>
+      <Box
         className='modal-content merge-modal'
         onClick={(e) => e.stopPropagation()}
       >
@@ -121,15 +122,15 @@ export const EntityMergeModal = ({
           title='🔄 Merge Duplicate Entities'
           onClose={handleClose}
         />
-        <div className='modal-body'>
-          <div className='merge-section'>
+        <Box className='modal-body'>
+          <Box className='merge-section'>
             <PrimaryEntitySelector
               entities={entities}
               primaryEntityId={primaryEntityId}
               setPrimaryEntityId={setPrimaryEntityId}
               renderEntityDetail={renderEntityDetail}
             />
-          </div>
+          </Box>
           <FieldMergeSection
             allFields={allFields}
             getFieldValues={getFieldValues}
@@ -137,21 +138,21 @@ export const EntityMergeModal = ({
             entityKind={primaryEntity?.kind || EntityKind.UNKNOWN}
           />
 
-          <div className='merge-section'>
-            <h3>3. Preview Merged Entity</h3>
+          <Box className='merge-section'>
+            <Typography variant='h3'>3. Preview Merged Entity</Typography>
             <MergedEntityPreview
               primaryEntity={primaryEntity}
               allFields={allFields}
               mergedFields={mergedFields}
             />
-          </div>
+          </Box>
           <ModalFooter
             onCancel={handleClose}
             onConfirm={handleMerge}
             confirmLabel={`🔄 Merge ${entities.length} Entities`}
           />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
