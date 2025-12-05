@@ -1,3 +1,10 @@
+import {
+  Box,
+  Typography,
+  TextField,
+  Radio,
+  FormControlLabel,
+} from '@mui/material';
 import { useState } from 'react';
 export const FieldValueOption = ({
   optionKey,
@@ -14,20 +21,26 @@ export const FieldValueOption = ({
   selected: boolean;
   groupName: string;
 }) => (
-  <div className='field-option'>
-    <input
-      type='radio'
-      id={optionKey}
-      name={groupName}
+  <Box className='field-option'>
+    <FormControlLabel
       value={value}
-      onChange={onChange}
-      checked={selected}
+      control={
+        <Radio
+          id={optionKey}
+          name={groupName}
+          value={value}
+          onChange={onChange}
+          checked={selected}
+        />
+      }
+      label={
+        <>
+          <Typography>{String(value)}</Typography>
+          <Typography className='source'>from {source}</Typography>
+        </>
+      }
     />
-    <label htmlFor={optionKey} className='field-value'>
-      <strong>{String(value)}</strong>
-      <span className='source'>from {source}</span>
-    </label>
-  </div>
+  </Box>
 );
 
 export const CustomValueOption = ({
@@ -54,30 +67,32 @@ export const CustomValueOption = ({
     }
   };
   return (
-    <label className='field-option custom-option'>
-      <input
-        type='radio'
+    <Typography component='label' className='field-option custom-option'>
+      <Radio
         name={groupName}
         value={customValueKey}
         checked={selected}
         onChange={handleRadioChange}
       />
-      <div className='field-value custom-value'>
-        <strong>Custom / Combined</strong>
-        <span className='source'>manually edit or combine values</span>
-      </div>
-      <div className='custom-input-container'>
-        <textarea
+      <Box className='field-value custom-value'>
+        <Typography variant='body1'>Custom / Combined</Typography>
+        <Typography className='source'>
+          manually edit or combine values
+        </Typography>
+      </Box>
+      <Box className='custom-input-container'>
+        <TextField
+          multiline
           className='custom-input'
           value={customValue}
           onChange={handleCustomValueChange}
           placeholder={`Enter custom value for ${groupName}...`}
           rows={3}
         />
-        <div className='custom-hint'>
+        <Box className='custom-hint'>
           💡 Tip: You can combine values from multiple entities above
-        </div>
-      </div>
-    </label>
+        </Box>
+      </Box>
+    </Typography>
   );
 };
