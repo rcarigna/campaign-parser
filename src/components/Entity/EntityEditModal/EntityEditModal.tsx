@@ -1,4 +1,14 @@
-import { Box, Typography, Button } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  IconButton,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   getEntityFields,
   type EntityWithId,
@@ -50,29 +60,20 @@ export const EntityEditModal = ({
           {/* Header */}
           <Box className='bg-gray-50 px-6 py-4 border-b border-gray-200'>
             <Box className='flex items-center justify-between'>
-              <h3 className='text-lg font-medium text-gray-900'>
+              <Typography
+                variant='h3'
+                className='text-lg font-medium text-gray-900'
+              >
                 Edit Entity: {entity.title}
-              </h3>
-              <Button
+              </Typography>
+              <IconButton
                 className='text-gray-400 hover:text-gray-600 transition-colors duration-200'
                 onClick={onClose}
                 aria-label='Close modal'
                 data-testid='close-button'
               >
-                <svg
-                  className='h-6 w-6'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                  stroke='currentColor'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M6 18L18 6M6 6l12 12'
-                  />
-                </svg>
-              </Button>
+                <CloseIcon />
+              </IconButton>
             </Box>
           </Box>
 
@@ -80,35 +81,45 @@ export const EntityEditModal = ({
           <Box className='px-6 py-4 overflow-y-auto max-h-[60vh]'>
             {/* Entity Type Selector */}
             <Box className='mb-6 pb-4 border-b border-gray-200'>
-              <label
-                htmlFor='entity-type'
-                className='block text-sm font-medium text-gray-700 mb-2'
-              >
-                Entity Type{' '}
-                {entityKind !== entity.kind && (
-                  <span className='text-orange-600 text-xs ml-2'>
-                    (Changed from {entity.kind})
-                  </span>
-                )}
-              </label>
-              <select
-                id='entity-type'
-                value={entityKind}
-                onChange={(e) => setEntityKind(e.target.value as EntityKind)}
-                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'
-              >
-                {entityTypes.map((type) => (
-                  <option key={type.kind} value={type.kind}>
-                    {type.emoji} {type.label}
-                  </option>
-                ))}
-              </select>
+              <FormControl fullWidth>
+                <InputLabel id='entity-type-label'>
+                  Entity Type
+                  {entityKind !== entity.kind && (
+                    <Box
+                      component='span'
+                      sx={{
+                        color: 'orange',
+                        fontSize: '0.8em',
+                        ml: 1,
+                      }}
+                    >
+                      (Changed from {entity.kind})
+                    </Box>
+                  )}
+                </InputLabel>
+                <Select
+                  labelId='entity-type-label'
+                  id='entity-type'
+                  value={entityKind}
+                  label='Entity Type'
+                  onChange={(e) => setEntityKind(e.target.value as EntityKind)}
+                >
+                  {entityTypes.map((type) => (
+                    <MenuItem key={type.kind} value={type.kind}>
+                      {type.emoji} {type.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               {entityKind !== entity.kind && (
-                <p className='mt-2 text-xs text-orange-600'>
+                <Typography
+                  variant='body2'
+                  className='mt-2 text-xs text-orange-600'
+                >
                   ⚠️ Changing entity type will preserve existing fields where
                   possible, but some fields may be lost if they don&apos;t exist
                   in the new type.
-                </p>
+                </Typography>
               )}
             </Box>
 
