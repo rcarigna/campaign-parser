@@ -141,7 +141,7 @@ export const EntityViewer = ({
   };
 
   return (
-    <Box className='entity-viewer'>
+    <Box className='entity-viewer' data-testid='entity-viewer'>
       <EntityViewerHeader
         entitiesLength={entities.length}
         isExporting={isExporting}

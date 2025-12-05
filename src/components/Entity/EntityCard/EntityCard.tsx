@@ -68,6 +68,7 @@ export const EntityCard = ({
           )}
           {onDiscard && (
             <Button
+              data-testid={`discard-button-${entity.id}`}
               className='entity-discard-btn'
               onClick={handleDiscardClick}
               title={`Discard ${entity.title}`}
