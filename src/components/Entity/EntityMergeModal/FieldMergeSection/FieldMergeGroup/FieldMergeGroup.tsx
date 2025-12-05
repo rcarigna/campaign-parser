@@ -1,3 +1,4 @@
+import { Box, Typography } from '@mui/material';
 import React, { useState, useMemo, useCallback } from 'react';
 import { EntityKind, FieldMergeGroupProps, getEntityFields } from '@/types';
 import {
@@ -104,9 +105,11 @@ export const FieldMergeGroup: React.FC<FieldMergeGroupProps> = ({
   ]);
 
   return (
-    <div className='field-merge-group'>
-      <h4 className='field-name'>{fieldName}</h4>
-      <div className='options-list'>{optionsList}</div>
-    </div>
+    <Box className='field-merge-group'>
+      <Typography variant='h6' className='field-name'>
+        {fieldName}
+      </Typography>
+      <Box className='options-list'>{optionsList}</Box>
+    </Box>
   );
 };
