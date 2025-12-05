@@ -155,7 +155,7 @@ describe('EntitiesView', () => {
       expect(selectionWithMerge.setMergeModalEntities).toHaveBeenCalled()
     );
   });
-  it('clears entity sselection when edit modal is closed', async () => {
+  it('clears entity selection when edit modal is closed', async () => {
     render(
       <EntitiesView
         entities={mockEntities}
