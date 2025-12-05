@@ -149,7 +149,7 @@ describe('EntitiesView', () => {
     );
 
     // Simulate merging entities
-    await userEvent.click(screen.getByTestId('close-button'));
+    await userEvent.click(screen.getByTestId('close-Button'));
 
     await waitFor(() =>
       expect(selectionWithMerge.setMergeModalEntities).toHaveBeenCalled()

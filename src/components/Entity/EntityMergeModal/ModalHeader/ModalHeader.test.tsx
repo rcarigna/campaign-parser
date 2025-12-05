@@ -21,7 +21,8 @@ describe('ModalHeader', () => {
     const closeButton = screen.getByRole('button');
     expect(closeButton).toBeInTheDocument();
     expect(closeButton).toHaveClass('modal-close');
-    expect(closeButton).toHaveTextContent('×');
+    expect(closeButton).toHaveAttribute('data-testid', 'close-Button');
+    expect(closeButton.querySelector('svg')).toBeInTheDocument();
   });
 
   it('calls onClose when close button is clicked', async () => {

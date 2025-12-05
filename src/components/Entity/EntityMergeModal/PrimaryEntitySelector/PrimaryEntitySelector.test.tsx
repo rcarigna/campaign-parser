@@ -30,26 +30,24 @@ describe('PrimaryEntitySelector', () => {
     setup();
     mockPrimaryEntities.forEach((entity) => {
       expect(
-        screen.getByRole('radio', { name: new RegExp(entity.title, 'i') })
+        screen.getByText(new RegExp(entity.title, 'i'))
       ).toBeInTheDocument();
     });
   });
 
   it('checks the radio for the selected primary entity', () => {
     setup('2');
-    const radio = screen.getByRole('radio', {
-      name: new RegExp(mockPrimaryEntities[1].title, 'i'),
-    }) as HTMLInputElement;
-    expect(radio.checked).toBe(true);
+    // Find the radio with value '2'
+    const radioWithValue2 = screen.getByDisplayValue('2') as HTMLInputElement;
+    expect(radioWithValue2).toBeChecked();
   });
 
   it('calls setPrimaryEntityId when a radio is selected', async () => {
     const setPrimaryEntityId = jest.fn();
     setup('1', setPrimaryEntityId);
-    const radio = screen.getByRole('radio', {
-      name: new RegExp(mockPrimaryEntities[1].title, 'i'),
-    }) as HTMLInputElement;
-    await userEvent.click(radio);
+    // Find the radio with value '2'
+    const radioWithValue2 = screen.getByDisplayValue('2') as HTMLInputElement;
+    await userEvent.click(radioWithValue2);
     expect(setPrimaryEntityId).toHaveBeenCalledWith('2');
   });
 

@@ -97,7 +97,7 @@ describe('EntityMergeModal', () => {
         />
       );
 
-      await userEvent.click(screen.getByRole('button', { name: '×' }));
+      await userEvent.click(screen.getByTestId('close-Button'));
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
   });
@@ -302,7 +302,7 @@ describe('EntityMergeModal', () => {
         />
       );
 
-      await userEvent.click(screen.getByRole('button', { name: '×' }));
+      await userEvent.click(screen.getByTestId('close-Button'));
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
 

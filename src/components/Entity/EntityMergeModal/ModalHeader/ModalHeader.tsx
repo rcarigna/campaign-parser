@@ -1,15 +1,17 @@
 import React from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 import { ModalHeaderProps } from '@/types';
+import { Box, Typography, IconButton, Icon } from '@mui/material';
 
 export const ModalHeader: React.FC<ModalHeaderProps> = ({ title, onClose }) => (
-  <div className='modal-header'>
-    <h2>{title}</h2>
-    <button
+  <Box className='modal-header'>
+    <Typography variant='h2'>{title}</Typography>
+    <IconButton
       className='modal-close'
       onClick={onClose}
-      data-testid='close-button'
+      data-testid='close-Button'
     >
-      ×
-    </button>
-  </div>
+      <CloseIcon />
+    </IconButton>
+  </Box>
 );
