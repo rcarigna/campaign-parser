@@ -1,6 +1,7 @@
 import { EntityKind } from '@/types';
 import { getAllEntityMetadata } from '@/lib/utils/entity';
 import { EntityTypeCard } from '../EntityTypeCard';
+import { Box } from '@mui/material';
 
 type EntityTypesGridProps = {
   selectedEntity: EntityKind | null;
@@ -14,7 +15,7 @@ export const EntityTypesGrid = ({
   const entityTypes = getAllEntityMetadata();
 
   return (
-    <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6'>
+    <Box className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6'>
       {entityTypes.map((metadata) => (
         <EntityTypeCard
           key={metadata.kind}
@@ -23,6 +24,6 @@ export const EntityTypesGrid = ({
           onClick={onEntityClick}
         />
       ))}
-    </div>
+    </Box>
   );
 };
