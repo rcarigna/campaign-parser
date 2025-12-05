@@ -23,19 +23,19 @@ const ViewToggle = ({
   setView: (view: 'entities' | 'json') => void;
 }) => {
   return (
-    <ToggleButtonGroup>
-      <ToggleButton
-        value='entities'
-        selected={view === 'entities'}
-        onClick={() => setView('entities')}
-      >
+    <ToggleButtonGroup
+      value={view}
+      exclusive
+      onChange={(_, newView) => {
+        if (newView !== null) {
+          setView(newView);
+        }
+      }}
+    >
+      <ToggleButton value='entities'>
         📋 Entity View
       </ToggleButton>
-      <ToggleButton
-        value='json'
-        selected={view === 'json'}
-        onClick={() => setView('json')}
-      >
+      <ToggleButton value='json'>
         📄 Raw Data
       </ToggleButton>
     </ToggleButtonGroup>
