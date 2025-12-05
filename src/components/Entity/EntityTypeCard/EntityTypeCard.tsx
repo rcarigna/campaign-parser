@@ -1,5 +1,6 @@
 import { EntityKind } from '@/types';
 import type { EntityMetadata } from '@/types';
+import { Box } from '@mui/material';
 
 type EntityTypeCardProps = {
   metadata: EntityMetadata;
@@ -15,7 +16,7 @@ export const EntityTypeCard = ({
   const { kind, emoji, label, description } = metadata;
 
   return (
-    <div
+    <Box
       className={`entity-type-card ${isSelected ? 'selected' : ''}`}
       onClick={() => onClick(kind)}
       role='button'
@@ -28,11 +29,11 @@ export const EntityTypeCard = ({
         }
       }}
     >
-      <div className='text-2xl mb-2 text-center'>{emoji}</div>
-      <div className='text-sm font-medium text-gray-700 text-center mb-1'>
+      <Box className='text-2xl mb-2 text-center'>{emoji}</Box>
+      <Box className='text-sm font-medium text-gray-700 text-center mb-1'>
         {label}
-      </div>
-      <div className='text-xs text-gray-500 text-center'>{description}</div>
-    </div>
+      </Box>
+      <Box className='text-xs text-gray-500 text-center'>{description}</Box>
+    </Box>
   );
 };
