@@ -55,12 +55,23 @@ describe('EntityViewer', () => {
 
   it('handles entity filtering', async () => {
     setupEntityViewerTest((props) => render(<EntityViewer {...props} />));
-    const filterSelect = screen.getByLabelText('Filter by type:');
+    expect(screen.getByText('Guard NPC')).toBeInTheDocument();
+    expect(screen.getByText('Test Location')).toBeInTheDocument();
+    expect(screen.getByText('Captain NPC')).toBeInTheDocument();
+    const filterSelect = screen.getByRole('combobox', { name: '' });
     expect(filterSelect).toBeInTheDocument();
-    await userEvent.selectOptions(filterSelect, EntityKind.NPC);
+    await userEvent.click(filterSelect);
+    // Select the NPC option from the dropdown
+    const npcOptions = await screen.findAllByText(/npc/i);
+    const npcDropdownOption = npcOptions.find(
+      (el) => el.getAttribute('role') === 'option'
+    );
+    await userEvent.click(npcDropdownOption!);
     expect(screen.getByText('Guard NPC')).toBeInTheDocument();
     expect(screen.getByText('Captain NPC')).toBeInTheDocument();
-    expect(screen.queryByText('Test Location')).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.queryByText('Test Location')).not.toBeInTheDocument()
+    );
   });
 
   it('handles duplicate detection', async () => {

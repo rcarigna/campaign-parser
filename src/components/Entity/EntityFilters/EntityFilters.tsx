@@ -1,3 +1,4 @@
+import { Box, MenuItem, InputLabel, Select, Checkbox } from '@mui/material';
 import { EntityKind } from '@/types';
 import { getEntityIcon } from '@/lib/utils/entity';
 
@@ -23,34 +24,33 @@ export const EntityFilters = ({
   totalDuplicates,
 }: EntityFiltersProps) => {
   return (
-    <div className='entity-controls'>
-      <div className='filter-group'>
-        <label htmlFor='type-filter'>Filter by type:</label>
-        <select
+    <Box className='entity-controls'>
+      <Box className='filter-group'>
+        <Select
+          label='Filter by type'
           id='type-filter'
           value={filterType}
           onChange={(e) => onFilterChange(e.target.value as EntityFilterType)}
-          className='filter-select'
+          className='filter-Select'
         >
-          <option value='all'>All Types ({totalEntities})</option>
+          <MenuItem value='all'>All Types ({totalEntities})</MenuItem>
           {Object.entries(typeCounts).map(([type, count]) => (
-            <option key={type} value={type}>
+            <MenuItem key={type} value={type}>
               {getEntityIcon(type as EntityKind)} {type} ({count})
-            </option>
+            </MenuItem>
           ))}
-        </select>
-      </div>
+        </Select>
+      </Box>
 
-      <div className='toggle-group'>
-        <label className='toggle-label'>
-          <input
-            type='checkbox'
+      <Box className='toggle-group'>
+        <InputLabel className='toggle-InputLabel'>
+          <Checkbox
             checked={showDuplicates}
             onChange={(e) => onDuplicateToggle(e.target.checked)}
           />
           Show only duplicates ({totalDuplicates})
-        </label>
-      </div>
-    </div>
+        </InputLabel>
+      </Box>
+    </Box>
   );
 };
