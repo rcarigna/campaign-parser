@@ -1,7 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import {
+  Box,
+  Typography,
+  ToggleButtonGroup,
+  ToggleButton,
+} from '@mui/material';
 import { MarkdownRenderer } from '../../MarkdownRenderer/MarkdownRenderer';
 import {
   type SerializedParsedDocumentWithEntities,
@@ -9,37 +14,33 @@ import {
   MarkdownContent,
   WordDocumentContent,
 } from '@/types';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 type DocumentViewerProps = {
   parsedData: SerializedParsedDocumentWithEntities;
 };
-const DocumentHeaderControls = ({
+
+const DocumentViewToggle = ({
   showRaw,
   setShowRaw,
-  isMarkdown, // Markdown vs Word document
+  isMarkdown,
 }: {
   showRaw: boolean;
   setShowRaw: (value: boolean) => void;
   isMarkdown: boolean;
-}) => (
-  <ToggleButtonGroup
-    value={showRaw ? 'raw' : 'formatted'}
-    exclusive
-    onChange={(_, value) => {
-      if (value !== null) setShowRaw(value === 'raw');
-    }}
-    size='small'
-  >
-    <ToggleButton value='formatted'>
-      {isMarkdown ? 'Formatted' : 'Rendered'}
-    </ToggleButton>
-    <ToggleButton value='raw'>
-      {isMarkdown ? 'Raw Markdown' : 'Plain Text'}
-    </ToggleButton>
-  </ToggleButtonGroup>
-);
+}) => {
+  const showFormattedLabel = isMarkdown ? 'Formatted' : 'Rendered';
+  const showRawLabel = isMarkdown ? 'Raw Markdown' : 'Plain Text';
+  return (
+    <ToggleButtonGroup
+      value={showRaw ? 'raw' : 'formatted'}
+      exclusive
+      onChange={() => setShowRaw(!showRaw)}
+    >
+      <ToggleButton value='formatted'>{showFormattedLabel}</ToggleButton>
+      <ToggleButton value='raw'>{showRawLabel}</ToggleButton>
+    </ToggleButtonGroup>
+  );
+};
 
 export const DocumentViewer = ({ parsedData }: DocumentViewerProps) => {
   const [showRaw, setShowRaw] = useState(false);
@@ -80,13 +81,11 @@ export const DocumentViewer = ({ parsedData }: DocumentViewerProps) => {
               : 'Word Document'}
           </Typography>
         </Box>
-        <Box className='document-header-controls'>
-          <DocumentHeaderControls
-            showRaw={showRaw}
-            setShowRaw={setShowRaw}
-            isMarkdown={isMarkdown}
-          />
-        </Box>
+        <DocumentViewToggle
+          showRaw={showRaw}
+          setShowRaw={setShowRaw}
+          isMarkdown={isMarkdown}
+        />
       </Box>
 
       {showRaw ? (
