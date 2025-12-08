@@ -70,7 +70,7 @@ export const DocumentViewer = ({ parsedData }: DocumentViewerProps) => {
   const { raw, formatted, isMarkdown } = getDisplayContent();
 
   return (
-    <Box className='document-viewer'>
+    <Box className='document-viewer' data-testid='document-viewer'>
       <Box className='document-header'>
         <Box className='document-header-info'>
           <Typography variant='h3' className='document-title'>
