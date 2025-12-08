@@ -34,10 +34,10 @@ export const FieldValueOption = ({
         />
       }
       label={
-        <>
+        <Box className='field-value'>
           <Typography>{String(value)}</Typography>
           <Typography className='source'>from {source}</Typography>
-        </>
+        </Box>
       }
     />
   </Box>
