@@ -55,6 +55,7 @@ export const CustomValueOption = ({
   groupName: string;
 }) => {
   const [customValue, setCustomValue] = useState('');
+  const radioId = `${groupName}-custom-radio`;
   const handleRadioChange = () => {
     onChange(customValue);
   };
@@ -69,12 +70,13 @@ export const CustomValueOption = ({
   return (
     <Box className='field-option custom-option'>
       <Radio
+        id={radioId}
         name={groupName}
         value={customValueKey}
         checked={selected}
         onChange={handleRadioChange}
       />
-      <Box className='field-value custom-value'>
+      <Box component='label' htmlFor={radioId} className='field-value custom-value'>
         <Typography variant='body1'>Custom / Combined</Typography>
         <Typography className='source'>
           manually edit or combine values
