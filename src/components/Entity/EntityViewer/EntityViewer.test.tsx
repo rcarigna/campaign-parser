@@ -57,7 +57,7 @@ describe('EntityViewer', () => {
     expect(screen.getByText('Guard NPC')).toBeInTheDocument();
     expect(screen.getByText('Test Location')).toBeInTheDocument();
     expect(screen.getByText('Captain NPC')).toBeInTheDocument();
-    const filterSelect = screen.getByRole('combobox', { name: '' });
+    const filterSelect = screen.getByRole('combobox', { name: /filter by type/i });
     expect(filterSelect).toBeInTheDocument();
     await userEvent.click(filterSelect);
     // Select the NPC option from the dropdown
