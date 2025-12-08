@@ -1,5 +1,6 @@
 import React from 'react';
 import { ModalFooterProps } from '@/types';
+import { Box, Button } from '@mui/material';
 
 export const ModalFooter: React.FC<ModalFooterProps> = ({
   onCancel,
@@ -8,12 +9,12 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
   cancelLabel = 'Cancel',
   disabled = false,
 }) => (
-  <div className='modal-footer'>
-    <button onClick={onCancel} className='btn-secondary'>
+  <Box className='modal-footer'>
+    <Button onClick={onCancel} className='btn-secondary'>
       {cancelLabel}
-    </button>
-    <button onClick={onConfirm} className='btn-primary' disabled={disabled}>
+    </Button>
+    <Button onClick={onConfirm} className='btn-primary' disabled={disabled}>
       {confirmLabel}
-    </button>
-  </div>
+    </Button>
+  </Box>
 );

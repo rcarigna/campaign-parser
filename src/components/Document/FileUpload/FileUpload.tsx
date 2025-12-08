@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { Box, Typography } from '@mui/material';
 import { FileUploadProps } from '@/types';
 
 export const FileUpload = ({
@@ -44,7 +45,7 @@ export const FileUpload = ({
 
   return (
     <>
-      <div
+      <Box
         className={`upload-area ${dragOver ? 'drag-over' : ''}`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -58,22 +59,32 @@ export const FileUpload = ({
           onChange={handleFileChange}
           className='file-input-hidden'
         />
-        <label htmlFor='file-input' className='file-input-label'>
+        <Typography
+          component='label'
+          htmlFor='file-input'
+          className='file-input-label'
+        >
           {selectedFile ? (
-            <div>
-              <p>Selected: {selectedFile.name}</p>
-              <p>Size: {(selectedFile.size / 1024).toFixed(2)} KB</p>
-            </div>
+            <Box>
+              <Typography>Selected: {selectedFile.name}</Typography>
+              <Typography>
+                Size: {(selectedFile.size / 1024).toFixed(2)} KB
+              </Typography>
+            </Box>
           ) : (
-            <div>
-              <p>Click to select a file or drag and drop</p>
-              <p>Supported formats: {allowedExtensions.join(', ')}</p>
-            </div>
+            <Box>
+              <Typography variant='body1'>
+                Click to select a file or drag and drop
+              </Typography>
+              <Typography variant='body1'>
+                Supported formats: {allowedExtensions.join(', ')}
+              </Typography>
+            </Box>
           )}
-        </label>
-      </div>
+        </Typography>
+      </Box>
 
-      {error && <div className='error'>{error}</div>}
+      {error && <Box className='error'>{error}</Box>}
     </>
   );
 };

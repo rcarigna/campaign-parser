@@ -1,5 +1,6 @@
 import React from 'react';
 import { EntityWithId, SerializedParsedDocumentWithEntities } from '@/types';
+import { Box } from '@mui/material';
 
 type EntityViewerJsonViewProps = {
   entities: EntityWithId[];
@@ -10,7 +11,7 @@ export const EntityViewerJsonView: React.FC<EntityViewerJsonViewProps> = ({
   entities,
   parsedData,
 }) => (
-  <div className='json-output'>
+  <Box className='json-output'>
     <pre>
       {JSON.stringify(
         {
@@ -21,5 +22,5 @@ export const EntityViewerJsonView: React.FC<EntityViewerJsonViewProps> = ({
         2
       )}
     </pre>
-  </div>
+  </Box>
 );

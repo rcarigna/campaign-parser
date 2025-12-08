@@ -1,3 +1,4 @@
+import { Box, Button, Typography, Checkbox } from '@mui/material';
 import { EntityCardProps } from '@/types';
 import { getEntityIcon } from '@/lib/utils/entity';
 
@@ -39,63 +40,72 @@ export const EntityCard = ({
   };
   try {
     return (
-      <div
+      <Box
         className={`entity-card entity-kind-${entity.kind} ${
           isDuplicate ? 'duplicate' : ''
         } ${isSelected ? 'selected' : ''}`}
         onClick={handleCardClick}
       >
-        <div className='entity-card-header'>
+        <Box className='entity-card-header'>
           {isSelectable && (
-            <input
-              type='checkbox'
+            <Checkbox
               checked={isSelected}
               onChange={handleSelectChange}
               className='entity-select-checkbox'
               data-testid={`select-checkbox-${entity.id}`}
             />
           )}
-          <span className='entity-icon'>{getEntityIcon(entity.kind)}</span>
-          <span className='entity-type'>{entity.kind}</span>
-          {isDuplicate && <span className='duplicate-badge'>DUPE</span>}
+          <Box component='span' className='entity-icon'>
+            {getEntityIcon(entity.kind)}
+          </Box>
+          <Box component='span' className='entity-type'>
+            {entity.kind}
+          </Box>
+          {isDuplicate && (
+            <Box component='span' className='duplicate-badge'>
+              DUPE
+            </Box>
+          )}
           {onDiscard && (
-            <button
+            <Button
+              data-testid={`discard-button-${entity.id}`}
               className='entity-discard-btn'
               onClick={handleDiscardClick}
               title={`Discard ${entity.title}`}
               aria-label={`Discard ${entity.title}`}
             >
               🗑️
-            </button>
+            </Button>
           )}
-        </div>
+        </Box>
 
-        <h4 className='entity-title'>{entity.title}</h4>
-
-        <div className='entity-details'>
+        <Typography variant='h4' className='entity-title'>
+          {entity.title}
+        </Typography>
+        <Box className='entity-details'>
           {'role' in entity && entity.role && (
-            <div className='detail-item'>Role: {entity.role}</div>
+            <Box className='detail-item'>Role: {entity.role}</Box>
           )}
           {'type' in entity && entity.type && (
-            <div className='detail-item'>Type: {entity.type}</div>
+            <Box className='detail-item'>Type: {entity.type}</Box>
           )}
           {'status' in entity && entity.status && (
-            <div className='detail-item'>Status: {entity.status}</div>
+            <Box className='detail-item'>Status: {entity.status}</Box>
           )}
           {entity.sourceSessions && (
-            <div className='detail-item'>
+            <Box className='detail-item'>
               Sessions: {entity.sourceSessions?.join(', ')}
-            </div>
+            </Box>
           )}
-        </div>
+        </Box>
 
         {missingFields.length > 0 && (
-          <div className='missing-fields'>
+          <Box className='missing-fields'>
             <span className='missing-label'>Missing:</span>
             <span className='missing-list'>{missingFields.join(', ')}</span>
-          </div>
+          </Box>
         )}
-      </div>
+      </Box>
     );
   } catch (error) {
     console.error('Error rendering EntityCard:', error);

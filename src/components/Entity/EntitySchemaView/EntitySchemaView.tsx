@@ -2,6 +2,10 @@ import { EntityKind, getEntityFields } from '@/types';
 import { getAllEntityMetadata } from '@/lib/utils/entity';
 import { generateSchemaEnhancementIssueUrl } from '@/lib/utils/github';
 import { SchemaField } from './SchemaField';
+import { Box, Typography, Button } from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import CloseIcon from '@mui/icons-material/Close';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 type EntitySchemaViewProps = {
   entityKind: EntityKind;
@@ -26,90 +30,62 @@ export const EntitySchemaView = ({
   if (!entityMetadata) return null;
 
   return (
-    <div
+    <Box
       data-testid='entity-schema-view'
       className='bg-white rounded-lg border-2 border-blue-300 shadow-lg overflow-hidden'
     >
       {/* Schema Header */}
-      <div className='bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4 flex items-center justify-between'>
-        <div className='flex items-center gap-3'>
-          <span className='text-3xl'>{entityMetadata.emoji}</span>
-          <div>
-            <h3 className='text-xl font-bold text-white'>
+      <Box className='bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4 flex items-center justify-between'>
+        <Box className='flex items-center gap-3'>
+          <Typography component='span' className='text-3xl'>
+            {entityMetadata.emoji}
+          </Typography>
+          <Box>
+            <Typography variant='h3' className='text-white font-bold'>
               {entityMetadata.label} Schema
-            </h3>
-            <p className='text-blue-100 text-sm'>
+            </Typography>
+            <Typography className='text-blue-100 text-sm'>
               Field definitions and data structure
-            </p>
-          </div>
-        </div>
-        <button
+            </Typography>
+          </Box>
+        </Box>
+        <Button
           onClick={onClose}
           className='text-white hover:text-blue-100 transition-colors'
           aria-label='Close schema view'
         >
-          <svg
-            className='w-6 h-6'
-            fill='none'
-            stroke='currentColor'
-            viewBox='0 0 24 24'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={2}
-              d='M6 18L18 6M6 6l12 12'
-            />
-          </svg>
-        </button>
-      </div>
+          <CloseIcon fontSize='medium' />
+        </Button>
+      </Box>
 
       {/* Schema Content */}
-      <div className='p-6 bg-gray-50'>
-        <div className='mb-4 flex items-center justify-between'>
-          <div className='flex items-center gap-2 text-sm text-gray-600'>
-            <svg
-              className='w-4 h-4'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-              />
-            </svg>
-            <span>
-              Fields marked with{' '}
-              <span className='text-red-500 font-bold'>*</span> are required
-            </span>
-          </div>
-          <button
+      <Box className='p-6 bg-gray-50'>
+        <Box className='mb-4 flex items-center justify-between'>
+          <Box className='flex items-center gap-2 text-sm text-gray-600'>
+            <InfoOutlinedIcon
+              fontSize='small'
+              sx={{ color: 'text.secondary' }}
+            />
+            <Typography component='span'>
+              Fields marked with
+              <Typography component='span' className='text-red-500 font-bold'>
+                {' *'}
+              </Typography>{' '}
+              are required
+            </Typography>
+          </Box>
+          <Button
             onClick={handleSuggestEnhancement}
             className='flex items-center gap-2 px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md font-medium transition-colors border border-blue-200 hover:border-blue-300'
             aria-label='Suggest schema enhancement'
           >
-            <svg
-              className='w-4 h-4'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z'
-              />
-            </svg>
+            <AddCircleOutlineIcon fontSize='small' />
             Suggest Enhancement
-          </button>
-        </div>
+          </Button>
+        </Box>
 
         {/* Field List */}
-        <div className='space-y-3'>
+        <Box className='space-y-3'>
           {fields.map((field) => (
             <SchemaField
               key={field.key}
@@ -117,21 +93,21 @@ export const EntitySchemaView = ({
               entityKind={entityKind}
             />
           ))}
-        </div>
-      </div>
+        </Box>
+      </Box>
 
       {/* Schema Footer */}
-      <div className='bg-gray-100 px-6 py-3 border-t border-gray-200 flex items-center justify-between'>
-        <div className='text-xs text-gray-500'>
+      <Box className='bg-gray-100 px-6 py-3 border-t border-gray-200 flex items-center justify-between'>
+        <Box className='text-xs text-gray-500'>
           {requiredCount} required • {optionalCount} optional
-        </div>
-        <button
+        </Box>
+        <Button
           onClick={onClose}
           className='text-sm text-blue-600 hover:text-blue-800 font-medium'
         >
           Close
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Box>
   );
 };

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { EntityKind } from '@/types';
 import { WelcomeHeader } from '../WelcomeHeader';
 import { EntityTypesGrid, EntitySchemaView } from '@/components/Entity';
+import { Box } from '@mui/material';
 
 export const PersistentWelcome = () => {
   const [selectedEntity, setSelectedEntity] = useState<EntityKind | null>(null);
@@ -13,7 +14,7 @@ export const PersistentWelcome = () => {
   };
 
   return (
-    <div className='bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200 p-8 mb-6'>
+    <Box className='bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200 p-8 mb-6'>
       <WelcomeHeader />
       <EntityTypesGrid
         selectedEntity={selectedEntity}
@@ -25,6 +26,6 @@ export const PersistentWelcome = () => {
           onClose={() => setSelectedEntity(null)}
         />
       )}
-    </div>
+    </Box>
   );
 };

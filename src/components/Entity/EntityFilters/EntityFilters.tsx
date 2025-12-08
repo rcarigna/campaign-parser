@@ -1,3 +1,4 @@
+import { Box, MenuItem, InputLabel, Select, Checkbox, FormControl } from '@mui/material';
 import { EntityKind } from '@/types';
 import { getEntityIcon } from '@/lib/utils/entity';
 
@@ -23,34 +24,37 @@ export const EntityFilters = ({
   totalDuplicates,
 }: EntityFiltersProps) => {
   return (
-    <div className='entity-controls'>
-      <div className='filter-group'>
-        <label htmlFor='type-filter'>Filter by type:</label>
-        <select
-          id='type-filter'
-          value={filterType}
-          onChange={(e) => onFilterChange(e.target.value as EntityFilterType)}
-          className='filter-select'
-        >
-          <option value='all'>All Types ({totalEntities})</option>
-          {Object.entries(typeCounts).map(([type, count]) => (
-            <option key={type} value={type}>
-              {getEntityIcon(type as EntityKind)} {type} ({count})
-            </option>
-          ))}
-        </select>
-      </div>
+    <Box className='entity-controls'>
+      <Box className='filter-group'>
+        <FormControl fullWidth>
+          <InputLabel id='type-filter-label'>Filter by type</InputLabel>
+          <Select
+            labelId='type-filter-label'
+            id='type-filter'
+            value={filterType}
+            label='Filter by type'
+            onChange={(e) => onFilterChange(e.target.value as EntityFilterType)}
+            className='filter-select'
+          >
+            <MenuItem value='all'>All Types ({totalEntities})</MenuItem>
+            {Object.entries(typeCounts).map(([type, count]) => (
+              <MenuItem key={type} value={type}>
+                {getEntityIcon(type as EntityKind)} {type} ({count})
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
 
-      <div className='toggle-group'>
-        <label className='toggle-label'>
-          <input
-            type='checkbox'
+      <Box className='toggle-group'>
+        <InputLabel className='toggle-label'>
+          <Checkbox
             checked={showDuplicates}
             onChange={(e) => onDuplicateToggle(e.target.checked)}
           />
           Show only duplicates ({totalDuplicates})
-        </label>
-      </div>
-    </div>
+        </InputLabel>
+      </Box>
+    </Box>
   );
 };

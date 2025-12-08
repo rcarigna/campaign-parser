@@ -2,6 +2,7 @@
 
 import { FileUpload, ActionButtons } from '@/components';
 import { ALLOWED_EXTENSIONS, ProcessingWorkflowProps } from '@/types';
+import { Box, Typography, Button } from '@mui/material';
 
 export const ProcessingWorkflow = ({
   selectedFile,
@@ -24,58 +25,66 @@ export const ProcessingWorkflow = ({
   // If we have content, show reset button instead of upload
   if (hasContent) {
     return (
-      <div className='space-y-6'>
-        <div className='bg-green-50 border border-green-200 rounded-lg p-6 text-center'>
-          <div className='text-4xl mb-3'>✅</div>
-          <h3 className='text-lg font-semibold text-gray-800 mb-2'>
+      <Box className='space-y-6'>
+        <Box className='bg-green-50 border border-green-200 rounded-lg p-6 text-center'>
+          <Box className='text-4xl mb-3'>✅</Box>
+          <Typography
+            variant='h3'
+            className='text-lg font-semibold text-gray-800 mb-2'
+          >
             Content Loaded Successfully
-          </h3>
-          <p className='text-gray-600 text-sm mb-4'>
+          </Typography>
+          <Typography className='text-gray-600 text-sm mb-4'>
             Your document has been processed. You can view the extracted
             entities below.
-          </p>
-          <button
+          </Typography>
+          <Button
             onClick={onReset}
             className='px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-medium transition-colors flex items-center gap-2 mx-auto'
           >
-            <span>🔄</span>
+            <Typography>🔄</Typography>
             Start Over
-          </button>
-        </div>
+          </Button>
+        </Box>
 
         {/* Error Display */}
         {error && (
-          <div className='bg-red-50 border border-red-200 rounded-lg p-4'>
-            <div className='flex items-center'>
-              <span className='text-red-600 font-medium'>❌ Error:</span>
-              <span className='text-red-700 ml-2'>{error}</span>
-            </div>
-            <button
+          <Box className='bg-red-50 border border-red-200 rounded-lg p-4'>
+            <Box className='flex items-center'>
+              <Typography className='text-red-600 font-medium'>
+                ❌ Error:
+              </Typography>
+              <Typography className='text-red-700 ml-2'>{error}</Typography>
+            </Box>
+            <Button
               onClick={onClearError}
               className='mt-2 text-red-600 hover:text-red-800 text-sm underline'
             >
               Clear Error
-            </button>
-          </div>
+            </Button>
+          </Box>
         )}
-      </div>
+      </Box>
     );
   }
 
   return (
-    <div className='space-y-6'>
+    <Box className='space-y-6'>
       {/* File Upload Section */}
-      <div>
-        <h2 className='text-xl font-semibold text-gray-800 mb-4'>
+      <Box className='text-center'>
+        <Typography
+          variant='h3'
+          className='text-xl font-semibold text-gray-800 mb-4'
+        >
           📤 Upload Document
-        </h2>
+        </Typography>
         <FileUpload
           onFileSelect={onFileSelect}
           selectedFile={selectedFile}
           error={error}
           allowedExtensions={ALLOWED_EXTENSIONS}
         />
-      </div>
+      </Box>
 
       {/* Action Buttons */}
       {selectedFile && (
@@ -89,29 +98,33 @@ export const ProcessingWorkflow = ({
 
       {/* Processing Status */}
       {isLoading && (
-        <div className='bg-blue-50 border border-blue-200 rounded-lg p-4'>
-          <div className='flex items-center'>
-            <div className='animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3'></div>
-            <span className='text-blue-700 font-medium'>{loadingMessage}</span>
-          </div>
-        </div>
+        <Box className='bg-blue-50 border border-blue-200 rounded-lg p-4'>
+          <Box className='flex items-center'>
+            <Box className='animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3'></Box>
+            <Typography className='text-blue-700 font-medium'>
+              {loadingMessage}
+            </Typography>
+          </Box>
+        </Box>
       )}
 
       {/* Error Display */}
       {error && (
-        <div className='bg-red-50 border border-red-200 rounded-lg p-4'>
-          <div className='flex items-center'>
-            <span className='text-red-600 font-medium'>❌ Error:</span>
-            <span className='text-red-700 ml-2'>{error}</span>
-          </div>
-          <button
+        <Box className='bg-red-50 border border-red-200 rounded-lg p-4'>
+          <Box className='flex items-center'>
+            <Typography className='text-red-600 font-medium'>
+              ❌ Error:
+            </Typography>
+            <Typography className='text-red-700 ml-2'>{error}</Typography>
+          </Box>
+          <Button
             onClick={onClearError}
             className='mt-2 text-red-600 hover:text-red-800 text-sm underline'
           >
             Clear Error
-          </button>
-        </div>
+          </Button>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };

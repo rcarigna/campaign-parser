@@ -1,3 +1,4 @@
+import { Box, Typography } from '@mui/material';
 import { EntityCard } from '../EntityCard';
 import { type EntityWithId } from '@/types';
 import { getMissingFields } from '@/lib/validation/entity';
@@ -23,14 +24,16 @@ export const EntityGrid = ({
 }: EntityGridProps) => {
   if (entities.length === 0) {
     return (
-      <div className='no-results'>
-        <p>No entities match the current filter.</p>
-      </div>
+      <Box className='no-results'>
+        <Typography variant='body1'>
+          No entities match the current filter.
+        </Typography>
+      </Box>
     );
   }
 
   return (
-    <div className='entity-grid' role='grid'>
+    <Box className='entity-grid' role='grid'>
       {entities.map((entity) => {
         const isDuplicate = duplicateIds.has(entity.id);
         const missingFields = getMissingFields(entity);
@@ -54,6 +57,6 @@ export const EntityGrid = ({
           />
         );
       })}
-    </div>
+    </Box>
   );
 };

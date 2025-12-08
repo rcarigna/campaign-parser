@@ -121,19 +121,12 @@ describe('EntityEditModal', () => {
     it('updates entity type when selector is changed', async () => {
       renderEditModal();
       const select = screen.getByLabelText(/Entity Type/i);
-      const locationOption = screen.getByRole('option', { name: /Location/i });
-      await userEvent.selectOptions(select, locationOption);
+      await userEvent.click(select);
+      expect(screen.getByText(/Location/)).toBeInTheDocument();
+      await userEvent.click(screen.getByText(/Location/));
       expect(
         screen.getByText(/Changing entity type will preserve existing fields/i)
       ).toBeInTheDocument();
-    });
-    it('shows changed entity type label when type is changed', async () => {
-      renderEditModal();
-      const select = screen.getByLabelText(/Entity Type/i);
-      await userEvent.selectOptions(
-        select,
-        screen.getByRole('option', { name: /Location/i })
-      );
       expect(screen.getByText(/Changed from PLAYER/i)).toBeInTheDocument();
     });
   });

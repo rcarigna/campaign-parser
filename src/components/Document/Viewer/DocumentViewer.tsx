@@ -1,6 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import {
+  Box,
+  Typography,
+  ToggleButtonGroup,
+  ToggleButton,
+} from '@mui/material';
 import { MarkdownRenderer } from '../../MarkdownRenderer/MarkdownRenderer';
 import {
   type SerializedParsedDocumentWithEntities,
@@ -8,37 +14,35 @@ import {
   MarkdownContent,
   WordDocumentContent,
 } from '@/types';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 type DocumentViewerProps = {
   parsedData: SerializedParsedDocumentWithEntities;
 };
-const DocumentHeaderControls = ({
+
+const DocumentViewToggle = ({
   showRaw,
   setShowRaw,
-  isMarkdown, // Markdown vs Word document
+  isMarkdown,
 }: {
   showRaw: boolean;
   setShowRaw: (value: boolean) => void;
   isMarkdown: boolean;
-}) => (
-  <ToggleButtonGroup
-    value={showRaw ? 'raw' : 'formatted'}
-    exclusive
-    onChange={(_, value) => {
-      if (value !== null) setShowRaw(value === 'raw');
-    }}
-    size='small'
-  >
-    <ToggleButton value='formatted'>
-      {isMarkdown ? 'Formatted' : 'Rendered'}
-    </ToggleButton>
-    <ToggleButton value='raw'>
-      {isMarkdown ? 'Raw Markdown' : 'Plain Text'}
-    </ToggleButton>
-  </ToggleButtonGroup>
-);
+}) => {
+  const showFormattedLabel = isMarkdown ? 'Formatted' : 'Rendered';
+  const showRawLabel = isMarkdown ? 'Raw Markdown' : 'Plain Text';
+  return (
+    <ToggleButtonGroup
+      value={showRaw ? 'raw' : 'formatted'}
+      exclusive
+      onChange={(_, value) => {
+        if (value !== null) setShowRaw(value === 'raw');
+      }}
+    >
+      <ToggleButton value='formatted'>{showFormattedLabel}</ToggleButton>
+      <ToggleButton value='raw'>{showRawLabel}</ToggleButton>
+    </ToggleButtonGroup>
+  );
+};
 
 export const DocumentViewer = ({ parsedData }: DocumentViewerProps) => {
   const [showRaw, setShowRaw] = useState(false);
@@ -66,38 +70,42 @@ export const DocumentViewer = ({ parsedData }: DocumentViewerProps) => {
   const { raw, formatted, isMarkdown } = getDisplayContent();
 
   return (
-    <div className='document-viewer'>
-      <div className='document-header'>
-        <div className='document-header-info'>
-          <h3 className='document-title'>📄 Document Content</h3>
-          <p className='document-meta'>
+    <Box className='document-viewer' data-testid='document-viewer'>
+      <Box className='document-header'>
+        <Box className='document-header-info'>
+          <Typography variant='h3' className='document-title'>
+            📄 Document Content
+          </Typography>
+          <Typography variant='body2' className='document-meta'>
             {parsedData.filename} •{' '}
             {parsedData.type === DocumentType.MARKDOWN
               ? 'Markdown'
               : 'Word Document'}
-          </p>
-        </div>
-        <DocumentHeaderControls
+          </Typography>
+        </Box>
+        <DocumentViewToggle
           showRaw={showRaw}
           setShowRaw={setShowRaw}
           isMarkdown={isMarkdown}
         />
-      </div>
+      </Box>
 
       {showRaw ? (
-        <pre className='document-raw-content'>{raw}</pre>
+        <Box component='pre' className='document-raw-content'>
+          {raw}
+        </Box>
       ) : (
-        <div className='document-formatted-content'>
+        <Box className='document-formatted-content'>
           {isMarkdown ? (
             <MarkdownRenderer markdown={formatted} />
           ) : (
-            <div
+            <Box
               className='prose prose-sm max-w-none'
               dangerouslySetInnerHTML={{ __html: formatted }}
             />
           )}
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
