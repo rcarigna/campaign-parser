@@ -43,6 +43,7 @@ const EditModalHeader = ({
         onClick={onClose}
         aria-label='Close modal'
         data-testid='close-button'
+        type='button'
       >
         <CloseIcon />
       </IconButton>
