@@ -9,6 +9,9 @@
 ✅ **CI/CD Pipeline**: Automated testing, building, and deployment with smart build skipping  
 ✅ **Entity Editing**: Full CRUD operations with type migration capability  
 ✅ **Schema Display**: Interactive entity schema viewer with field documentation  
+✅ **Obsidian Export API**: `/api/export` endpoint and client logic implemented
+✅ **Entity Merge/Discard**: Bulk merge/discard operations working
+✅ **Zod Validation**: Entity validation on save
 
 ---
 
