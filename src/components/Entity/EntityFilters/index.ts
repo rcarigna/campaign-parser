@@ -1,1 +1,1 @@
-export { EntityFilters } from './EntityFilters';
+export * from './EntityFilters';

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { type EntityWithId } from '@/types';
 
-type UseEntitySelectionReturn = {
+export type UseEntitySelectionReturn = {
     selectedEntityIds: Set<string>;
     isSelectionMode: boolean;
     setIsSelectionMode: (mode: boolean) => void;

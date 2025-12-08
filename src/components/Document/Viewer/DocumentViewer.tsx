@@ -8,10 +8,37 @@ import {
   MarkdownContent,
   WordDocumentContent,
 } from '@/types';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 type DocumentViewerProps = {
   parsedData: SerializedParsedDocumentWithEntities;
 };
+const DocumentHeaderControls = ({
+  showRaw,
+  setShowRaw,
+  isMarkdown, // Markdown vs Word document
+}: {
+  showRaw: boolean;
+  setShowRaw: (value: boolean) => void;
+  isMarkdown: boolean;
+}) => (
+  <ToggleButtonGroup
+    value={showRaw ? 'raw' : 'formatted'}
+    exclusive
+    onChange={(_, value) => {
+      if (value !== null) setShowRaw(value === 'raw');
+    }}
+    size='small'
+  >
+    <ToggleButton value='formatted'>
+      {isMarkdown ? 'Formatted' : 'Rendered'}
+    </ToggleButton>
+    <ToggleButton value='raw'>
+      {isMarkdown ? 'Raw Markdown' : 'Plain Text'}
+    </ToggleButton>
+  </ToggleButtonGroup>
+);
 
 export const DocumentViewer = ({ parsedData }: DocumentViewerProps) => {
   const [showRaw, setShowRaw] = useState(false);
@@ -50,20 +77,11 @@ export const DocumentViewer = ({ parsedData }: DocumentViewerProps) => {
               : 'Word Document'}
           </p>
         </div>
-        <div className='document-header-controls'>
-          <button
-            onClick={() => setShowRaw(false)}
-            className={`document-toggle-btn ${!showRaw ? 'active' : ''}`}
-          >
-            {isMarkdown ? 'Formatted' : 'Rendered'}
-          </button>
-          <button
-            onClick={() => setShowRaw(true)}
-            className={`document-toggle-btn ${showRaw ? 'active' : ''}`}
-          >
-            {isMarkdown ? 'Raw Markdown' : 'Plain Text'}
-          </button>
-        </div>
+        <DocumentHeaderControls
+          showRaw={showRaw}
+          setShowRaw={setShowRaw}
+          isMarkdown={isMarkdown}
+        />
       </div>
 
       {showRaw ? (

@@ -5,12 +5,17 @@ import {
   type SerializedParsedDocumentWithEntities,
 } from '@/types';
 import { exportEntities } from '@/client/api';
-import { EntityFilters } from '../EntityFilters';
-import { EntityGrid } from '../EntityGrid';
-import { EntityEditModal } from '../EntityEditModal';
-import { EntityMergeModal } from '../EntityMergeModal';
-import { useEntityFiltering } from './hooks/useEntityFiltering';
-import { useEntitySelection } from './hooks/useEntitySelection';
+import {
+  useEntityFiltering,
+  UseEntityFilteringReturn,
+} from './hooks/useEntityFiltering';
+import {
+  useEntitySelection,
+  UseEntitySelectionReturn,
+} from './hooks/useEntitySelection';
+import { EntityViewerHeader } from './Header';
+import { EntitiesView } from './EntitiesView';
+import { EntityViewerJsonView } from './JsonView';
 
 type EntityViewerProps = {
   entities: EntityWithId[];
@@ -34,8 +39,8 @@ export const EntityViewer = ({
   const [isExporting, setIsExporting] = useState(false);
 
   // Custom hooks for different concerns
-  const filtering = useEntityFiltering(entities);
-  const selection = useEntitySelection();
+  const filtering: UseEntityFilteringReturn = useEntityFiltering(entities);
+  const selection: UseEntitySelectionReturn = useEntitySelection();
 
   if (entities?.length === 0) {
     return (
@@ -136,140 +141,29 @@ export const EntityViewer = ({
 
   return (
     <div className='entity-viewer'>
-      <div className='entity-header'>
-        <div className='entity-title-row'>
-          <h3>📋 Extracted Entities ({entities.length})</h3>
-
-          <div className='header-controls'>
-            {/* Export Button */}
-            <button
-              className='btn btn-primary export-btn'
-              onClick={handleExport}
-              disabled={isExporting || entities.length === 0}
-              title='Export all entities to Obsidian vault format'
-            >
-              {isExporting ? '⏳ Exporting...' : '📦 Export to Obsidian'}
-            </button>
-
-            {/* View Toggle */}
-            <div className='view-toggle'>
-              <button
-                className={`toggle-btn ${view === 'entities' ? 'active' : ''}`}
-                onClick={() => setView('entities')}
-              >
-                📋 Entity View
-              </button>
-              <button
-                className={`toggle-btn ${view === 'json' ? 'active' : ''}`}
-                onClick={() => setView('json')}
-              >
-                📄 Raw Data
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {view === 'entities' && (
-          <EntityFilters
-            filterType={filtering.filterType}
-            onFilterChange={filtering.setFilterType}
-            showDuplicates={filtering.showDuplicates}
-            onDuplicateToggle={filtering.setShowDuplicates}
-            typeCounts={filtering.typeCounts}
-            totalEntities={entities.length}
-            totalDuplicates={filtering.duplicates.length}
-          />
-        )}
-      </div>
+      <EntityViewerHeader
+        entitiesLength={entities.length}
+        isExporting={isExporting}
+        onExport={handleExport}
+        view={view}
+        setView={setView}
+        filtering={filtering}
+      />
 
       {view === 'entities' ? (
-        <>
-          {selection.isSelectionMode && (
-            <div className='selection-controls'>
-              <button
-                onClick={() => selection.handleMarkAsDuplicates(entities)}
-                disabled={selection.selectedEntityIds.size < 2}
-                className='btn btn-primary'
-              >
-                Mark {selection.selectedEntityIds.size} as Duplicates
-              </button>
-              <button
-                onClick={selection.handleCancelSelection}
-                className='btn btn-secondary'
-                data-testid='cancel-selection'
-              >
-                Cancel
-              </button>
-            </div>
-          )}
-
-          <div className='entity-actions'>
-            {!selection.isSelectionMode ? (
-              <button
-                onClick={() => selection.setIsSelectionMode(true)}
-                className='btn btn-outline'
-              >
-                Select Duplicates
-              </button>
-            ) : (
-              <p className='selection-help'>
-                Select entities to mark as duplicates. Selected:{' '}
-                {selection.selectedEntityIds.size}
-              </p>
-            )}
-          </div>
-
-          <EntityGrid
-            entities={filtering.filteredEntities}
-            duplicateIds={filtering.duplicateIds}
-            onEntityClick={
-              selection.isSelectionMode
-                ? (entity) =>
-                    selection.handleEntitySelect(
-                      entity.id,
-                      !selection.selectedEntityIds.has(entity.id)
-                    )
-                : handleEntityClick
-            }
-            isSelectionMode={selection.isSelectionMode}
-            selectedEntityIds={selection.selectedEntityIds}
-            onEntitySelect={
-              selection.isSelectionMode
-                ? selection.handleEntitySelect
-                : undefined
-            }
-            onEntityDiscard={handleEntityDiscard}
-          />
-        </>
+        <EntitiesView
+          entities={entities}
+          filtering={filtering}
+          selection={selection}
+          handleEntityClick={handleEntityClick}
+          handleEntityDiscard={handleEntityDiscard}
+          selectedEntity={selectedEntity}
+          setSelectedEntity={setSelectedEntity}
+          handleEntitySave={handleEntitySave}
+          handleEntityMerge={handleEntityMerge}
+        />
       ) : (
-        <div className='json-output'>
-          <pre>
-            {JSON.stringify(
-              {
-                ...parsedData,
-                entities: entities,
-              },
-              null,
-              2
-            )}
-          </pre>
-        </div>
-      )}
-
-      {selectedEntity && (
-        <EntityEditModal
-          entity={selectedEntity}
-          onClose={() => setSelectedEntity(null)}
-          onSave={handleEntitySave}
-        />
-      )}
-
-      {selection.mergeModalEntities && (
-        <EntityMergeModal
-          entities={selection.mergeModalEntities}
-          onClose={() => selection.setMergeModalEntities(null)}
-          onMerge={handleEntityMerge}
-        />
+        <EntityViewerJsonView entities={entities} parsedData={parsedData} />
       )}
     </div>
   );

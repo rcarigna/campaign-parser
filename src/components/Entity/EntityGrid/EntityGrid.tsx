@@ -30,7 +30,7 @@ export const EntityGrid = ({
   }
 
   return (
-    <div className='entity-grid'>
+    <div className='entity-grid' role='grid'>
       {entities.map((entity) => {
         const isDuplicate = duplicateIds.has(entity.id);
         const missingFields = getMissingFields(entity);
