@@ -74,7 +74,7 @@ export const ProcessingWorkflow = ({
       <Box>
         <Typography
           variant='h3'
-          className='text-xl font-semibold text-gray-800 mb-4'
+          className='text-xl font-semibold text-gray-800 mb-4 display-flex items-center'
         >
           📤 Upload Document
         </Typography>
