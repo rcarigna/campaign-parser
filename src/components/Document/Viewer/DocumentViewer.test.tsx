@@ -29,16 +29,14 @@ describe('DocumentViewer', () => {
     render(<DocumentViewer {...markdownProps} />);
 
     // Initially should show formatted view
-    expect(screen.getByRole('button', { name: /formatted/i })).toHaveClass(
-      'document-toggle-btn active'
-    );
+    expect(screen.getByRole('button', { name: /formatted/i })).toBePressed();
 
     // Click raw markdown button
     const rawButton = screen.getByRole('button', { name: /raw markdown/i });
     await userEvent.click(rawButton);
 
     // Should now show raw view
-    expect(rawButton).toHaveClass('document-toggle-btn active');
+    expect(rawButton).toBePressed();
 
     // Should display the raw content in a pre tag
     const preElement = document.querySelector('pre');
@@ -63,16 +61,14 @@ describe('DocumentViewer', () => {
     render(<DocumentViewer {...mockWordProps} />);
 
     // Initially should show rendered view
-    expect(screen.getByRole('button', { name: /rendered/i })).toHaveClass(
-      'document-toggle-btn active'
-    );
+    expect(screen.getByRole('button', { name: /rendered/i })).toBePressed();
 
     // Click plain text button
     const plainTextButton = screen.getByRole('button', { name: /plain text/i });
     await userEvent.click(plainTextButton);
 
     // Should now show plain text view
-    expect(plainTextButton).toHaveClass('document-toggle-btn active');
+    expect(plainTextButton).toBePressed();
 
     // Should display the plain text in a pre tag
     const preElement = document.querySelector('pre');
@@ -89,7 +85,7 @@ describe('DocumentViewer', () => {
     await userEvent.click(formattedButton);
 
     // Should show formatted view again
-    expect(formattedButton).toHaveClass('document-toggle-btn active');
+    expect(formattedButton).toBePressed();
     expect(document.querySelector('pre')).not.toBeInTheDocument();
     expect(screen.getByText('Test Header')).toBeInTheDocument();
   });
@@ -103,7 +99,7 @@ describe('DocumentViewer', () => {
     await userEvent.click(renderedButton);
 
     // Should show rendered view again
-    expect(renderedButton).toHaveClass('document-toggle-btn active');
+    expect(renderedButton).toBePressed();
     expect(document.querySelector('pre')).not.toBeInTheDocument();
     expect(screen.getByText('Word document content')).toBeInTheDocument();
   });
