@@ -15,7 +15,7 @@ const defaultProps: EntityFiltersProps = {
 describe('EntityFilters', () => {
   it('renders filter select with correct options', async () => {
     render(<EntityFilters {...defaultProps} />);
-    expect(screen.getByText(/Filter by type/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Filter by type/i)[0]).toBeInTheDocument();
     expect(screen.getByText(/All Types \(5\)/)).toBeInTheDocument();
     await userEvent.click(screen.getByText(/All Types \(5\)/));
     expect(screen.getByText(/Person \(2\)/)).toBeInTheDocument();

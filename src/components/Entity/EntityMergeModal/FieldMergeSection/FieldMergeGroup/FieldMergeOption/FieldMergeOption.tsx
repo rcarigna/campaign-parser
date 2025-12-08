@@ -67,7 +67,7 @@ export const CustomValueOption = ({
     }
   };
   return (
-    <Typography component='label' className='field-option custom-option'>
+    <Box className='field-option custom-option'>
       <Radio
         name={groupName}
         value={customValueKey}
@@ -93,6 +93,6 @@ export const CustomValueOption = ({
           💡 Tip: You can combine values from multiple entities above
         </Box>
       </Box>
-    </Typography>
+    </Box>
   );
 };

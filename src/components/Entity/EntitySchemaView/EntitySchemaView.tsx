@@ -69,7 +69,7 @@ export const EntitySchemaView = ({
             <Typography component='span'>
               Fields marked with
               <Typography component='span' className='text-red-500 font-bold'>
-                *
+                {' *'}
               </Typography>{' '}
               are required
             </Typography>

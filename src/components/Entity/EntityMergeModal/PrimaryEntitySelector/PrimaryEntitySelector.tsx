@@ -13,7 +13,7 @@ export const PrimaryEntitySelector: React.FC<PrimaryEntitySelectorProps> = ({
     <Typography variant='h3'>1. Select Primary Entity</Typography>
     <Box className='entity-selector'>
       {entities.map((entity) => (
-        <Box key={entity.id} className='entity-option'>
+        <Box component='label' key={entity.id} className='entity-option'>
           <Radio
             name='primary-entity'
             value={entity.id}
