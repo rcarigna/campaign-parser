@@ -34,7 +34,9 @@ const DocumentViewToggle = ({
     <ToggleButtonGroup
       value={showRaw ? 'raw' : 'formatted'}
       exclusive
-      onChange={() => setShowRaw(!showRaw)}
+      onChange={(_, value) => {
+        if (value !== null) setShowRaw(value === 'raw');
+      }}
     >
       <ToggleButton value='formatted'>{showFormattedLabel}</ToggleButton>
       <ToggleButton value='raw'>{showRawLabel}</ToggleButton>
