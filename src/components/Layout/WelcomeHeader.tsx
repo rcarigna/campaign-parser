@@ -2,7 +2,12 @@ import { Box, Typography } from '@mui/material';
 
 export const WelcomeHeader = () => {
   return (
-    <Box className='text-center mb-8'>
+    <Box
+      display='flex'
+      flexDirection={'column'}
+      alignItems={'center'}
+      textAlign={'center'}
+    >
       <Box className='text-6xl mb-4'>📜</Box>
       <Typography
         variant='h2'
