@@ -73,7 +73,7 @@ export const ProcessingWorkflow = ({
       {/* File Upload Section */}
       <Box>
         <Typography
-          variant='h2'
+          variant='h3'
           className='text-xl font-semibold text-gray-800 mb-4'
         >
           📤 Upload Document
