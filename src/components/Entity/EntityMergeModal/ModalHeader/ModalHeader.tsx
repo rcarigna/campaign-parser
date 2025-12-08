@@ -9,7 +9,7 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({ title, onClose }) => (
     <IconButton
       className='modal-close'
       onClick={onClose}
-      data-testid='close-Button'
+      data-testid='close-button'
     >
       <CloseIcon />
     </IconButton>

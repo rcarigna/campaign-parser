@@ -31,7 +31,7 @@ export const EntityFilters = ({
           id='type-filter'
           value={filterType}
           onChange={(e) => onFilterChange(e.target.value as EntityFilterType)}
-          className='filter-Select'
+          className='filter-select'
         >
           <MenuItem value='all'>All Types ({totalEntities})</MenuItem>
           {Object.entries(typeCounts).map(([type, count]) => (

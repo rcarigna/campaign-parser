@@ -21,7 +21,7 @@ describe('ModalHeader', () => {
     const closeButton = screen.getByRole('button');
     expect(closeButton).toBeInTheDocument();
     expect(closeButton).toHaveClass('modal-close');
-    expect(closeButton).toHaveAttribute('data-testid', 'close-Button');
+    expect(closeButton).toHaveAttribute('data-testid', 'close-button');
     expect(closeButton.querySelector('svg')).toBeInTheDocument();
   });
 
