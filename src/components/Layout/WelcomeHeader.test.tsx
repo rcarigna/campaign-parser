@@ -2,15 +2,10 @@ import { render, screen } from '@testing-library/react';
 import { WelcomeHeader } from './WelcomeHeader';
 
 describe('WelcomeHeader', () => {
-  it('renders the emoji', () => {
-    render(<WelcomeHeader />);
-    expect(screen.getByText('📜')).toBeInTheDocument();
-  });
-
   it('renders the main heading', () => {
     render(<WelcomeHeader />);
     expect(
-      screen.getByRole('heading', { name: /welcome to campaign parser/i })
+      screen.getByRole('heading', { name: /📜 welcome to campaign parser/i })
     ).toBeInTheDocument();
   });
 
