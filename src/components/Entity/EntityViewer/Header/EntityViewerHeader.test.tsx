@@ -6,6 +6,7 @@ import {
 import { UseEntityFilteringReturn } from '../hooks';
 import { EntityKind } from '@/types';
 import { defaultMockEntities } from '@/components/__mocks__';
+import userEvent from '@testing-library/user-event';
 
 const mockFiltering: UseEntityFilteringReturn = {
   filterType: 'all',
@@ -62,11 +63,19 @@ describe('EntityViewerHeader', () => {
     expect(screen.queryByText(/Duplicates/i)).not.toBeInTheDocument();
   });
 
-  it('toggles view when toggle buttons are clicked', () => {
-    render(<EntityViewerHeader {...defaultProps} />);
-    fireEvent.click(screen.getByText(/Raw Data/i));
+  it('toggles view when toggle buttons are clicked', async () => {
+    const { rerender } = render(<EntityViewerHeader {...defaultProps} />);
+    expect(screen.getByText(/Raw Data/i)).not.toBePressed();
+    await userEvent.click(screen.getByText(/Raw Data/i));
     expect(defaultProps.setView).toHaveBeenCalledWith('json');
-    fireEvent.click(screen.getByText(/Entity View/i));
-    expect(defaultProps.setView).toHaveBeenCalledWith('entities');
+    // Simulate parent updating the view prop after click
+    rerender(<EntityViewerHeader {...defaultProps} view='json' />);
+    expect(screen.getByText(/Raw Data/i)).toBePressed();
+
+    expect(screen.getByText(/Entity View/i)).not.toBePressed();
+    await userEvent.click(screen.getByText(/Entity View/i));
+    expect(defaultProps.setView).toHaveBeenLastCalledWith('entities');
+    rerender(<EntityViewerHeader {...defaultProps} view='entities' />);
+    expect(screen.getByText(/Entity View/i)).toBePressed();
   });
 });

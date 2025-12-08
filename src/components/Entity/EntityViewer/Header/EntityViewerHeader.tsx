@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -22,22 +22,19 @@ const ViewToggle = ({
   view: 'entities' | 'json';
   setView: (view: 'entities' | 'json') => void;
 }) => {
+  const handleViewToggle = useCallback(
+    (_: React.MouseEvent<HTMLElement>, newView: 'entities' | 'json' | null) => {
+      console.log('Toggling view to:', newView);
+      if (newView !== null) {
+        setView(newView);
+      }
+    },
+    [setView]
+  );
   return (
-    <ToggleButtonGroup
-      value={view}
-      exclusive
-      onChange={(_, newView) => {
-        if (newView !== null) {
-          setView(newView);
-        }
-      }}
-    >
-      <ToggleButton value='entities'>
-        📋 Entity View
-      </ToggleButton>
-      <ToggleButton value='json'>
-        📄 Raw Data
-      </ToggleButton>
+    <ToggleButtonGroup value={view} exclusive onChange={handleViewToggle}>
+      <ToggleButton value='entities'>📋 Entity View</ToggleButton>
+      <ToggleButton value='json'>📄 Raw Data</ToggleButton>
     </ToggleButtonGroup>
   );
 };
