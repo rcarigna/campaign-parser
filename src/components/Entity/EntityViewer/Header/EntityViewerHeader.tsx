@@ -5,7 +5,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { EntityFilters } from '../../EntityFilters';
 import { UseEntityFilteringReturn } from '../hooks/useEntityFiltering';
 import IconButton from '@mui/material/IconButton';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { SectionTitle, FlexCenter } from '../../../Layout/CommonStyled';
 
 export type EntityViewerHeaderProps = {

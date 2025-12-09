@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { ThemedButton, FlexCenter } from '../../Layout/CommonStyled';
 import { ActionButtonsProps } from '@/types';
 
