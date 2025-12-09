@@ -6,6 +6,7 @@ import {
   type EntityWithId,
 } from '@/types';
 import { Box, Typography } from '@mui/material';
+import { SectionContainer, SectionTitle } from './CommonStyled';
 
 type ResultsSectionProps = {
   parsedData: SerializedParsedDocumentWithEntities;
@@ -23,20 +24,17 @@ export const ResultsSection = ({
   onEntityMerge,
 }: ResultsSectionProps) => {
   return (
-    <Box className='space-y-6'>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
       {/* Document Content */}
       <DocumentViewer data-testid='document-viewer' parsedData={parsedData} />
 
       {/* Entity Management */}
-      <Box className='bg-white rounded-lg shadow-sm border border-gray-200 p-6'>
-        <Box className='mb-4'>
-          <Typography
-            variant='h3'
-            className='text-xl font-semibold text-gray-800 mb-2'
-          >
+      <SectionContainer sx={{ p: 6 }}>
+        <Box sx={{ mb: 4 }}>
+          <SectionTitle component='h3' variant='h5' sx={{ mb: 2 }}>
             ✨ Extracted Entities
-          </Typography>
-          <Typography className='text-gray-600 text-sm'>
+          </SectionTitle>
+          <Typography sx={{ color: 'text.secondary', fontSize: '1rem' }}>
             The parser automatically identified {entities.length} entities from
             your document. You can view, edit, merge duplicates, and export them
             to Obsidian format.
@@ -49,7 +47,7 @@ export const ResultsSection = ({
           onEntityMerge={onEntityMerge}
           parsedData={parsedData}
         />
-      </Box>
+      </SectionContainer>
     </Box>
   );
 };

@@ -1,6 +1,7 @@
 import { EntityKind } from '@/types';
 import type { EntityMetadata } from '@/types';
 import { Box } from '@mui/material';
+import { EntityCardContainer } from '../CommonEntityStyled';
 
 type EntityTypeCardProps = {
   metadata: EntityMetadata;
@@ -16,8 +17,8 @@ export const EntityTypeCard = ({
   const { kind, emoji, label, description } = metadata;
 
   return (
-    <Box
-      className={`entity-type-card ${isSelected ? 'selected' : ''}`}
+    <EntityCardContainer
+      className={isSelected ? 'selected' : ''}
       onClick={() => onClick(kind)}
       role='button'
       tabIndex={0}
@@ -28,12 +29,15 @@ export const EntityTypeCard = ({
           onClick(kind);
         }
       }}
+      sx={{ textAlign: 'center' }}
     >
-      <Box className='text-2xl mb-2 text-center'>{emoji}</Box>
-      <Box className='text-sm font-medium text-gray-700 text-center mb-1'>
+      <Box sx={{ fontSize: 28, mb: 1 }}>{emoji}</Box>
+      <Box
+        sx={{ fontSize: 14, fontWeight: 500, color: 'text.primary', mb: 0.5 }}
+      >
         {label}
       </Box>
-      <Box className='text-xs text-gray-500 text-center'>{description}</Box>
-    </Box>
+      <Box sx={{ fontSize: 12, color: 'text.secondary' }}>{description}</Box>
+    </EntityCardContainer>
   );
 };

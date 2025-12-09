@@ -1,4 +1,5 @@
 import { Box, Button, Typography, Checkbox } from '@mui/material';
+import { EntityCardContainer } from '../CommonEntityStyled';
 import { EntityCardProps } from '@/types';
 import { getEntityIcon } from '@/lib/utils/entity';
 
@@ -40,72 +41,84 @@ export const EntityCard = ({
   };
   try {
     return (
-      <Box
-        className={`entity-card entity-kind-${entity.kind} ${
+      <EntityCardContainer
+        className={`entity-kind-${entity.kind} ${
           isDuplicate ? 'duplicate' : ''
         } ${isSelected ? 'selected' : ''}`}
         onClick={handleCardClick}
       >
-        <Box className='entity-card-header'>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
           {isSelectable && (
             <Checkbox
               checked={isSelected}
               onChange={handleSelectChange}
-              className='entity-select-checkbox'
               data-testid={`select-checkbox-${entity.id}`}
+              sx={{ mr: 1 }}
             />
           )}
-          <Box component='span' className='entity-icon'>
+          <Box component='span' sx={{ fontSize: 24, mr: 1 }}>
             {getEntityIcon(entity.kind)}
           </Box>
-          <Box component='span' className='entity-type'>
+          <Box
+            component='span'
+            sx={{ fontSize: 12, color: 'text.secondary', mr: 1 }}
+          >
             {entity.kind}
           </Box>
           {isDuplicate && (
-            <Box component='span' className='duplicate-badge'>
+            <Box
+              component='span'
+              sx={{ color: 'error.main', fontWeight: 600, fontSize: 12, ml: 1 }}
+            >
               DUPE
             </Box>
           )}
           {onDiscard && (
             <Button
               data-testid={`discard-button-${entity.id}`}
-              className='entity-discard-btn'
               onClick={handleDiscardClick}
               title={`Discard ${entity.title}`}
               aria-label={`Discard ${entity.title}`}
+              sx={{ ml: 'auto', minWidth: 0, px: 1, color: 'error.main' }}
             >
               🗑️
             </Button>
           )}
         </Box>
 
-        <Typography variant='h4' className='entity-title'>
+        <Typography variant='h4' sx={{ fontWeight: 600, mb: 1 }}>
           {entity.title}
         </Typography>
-        <Box className='entity-details'>
+        <Box sx={{ fontSize: 13, color: 'text.secondary', mb: 1 }}>
           {'role' in entity && entity.role && (
-            <Box className='detail-item'>Role: {entity.role}</Box>
+            <Box component='span' sx={{ mr: 1 }}>
+              Role: {entity.role}
+            </Box>
           )}
           {'type' in entity && entity.type && (
-            <Box className='detail-item'>Type: {entity.type}</Box>
+            <Box component='span' sx={{ mr: 1 }}>
+              Type: {entity.type}
+            </Box>
           )}
           {'status' in entity && entity.status && (
-            <Box className='detail-item'>Status: {entity.status}</Box>
+            <Box component='span' sx={{ mr: 1 }}>
+              Status: {entity.status}
+            </Box>
           )}
           {entity.sourceSessions && (
-            <Box className='detail-item'>
+            <Box component='span' sx={{ mr: 1 }}>
               Sessions: {entity.sourceSessions?.join(', ')}
             </Box>
           )}
         </Box>
 
         {missingFields.length > 0 && (
-          <Box className='missing-fields'>
-            <span className='missing-label'>Missing:</span>
-            <span className='missing-list'>{missingFields.join(', ')}</span>
+          <Box sx={{ fontSize: 12, color: 'warning.main', mt: 1 }}>
+            <span style={{ fontWeight: 500 }}>Missing:</span>
+            <span> {missingFields.join(', ')}</span>
           </Box>
         )}
-      </Box>
+      </EntityCardContainer>
     );
   } catch (error) {
     console.error('Error rendering EntityCard:', error);

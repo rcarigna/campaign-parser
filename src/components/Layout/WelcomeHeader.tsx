@@ -1,20 +1,20 @@
 import { Box, Typography } from '@mui/material';
+import { SectionTitle } from './CommonStyled';
 
 export const WelcomeHeader = () => {
   return (
     <Box
       display='flex'
-      flexDirection={'column'}
-      alignItems={'center'}
-      textAlign={'center'}
+      flexDirection='column'
+      alignItems='center'
+      textAlign='center'
     >
-      <Typography
-        variant='h2'
-        className='text-2xl font-semibold text-gray-800 mb-4'
-      >
+      <SectionTitle component='h2' variant='h2' sx={{ mb: 4 }}>
         📜 Welcome to Campaign Parser
-      </Typography>
-      <Typography className='text-gray-600 max-w-2xl mx-auto mb-6'>
+      </SectionTitle>
+      <Typography
+        sx={{ color: 'text.secondary', maxWidth: 600, mx: 'auto', mb: 6 }}
+      >
         Upload campaign documents (.docx, .md) or try the demo to automatically
         identify and extract entities like NPCs, locations, items, and quests,
         making it easy to manage your tabletop RPG campaigns.

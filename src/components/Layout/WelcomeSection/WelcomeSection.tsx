@@ -3,7 +3,13 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { loadDemoData, type DemoDataResponse } from '@/client/api';
-import { Box, Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
+import {
+  SectionContainer,
+  ThemedButton,
+  SectionTitle,
+  ThemedSpinner,
+} from '../CommonStyled';
 
 type WelcomeSectionProps = {
   onDemoDataLoaded: (data: DemoDataResponse) => void;
@@ -29,34 +35,27 @@ export const WelcomeSection = ({ onDemoDataLoaded }: WelcomeSectionProps) => {
   };
 
   return (
-    <Box className='bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border border-purple-200 p-6 text-center mb-6'>
-      <Typography
-        variant='h3'
-        className='text-xl font-semibold text-gray-800 mb-3'
-      >
+    <SectionContainer sx={{ textAlign: 'center', p: 6, mb: 6 }}>
+      <SectionTitle component='h3' variant='h3'>
         🎭 Try the Demo
-      </Typography>
-      <Typography className='text-gray-600 text-sm mb-4'>
+      </SectionTitle>
+      <Typography sx={{ color: 'text.secondary', fontSize: '1rem', mb: 4 }}>
         See how the parser works with an example D&D session note that includes
         NPCs, locations, and quests.
       </Typography>
-      <Button
-        onClick={handleLoadDemo}
-        disabled={loadingDemo}
-        className='px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium transition-colors flex items-center gap-2 mx-auto'
-      >
+      <ThemedButton onClick={handleLoadDemo} disabled={loadingDemo}>
         {loadingDemo ? (
           <>
-            <Box className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></Box>
+            <ThemedSpinner />
             Loading Demo...
           </>
         ) : (
           <>
-            <Typography>🚀</Typography>
+            <Typography component='span'>🚀</Typography>
             Load Demo Session
           </>
         )}
-      </Button>
-    </Box>
+      </ThemedButton>
+    </SectionContainer>
   );
 };

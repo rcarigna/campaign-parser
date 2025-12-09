@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material';
+import { SectionTitle } from '../CommonStyled';
 
 type HeaderProps = {
   title: string;
@@ -8,13 +9,12 @@ type HeaderProps = {
 export const Header = ({ title, subtitle }: HeaderProps) => {
   return (
     <Box component='header' role='banner'>
-      <Typography
-        component='h1'
-        className='text-3xl font-bold text-gray-900 mb-2'
-      >
+      <SectionTitle component='h1' variant='h3' sx={{ mb: 2 }}>
         {title}
+      </SectionTitle>
+      <Typography sx={{ color: 'text.secondary', mb: 4 }}>
+        {subtitle}
       </Typography>
-      <Typography className='text-gray-600 mb-8'>{subtitle}</Typography>
     </Box>
   );
 };
