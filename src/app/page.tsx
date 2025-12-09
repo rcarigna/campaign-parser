@@ -47,7 +47,7 @@ export default function Home() {
   return (
     <MuiRootProvider>
       <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: 6 }}>
-        <SectionContainer sx={{ maxWidth: 960, mx: 'auto', p: 0 }}>
+        <SectionContainer sx={{ maxWidth: 1400, mx: 'auto', p: 0 }}>
           <Box sx={{ p: { xs: 2, sm: 4 } }}>
             <PersistentWelcome />
 
