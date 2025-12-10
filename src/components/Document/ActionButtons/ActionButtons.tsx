@@ -1,4 +1,5 @@
 import { ThemedButton, FlexCenter } from '../../Layout/CommonStyled';
+import { Button } from '@mui/material';
 import { ActionButtonsProps } from '@/types';
 
 export const ActionButtons = ({
@@ -22,9 +23,19 @@ export const ActionButtons = ({
       <ThemedButton onClick={handleProcess} disabled={loading}>
         {loading ? 'Parsing...' : 'Parse Document'}
       </ThemedButton>
-      <ThemedButton onClick={onReset} color='secondary' variant='outlined'>
+      <Button
+        onClick={onReset}
+        variant='outlined'
+        color='secondary'
+        sx={{
+          px: 3,
+          py: 1.5,
+          borderRadius: (theme) => theme.shape.borderRadius,
+          fontWeight: 500,
+        }}
+      >
         Reset
-      </ThemedButton>
+      </Button>
     </FlexCenter>
   );
 };

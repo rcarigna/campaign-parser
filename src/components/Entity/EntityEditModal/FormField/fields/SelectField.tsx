@@ -1,5 +1,4 @@
 import { FieldValues, UseFormRegister } from 'react-hook-form';
-import { FieldLabel } from './FieldLabel';
 import {
   FormControl,
   InputLabel,
@@ -24,10 +23,8 @@ export const SelectField = ({
   options,
   register,
 }: SelectFieldProps) => (
-  <FormControl fullWidth size='small' sx={{ mb: 2 }}>
-    <InputLabel id={`${fieldKey}-label`}>
-      <FieldLabel htmlFor={fieldKey} label={label} required={required} />
-    </InputLabel>
+  <FormControl fullWidth size='small' sx={{ mb: 2 }} required={required}>
+    <InputLabel id={`${fieldKey}-label`}>{label}</InputLabel>
     <MuiSelect
       labelId={`${fieldKey}-label`}
       id={fieldKey}

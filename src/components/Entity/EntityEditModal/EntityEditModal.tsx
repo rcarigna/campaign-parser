@@ -50,7 +50,7 @@ const EditModalHeader = ({
         justifyContent: 'space-between',
       }}
     >
-      <SectionTitle component='h3' variant='h5' sx={{ mb: 0 }}>
+      <SectionTitle component='h3' variant='h5' sx={{ mb: 0 }} id='entity-edit-modal-title'>
         Edit Entity: {title}
       </SectionTitle>
       <IconButton
@@ -163,7 +163,7 @@ export const EntityEditModal = ({
       sx={{
         position: 'fixed',
         inset: 0,
-        bgcolor: 'rgba(30,30,40,0.7)',
+        bgcolor: 'rgba(0, 0, 0, 0.7)',
         overflowY: 'auto',
         height: '100vh',
         width: '100vw',
@@ -173,6 +173,9 @@ export const EntityEditModal = ({
         justifyContent: 'center',
         p: 2,
       }}
+      role='dialog'
+      aria-modal='true'
+      aria-labelledby='entity-edit-modal-title'
       data-testid='modal-overlay'
       onClick={onClose}
     >

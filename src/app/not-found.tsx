@@ -4,7 +4,7 @@ import MuiRootProvider from '@/components/MuiRootProvider';
 import { Box, Typography, Button } from '@mui/material';
 import Link from 'next/link';
 
-export default function NotFound() {
+const NotFound = () => {
   return (
     <MuiRootProvider>
       <Box
@@ -28,4 +28,6 @@ export default function NotFound() {
       </Box>
     </MuiRootProvider>
   );
-}
+};
+
+export default NotFound;

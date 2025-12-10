@@ -2,7 +2,7 @@
 
 import { FileUpload, ActionButtons } from '@/components';
 import { ALLOWED_EXTENSIONS, ProcessingWorkflowProps } from '@/types';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import {
   SectionContainer,
   ThemedButton,
@@ -147,7 +147,7 @@ export const ProcessingWorkflow = ({
             </Typography>
             <Typography sx={{ color: 'error.dark', ml: 2 }}>{error}</Typography>
           </FlexCenter>
-          <ThemedButton
+          <Button
             onClick={onClearError}
             sx={{
               mt: 2,
@@ -160,7 +160,7 @@ export const ProcessingWorkflow = ({
             }}
           >
             Clear Error
-          </ThemedButton>
+          </Button>
         </SectionContainer>
       )}
     </Box>

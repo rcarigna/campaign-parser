@@ -29,7 +29,11 @@ export const BooleanField = ({
       sx={{ fontSize: 15, color: 'text.primary', fontWeight: 500 }}
     >
       {label}
-      {required && <span style={{ color: '#ff5252', marginLeft: 4 }}>*</span>}
+      {required && (
+        <Box component='span' sx={{ color: 'error.main', ml: 0.5 }}>
+          *
+        </Box>
+      )}
     </Typography>
   </Box>
 );

@@ -1,10 +1,35 @@
 import { createTheme } from '@mui/material/styles';
 
+// Augment MUI palette type to include 'lighter' shades
+declare module '@mui/material/styles' {
+  interface PaletteColor {
+    lighter?: string;
+  }
+  interface SimplePaletteColorOptions {
+    lighter?: string;
+  }
+}
+
 const underdark = createTheme({
     palette: {
         mode: 'dark',
         primary: { main: '#807596' },
         secondary: { main: '#637089' },
+        success: {
+            main: '#4caf50',
+            light: '#81c784',
+            lighter: '#1b5e20',
+        },
+        error: {
+            main: '#f44336',
+            light: '#e57373',
+            lighter: '#b71c1c',
+        },
+        info: {
+            main: '#2196f3',
+            light: '#64b5f6',
+            lighter: '#0d47a1',
+        },
         background: {
             default: '#16171d',
             paper: '#23232B',      // a bit brighter so the gradient shows

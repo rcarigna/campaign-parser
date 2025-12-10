@@ -16,7 +16,8 @@ import {
 import { EntityViewerHeader } from './Header';
 import { EntitiesView } from './EntitiesView';
 import { EntityViewerJsonView } from './JsonView';
-import { SectionContainer } from '../../Layout/CommonStyled';
+import { SectionContainer, SectionTitle } from '../../Layout/CommonStyled';
+import { Typography } from '@mui/material';
 
 type EntityViewerProps = {
   entities: EntityWithId[];
@@ -46,10 +47,12 @@ export const EntityViewer = ({
   if (entities?.length === 0) {
     return (
       <SectionContainer data-testid='entity-viewer'>
-        <h3>Extracted Entities</h3>
-        <p style={{ color: '#888', fontStyle: 'italic' }}>
+        <SectionTitle component='h3' variant='h5'>
+          Extracted Entities
+        </SectionTitle>
+        <Typography sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
           No entities found in this document.
-        </p>
+        </Typography>
       </SectionContainer>
     );
   }
