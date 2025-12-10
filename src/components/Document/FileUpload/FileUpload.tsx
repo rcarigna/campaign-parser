@@ -65,7 +65,15 @@ export const FileUpload = ({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <Box component='input' type='file' role='button' id='file-input' accept={allowedExtensions.join(',')} onChange={handleFileChange} sx={{ display: 'none' }} />
+        <Box
+          component='input'
+          type='file'
+          role='button'
+          id='file-input'
+          accept={allowedExtensions.join(',')}
+          onChange={handleFileChange}
+          sx={{ display: 'none' }}
+        />
         <Typography
           component='label'
           htmlFor='file-input'
