@@ -1,5 +1,4 @@
 import { FieldValues, UseFormRegister } from 'react-hook-form';
-import { FieldLabel } from './FieldLabel';
 import { TextField as MuiTextField, Typography } from '@mui/material';
 
 type ArrayFieldProps = {
@@ -22,9 +21,8 @@ export const ArrayField = ({
   <>
     <MuiTextField
       id={fieldKey}
-      label={
-        <FieldLabel htmlFor={fieldKey} label={label} required={required} />
-      }
+      label={label}
+      required={required}
       variant='outlined'
       size='small'
       fullWidth

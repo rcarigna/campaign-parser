@@ -114,7 +114,9 @@ export const EntityCard = ({
 
         {missingFields.length > 0 && (
           <Box sx={{ fontSize: 12, color: 'warning.main', mt: 1 }}>
-            <span style={{ fontWeight: 500 }}>Missing:</span>
+            <Box component='span' sx={{ fontWeight: 500 }}>
+              Missing:
+            </Box>
             <span> {missingFields.join(', ')}</span>
           </Box>
         )}

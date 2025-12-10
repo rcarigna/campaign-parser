@@ -4,7 +4,7 @@ type FieldLabelProps = {
   required?: boolean;
 };
 
-import { Typography } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 
 export const FieldLabel = ({ htmlFor, label, required }: FieldLabelProps) => (
   <Typography
@@ -19,6 +19,10 @@ export const FieldLabel = ({ htmlFor, label, required }: FieldLabelProps) => (
     }}
   >
     {label}
-    {required && <span style={{ color: '#ff5252', marginLeft: 4 }}>*</span>}
+    {required && (
+      <Box component='span' sx={{ color: 'error.main', ml: 0.5 }}>
+        *
+      </Box>
+    )}
   </Typography>
 );

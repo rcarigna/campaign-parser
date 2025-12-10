@@ -1,5 +1,11 @@
 import { Box, Button, Typography, TypographyProps } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, keyframes } from '@mui/material/styles';
+
+const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 // Panel/Section Container
 export const SectionContainer = styled(Box)(({ theme }) => ({
@@ -29,7 +35,6 @@ export const ThemedButton = styled(Button)(({ theme }) => ({
     '&.Mui-disabled': {
         background: theme.palette.action.disabledBackground,
         color: theme.palette.action.disabled,
-        cursor: 'not-allowed',
     },
 }));
 
@@ -42,14 +47,11 @@ export const SectionTitle = styled(Typography)<TypographyProps>(({ theme }) => (
 
 // Spinner/Loader
 export const ThemedSpinner = styled(Box)(({ theme }) => ({
-    animation: 'spin 1s linear infinite',
+    animation: `${spin} 1s linear infinite`,
     borderRadius: '50%',
     height: 16,
     width: 16,
     borderBottom: `2px solid ${theme.palette.common.white}`,
-    '@keyframes spin': {
-        to: { transform: 'rotate(360deg)' },
-    },
 }));
 
 // Centered Flex Box
