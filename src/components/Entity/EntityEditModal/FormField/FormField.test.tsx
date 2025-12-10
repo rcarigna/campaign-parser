@@ -3,7 +3,6 @@ import { FormField } from './FormField';
 import { FieldMetadata, getEntityFields } from '@/types';
 import { EntityKind } from '@/types';
 import { mockNPCEntity, mockLocationEntity } from '../../../__mocks__';
-import userEvent from '@testing-library/user-event';
 
 const mockRegister = jest.fn();
 
