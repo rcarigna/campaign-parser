@@ -1,4 +1,5 @@
 import { FieldValues, UseFormRegister } from 'react-hook-form';
+import { Checkbox, Typography, Box } from '@mui/material';
 
 type BooleanFieldProps = {
   fieldKey: string;
@@ -14,22 +15,21 @@ export const BooleanField = ({
   required,
   defaultValue,
   register,
-}: BooleanFieldProps) => {
-  return (
-    <div className='mb-4'>
-      <div className='flex items-center'>
-        <input
-          type='checkbox'
-          id={fieldKey}
-          className='h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
-          defaultChecked={defaultValue}
-          {...register(fieldKey)}
-        />
-        <label htmlFor={fieldKey} className='ml-2 block text-sm text-gray-900'>
-          {label}
-          {required && <span className='text-red-500 ml-1'>*</span>}
-        </label>
-      </div>
-    </div>
-  );
-};
+}: BooleanFieldProps) => (
+  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+    <Checkbox
+      id={fieldKey}
+      defaultChecked={defaultValue}
+      {...register(fieldKey)}
+      sx={{ mr: 1 }}
+    />
+    <Typography
+      component='label'
+      htmlFor={fieldKey}
+      sx={{ fontSize: 15, color: 'text.primary', fontWeight: 500 }}
+    >
+      {label}
+      {required && <span style={{ color: '#ff5252', marginLeft: 4 }}>*</span>}
+    </Typography>
+  </Box>
+);

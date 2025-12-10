@@ -4,14 +4,21 @@ type FieldLabelProps = {
   required?: boolean;
 };
 
-export const FieldLabel = ({ htmlFor, label, required }: FieldLabelProps) => {
-  return (
-    <label
-      htmlFor={htmlFor}
-      className='block text-sm font-medium text-gray-700 mb-1'
-    >
-      {label}
-      {required && <span className='text-red-500 ml-1'>*</span>}
-    </label>
-  );
-};
+import { Typography } from '@mui/material';
+
+export const FieldLabel = ({ htmlFor, label, required }: FieldLabelProps) => (
+  <Typography
+    component='label'
+    htmlFor={htmlFor}
+    sx={{
+      display: 'block',
+      fontSize: 15,
+      fontWeight: 500,
+      color: 'text.primary',
+      mb: 1,
+    }}
+  >
+    {label}
+    {required && <span style={{ color: '#ff5252', marginLeft: 4 }}>*</span>}
+  </Typography>
+);
