@@ -34,8 +34,7 @@ describe('ActionButtons', () => {
     const { container } = render(<ActionButtons {...mockProps} />);
 
     const actionsDiv = container.querySelector('.actions');
-    expect(actionsDiv).toHaveClass('actions');
-    expect(actionsDiv).toBeEmptyDOMElement();
+    expect(actionsDiv).not.toBeInTheDocument();
   });
 
   it('should render process and reset buttons when file is selected', () => {

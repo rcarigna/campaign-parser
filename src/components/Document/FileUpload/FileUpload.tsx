@@ -66,6 +66,7 @@ export const FileUpload = ({
         onDrop={handleDrop}
       >
         <input
+          data-testid='file-upload-area'
           type='file'
           role='button'
           id='file-input'

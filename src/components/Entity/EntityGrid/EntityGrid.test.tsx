@@ -48,9 +48,7 @@ describe('EntityGrid', () => {
   it('calls onEntityClick when entity is clicked', () => {
     const props = setupProps();
     render(<EntityGrid {...props} />);
-    const entityCard = screen
-      .getByText(defaultEntities[0].title)
-      .closest('.entity-card');
+    const entityCard = screen.getByText(defaultEntities[0].title);
     fireEvent.click(entityCard!);
     expect(props.onEntityClick).toHaveBeenCalledWith(defaultEntities[0]);
   });

@@ -42,6 +42,7 @@ export const EntityCard = ({
   try {
     return (
       <EntityCardContainer
+        data-testid='entity-card'
         className={`entity-kind-${entity.kind} ${
           isDuplicate ? 'duplicate' : ''
         } ${isSelected ? 'selected' : ''}`}
