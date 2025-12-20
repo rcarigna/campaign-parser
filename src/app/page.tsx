@@ -6,9 +6,12 @@ import {
   ProcessingWorkflow,
   ResultsSection,
 } from '@/components';
+import MuiRootProvider from '@/components/MuiRootProvider';
 import { useCampaignParser, useFileManager } from '@/hooks';
 import { type DemoDataResponse } from '@/client/api';
 import { toast } from 'react-hot-toast';
+import { Box } from '@mui/material';
+import { SectionContainer } from '@/components/Layout/CommonStyled';
 
 export default function Home() {
   const campaignParser = useCampaignParser();
@@ -42,38 +45,40 @@ export default function Home() {
   const combinedError = fileManager.error || campaignParser.error;
 
   return (
-    <div className='min-h-screen bg-gray-50'>
-      <main className='container mx-auto px-4 py-8 max-w-6xl'>
-        <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8'>
-          <PersistentWelcome />
+    <MuiRootProvider>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: 6 }}>
+        <SectionContainer sx={{ maxWidth: 1400, mx: 'auto', p: 0 }}>
+          <Box sx={{ p: { xs: 2, sm: 4 } }}>
+            <PersistentWelcome />
 
-          {!hasContent && (
-            <WelcomeSection onDemoDataLoaded={handleDemoDataLoaded} />
+            {!hasContent && (
+              <WelcomeSection onDemoDataLoaded={handleDemoDataLoaded} />
+            )}
+
+            <ProcessingWorkflow
+              selectedFile={fileManager.selectedFile}
+              loading={campaignParser.loading}
+              error={combinedError}
+              hasContent={hasContent}
+              onFileSelect={handleFileSelect}
+              onProcess={handleProcessDocument}
+              onReset={handleClearResults}
+              onClearError={campaignParser.clearError}
+            />
+          </Box>
+
+          {/* Results Section */}
+          {campaignParser.parsedData && (
+            <ResultsSection
+              parsedData={campaignParser.parsedData}
+              entities={campaignParser.entities}
+              onEntityDiscard={campaignParser.discardEntity}
+              onEntityUpdate={campaignParser.updateEntity}
+              onEntityMerge={campaignParser.mergeEntities}
+            />
           )}
-
-          <ProcessingWorkflow
-            selectedFile={fileManager.selectedFile}
-            loading={campaignParser.loading}
-            error={combinedError}
-            hasContent={hasContent}
-            onFileSelect={handleFileSelect}
-            onProcess={handleProcessDocument}
-            onReset={handleClearResults}
-            onClearError={campaignParser.clearError}
-          />
-        </div>
-
-        {/* Results Section */}
-        {campaignParser.parsedData && (
-          <ResultsSection
-            parsedData={campaignParser.parsedData}
-            entities={campaignParser.entities}
-            onEntityDiscard={campaignParser.discardEntity}
-            onEntityUpdate={campaignParser.updateEntity}
-            onEntityMerge={campaignParser.mergeEntities}
-          />
-        )}
-      </main>
-    </div>
+        </SectionContainer>
+      </Box>
+    </MuiRootProvider>
   );
 }

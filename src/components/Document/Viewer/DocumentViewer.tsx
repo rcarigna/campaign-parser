@@ -7,6 +7,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';
+import { SectionContainer, SectionTitle } from '../../Layout/CommonStyled';
 import { MarkdownRenderer } from '../../MarkdownRenderer/MarkdownRenderer';
 import {
   type SerializedParsedDocumentWithEntities,
@@ -70,13 +71,22 @@ export const DocumentViewer = ({ parsedData }: DocumentViewerProps) => {
   const { raw, formatted, isMarkdown } = getDisplayContent();
 
   return (
-    <Box className='document-viewer' data-testid='document-viewer'>
-      <Box className='document-header'>
-        <Box className='document-header-info'>
-          <Typography variant='h3' className='document-title'>
+    <SectionContainer data-testid='document-viewer' sx={{ p: 0 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
+          alignItems: { sm: 'center' },
+          justifyContent: 'space-between',
+          px: 4,
+          pt: 4,
+        }}
+      >
+        <Box>
+          <SectionTitle component='h3' variant='h5' sx={{ mb: 1 }}>
             📄 Document Content
-          </Typography>
-          <Typography variant='body2' className='document-meta'>
+          </SectionTitle>
+          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
             {parsedData.filename} •{' '}
             {parsedData.type === DocumentType.MARKDOWN
               ? 'Markdown'
@@ -91,21 +101,37 @@ export const DocumentViewer = ({ parsedData }: DocumentViewerProps) => {
       </Box>
 
       {showRaw ? (
-        <Box component='pre' className='document-raw-content'>
+        <Box
+          component='pre'
+          sx={{
+            p: 4,
+            fontFamily: 'monospace',
+            fontSize: 14,
+            bgcolor: 'background.default',
+            borderRadius: 2,
+            mt: 2,
+            overflowX: 'auto',
+          }}
+        >
           {raw}
         </Box>
       ) : (
-        <Box className='document-formatted-content'>
+        <Box sx={{ p: 4 }}>
           {isMarkdown ? (
             <MarkdownRenderer markdown={formatted} />
           ) : (
             <Box
-              className='prose prose-sm max-w-none'
+              sx={{
+                fontFamily: 'inherit',
+                fontSize: 15,
+                color: 'text.primary',
+                maxWidth: '100%',
+              }}
               dangerouslySetInnerHTML={{ __html: formatted }}
             />
           )}
         </Box>
       )}
-    </Box>
+    </SectionContainer>
   );
 };

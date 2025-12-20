@@ -1,4 +1,4 @@
-import { Button, Box } from '@mui/material';
+import { ThemedButton, FlexCenter } from '../../Layout/CommonStyled';
 import { ActionButtonsProps } from '@/types';
 
 export const ActionButtons = ({
@@ -14,17 +14,17 @@ export const ActionButtons = ({
   };
 
   if (!selectedFile) {
-    return <div className='actions'></div>;
+    return <FlexCenter />;
   }
 
   return (
-    <Box className='actions'>
-      <Button onClick={handleProcess} disabled={loading} className='upload-btn'>
+    <FlexCenter sx={{ gap: 2, mt: 2 }}>
+      <ThemedButton onClick={handleProcess} disabled={loading}>
         {loading ? 'Parsing...' : 'Parse Document'}
-      </Button>
-      <Button onClick={onReset} className='reset-btn'>
+      </ThemedButton>
+      <ThemedButton onClick={onReset} color='secondary' variant='outlined'>
         Reset
-      </Button>
-    </Box>
+      </ThemedButton>
+    </FlexCenter>
   );
 };

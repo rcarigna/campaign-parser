@@ -1,4 +1,11 @@
-import { Box, MenuItem, InputLabel, Select, Checkbox, FormControl } from '@mui/material';
+import {
+  MenuItem,
+  InputLabel,
+  Select,
+  Checkbox,
+  FormControl,
+} from '@mui/material';
+import { FlexCenter } from '../../Layout/CommonStyled';
 import { EntityKind } from '@/types';
 import { getEntityIcon } from '@/lib/utils/entity';
 
@@ -24,37 +31,35 @@ export const EntityFilters = ({
   totalDuplicates,
 }: EntityFiltersProps) => {
   return (
-    <Box className='entity-controls'>
-      <Box className='filter-group'>
-        <FormControl fullWidth>
-          <InputLabel id='type-filter-label'>Filter by type</InputLabel>
-          <Select
-            labelId='type-filter-label'
-            id='type-filter'
-            value={filterType}
-            label='Filter by type'
-            onChange={(e) => onFilterChange(e.target.value as EntityFilterType)}
-            className='filter-select'
-          >
-            <MenuItem value='all'>All Types ({totalEntities})</MenuItem>
-            {Object.entries(typeCounts).map(([type, count]) => (
-              <MenuItem key={type} value={type}>
-                {getEntityIcon(type as EntityKind)} {type} ({count})
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-
-      <Box className='toggle-group'>
-        <InputLabel className='toggle-label'>
-          <Checkbox
-            checked={showDuplicates}
-            onChange={(e) => onDuplicateToggle(e.target.checked)}
-          />
-          Show only duplicates ({totalDuplicates})
-        </InputLabel>
-      </Box>
-    </Box>
+    <FlexCenter
+      sx={{ gap: 3, flexWrap: 'wrap', alignItems: 'center', mt: 2, mb: 2 }}
+    >
+      <FormControl sx={{ minWidth: 220 }}>
+        <InputLabel id='type-filter-label'>Filter by type</InputLabel>
+        <Select
+          labelId='type-filter-label'
+          id='type-filter'
+          value={filterType}
+          label='Filter by type'
+          onChange={(e) => onFilterChange(e.target.value as EntityFilterType)}
+        >
+          <MenuItem value='all'>All Types ({totalEntities})</MenuItem>
+          {Object.entries(typeCounts).map(([type, count]) => (
+            <MenuItem key={type} value={type}>
+              {getEntityIcon(type as EntityKind)} {type} ({count})
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <InputLabel
+        sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: 15 }}
+      >
+        <Checkbox
+          checked={showDuplicates}
+          onChange={(e) => onDuplicateToggle(e.target.checked)}
+        />
+        Show only duplicates ({totalDuplicates})
+      </InputLabel>
+    </FlexCenter>
   );
 };

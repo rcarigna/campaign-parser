@@ -2,8 +2,16 @@
 
 import { FileUpload, ActionButtons } from '@/components';
 import { ALLOWED_EXTENSIONS, ProcessingWorkflowProps } from '@/types';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import {
+  SectionContainer,
+  ThemedButton,
+  SectionTitle,
+  ThemedSpinner,
+  FlexCenter,
+} from '../CommonStyled';
 
+// @to-do: split into single interesting components
 export const ProcessingWorkflow = ({
   selectedFile,
   loading,
@@ -25,66 +33,76 @@ export const ProcessingWorkflow = ({
   // If we have content, show reset button instead of upload
   if (hasContent) {
     return (
-      <Box className='space-y-6'>
-        <Box className='bg-green-50 border border-green-200 rounded-lg p-6 text-center'>
-          <Box className='text-4xl mb-3'>✅</Box>
-          <Typography
-            variant='h3'
-            className='text-lg font-semibold text-gray-800 mb-2'
-          >
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <SectionContainer
+          sx={{
+            textAlign: 'center',
+            bgcolor: 'success.lighter',
+            borderColor: 'success.light',
+            p: 6,
+          }}
+        >
+          <Box sx={{ fontSize: 40, mb: 3 }}>✅</Box>
+          <SectionTitle component='h3' variant='h5' sx={{ mb: 2 }}>
             Content Loaded Successfully
-          </Typography>
-          <Typography className='text-gray-600 text-sm mb-4'>
+          </SectionTitle>
+          <Typography sx={{ color: 'text.secondary', fontSize: '1rem', mb: 4 }}>
             Your document has been processed. You can view the extracted
             entities below.
           </Typography>
-          <Button
-            onClick={onReset}
-            className='px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-medium transition-colors flex items-center gap-2 mx-auto'
-          >
-            <Typography>🔄</Typography>
+          <ThemedButton onClick={onReset}>
+            <Typography component='span'>🔄</Typography>
             Start Over
-          </Button>
-        </Box>
+          </ThemedButton>
+        </SectionContainer>
 
         {/* Error Display */}
         {error && (
-          <Box className='bg-red-50 border border-red-200 rounded-lg p-4'>
-            <Box className='flex items-center'>
-              <Typography className='text-red-600 font-medium'>
+          <SectionContainer
+            sx={{ bgcolor: 'error.lighter', borderColor: 'error.light', p: 4 }}
+          >
+            <FlexCenter sx={{ alignItems: 'center' }}>
+              <Typography sx={{ color: 'error.main', fontWeight: 500 }}>
                 ❌ Error:
               </Typography>
-              <Typography className='text-red-700 ml-2'>{error}</Typography>
-            </Box>
-            <Button
+              <Typography sx={{ color: 'error.dark', ml: 2 }}>
+                {error}
+              </Typography>
+            </FlexCenter>
+            <ThemedButton
               onClick={onClearError}
-              className='mt-2 text-red-600 hover:text-red-800 text-sm underline'
+              sx={{
+                mt: 2,
+                color: 'error.main',
+                background: 'none',
+                textDecoration: 'underline',
+                fontSize: 14,
+                fontWeight: 400,
+                '&:hover': { color: 'error.dark', background: 'none' },
+              }}
             >
               Clear Error
-            </Button>
-          </Box>
+            </ThemedButton>
+          </SectionContainer>
         )}
       </Box>
     );
   }
 
   return (
-    <Box className='space-y-6'>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
       {/* File Upload Section */}
-      <Box className='text-center'>
-        <Typography
-          variant='h3'
-          className='text-xl font-semibold text-gray-800 mb-4'
-        >
+      <SectionContainer sx={{ textAlign: 'center', p: 6 }}>
+        <SectionTitle component='h3' variant='h5' sx={{ mb: 4 }}>
           📤 Upload Document
-        </Typography>
+        </SectionTitle>
         <FileUpload
           onFileSelect={onFileSelect}
           selectedFile={selectedFile}
           error={error}
           allowedExtensions={ALLOWED_EXTENSIONS}
         />
-      </Box>
+      </SectionContainer>
 
       {/* Action Buttons */}
       {selectedFile && (
@@ -98,32 +116,52 @@ export const ProcessingWorkflow = ({
 
       {/* Processing Status */}
       {isLoading && (
-        <Box className='bg-blue-50 border border-blue-200 rounded-lg p-4'>
-          <Box className='flex items-center'>
-            <Box className='animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3'></Box>
-            <Typography className='text-blue-700 font-medium'>
+        <SectionContainer
+          sx={{ bgcolor: 'info.lighter', borderColor: 'info.light', p: 4 }}
+        >
+          <FlexCenter sx={{ alignItems: 'center' }}>
+            <ThemedSpinner
+              sx={{
+                height: 20,
+                width: 20,
+                borderBottomWidth: 2,
+                borderBottomColor: 'info.main',
+                mr: 2,
+              }}
+            />
+            <Typography sx={{ color: 'info.dark', fontWeight: 500 }}>
               {loadingMessage}
             </Typography>
-          </Box>
-        </Box>
+          </FlexCenter>
+        </SectionContainer>
       )}
 
       {/* Error Display */}
       {error && (
-        <Box className='bg-red-50 border border-red-200 rounded-lg p-4'>
-          <Box className='flex items-center'>
-            <Typography className='text-red-600 font-medium'>
+        <SectionContainer
+          sx={{ bgcolor: 'error.lighter', borderColor: 'error.light', p: 4 }}
+        >
+          <FlexCenter sx={{ alignItems: 'center' }}>
+            <Typography sx={{ color: 'error.main', fontWeight: 500 }}>
               ❌ Error:
             </Typography>
-            <Typography className='text-red-700 ml-2'>{error}</Typography>
-          </Box>
-          <Button
+            <Typography sx={{ color: 'error.dark', ml: 2 }}>{error}</Typography>
+          </FlexCenter>
+          <ThemedButton
             onClick={onClearError}
-            className='mt-2 text-red-600 hover:text-red-800 text-sm underline'
+            sx={{
+              mt: 2,
+              color: 'error.main',
+              background: 'none',
+              textDecoration: 'underline',
+              fontSize: 14,
+              fontWeight: 400,
+              '&:hover': { color: 'error.dark', background: 'none' },
+            }}
           >
             Clear Error
-          </Button>
-        </Box>
+          </ThemedButton>
+        </SectionContainer>
       )}
     </Box>
   );

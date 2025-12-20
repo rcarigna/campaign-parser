@@ -57,7 +57,9 @@ describe('EntityViewer', () => {
     expect(screen.getByText('Guard NPC')).toBeInTheDocument();
     expect(screen.getByText('Test Location')).toBeInTheDocument();
     expect(screen.getByText('Captain NPC')).toBeInTheDocument();
-    const filterSelect = screen.getByRole('combobox', { name: /filter by type/i });
+    const filterSelect = screen.getByRole('combobox', {
+      name: /filter by type/i,
+    });
     expect(filterSelect).toBeInTheDocument();
     await userEvent.click(filterSelect);
     // Select the NPC option from the dropdown
@@ -101,15 +103,17 @@ describe('EntityViewer', () => {
 
   it('opens entity edit modal when entity is clicked', async () => {
     setupEntityViewerTest((props) => render(<EntityViewer {...props} />));
-    const entityCard = screen.getByText('Guard NPC').closest('.entity-card');
+    const entityCard = screen.getByText('Guard NPC');
     await userEvent.click(entityCard!);
   });
 
   it('closes entity edit modal', async () => {
     setupEntityViewerTest((props) => render(<EntityViewer {...props} />));
-    const entityCard = screen.getByText('Guard NPC').closest('.entity-card');
+    const entityCard = screen.getByText('Guard NPC');
     await userEvent.click(entityCard!);
-    expect(await screen.findByText(/Save Changes/)).toBeInTheDocument();
+    await waitFor(async () =>
+      expect(await screen.findByText(/Edit Entity:/)).toBeInTheDocument()
+    );
     const closeButton = screen.getByTestId('close-button');
     await userEvent.click(closeButton);
     expect(
@@ -119,7 +123,7 @@ describe('EntityViewer', () => {
 
   it('handles entity save from modal', async () => {
     setupEntityViewerTest((props) => render(<EntityViewer {...props} />));
-    const entityCard = screen.getByText('Guard NPC').closest('.entity-card');
+    const entityCard = screen.getByText('Guard NPC');
     await userEvent.click(entityCard!);
     const titleInput = screen.getByLabelText(/title/i);
     await userEvent.clear(titleInput);

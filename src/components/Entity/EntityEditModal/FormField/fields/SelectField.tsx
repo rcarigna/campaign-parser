@@ -1,5 +1,11 @@
 import { FieldValues, UseFormRegister } from 'react-hook-form';
 import { FieldLabel } from './FieldLabel';
+import {
+  FormControl,
+  InputLabel,
+  Select as MuiSelect,
+  MenuItem,
+} from '@mui/material';
 
 type SelectFieldProps = {
   fieldKey: string;
@@ -17,25 +23,23 @@ export const SelectField = ({
   defaultValue,
   options,
   register,
-}: SelectFieldProps) => {
-  const baseInputClasses =
-    'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm';
-
-  return (
-    <div className='mb-4'>
+}: SelectFieldProps) => (
+  <FormControl fullWidth size='small' sx={{ mb: 2 }}>
+    <InputLabel id={`${fieldKey}-label`}>
       <FieldLabel htmlFor={fieldKey} label={label} required={required} />
-      <select
-        id={fieldKey}
-        className={baseInputClasses}
-        defaultValue={defaultValue}
-        {...register(fieldKey)}
-      >
-        {options?.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
+    </InputLabel>
+    <MuiSelect
+      labelId={`${fieldKey}-label`}
+      id={fieldKey}
+      defaultValue={defaultValue}
+      label={label}
+      {...register(fieldKey)}
+    >
+      {options?.map((option) => (
+        <MenuItem key={option.value} value={option.value}>
+          {option.label}
+        </MenuItem>
+      ))}
+    </MuiSelect>
+  </FormControl>
+);

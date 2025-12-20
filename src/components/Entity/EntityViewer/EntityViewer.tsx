@@ -16,7 +16,7 @@ import {
 import { EntityViewerHeader } from './Header';
 import { EntitiesView } from './EntitiesView';
 import { EntityViewerJsonView } from './JsonView';
-import { Box } from '@mui/material';
+import { SectionContainer } from '../../Layout/CommonStyled';
 
 type EntityViewerProps = {
   entities: EntityWithId[];
@@ -45,10 +45,12 @@ export const EntityViewer = ({
 
   if (entities?.length === 0) {
     return (
-      <Box className='entity-viewer'>
+      <SectionContainer data-testid='entity-viewer'>
         <h3>Extracted Entities</h3>
-        <p className='no-entities'>No entities found in this document.</p>
-      </Box>
+        <p style={{ color: '#888', fontStyle: 'italic' }}>
+          No entities found in this document.
+        </p>
+      </SectionContainer>
     );
   }
 
@@ -141,7 +143,7 @@ export const EntityViewer = ({
   };
 
   return (
-    <Box className='entity-viewer' data-testid='entity-viewer'>
+    <SectionContainer data-testid='entity-viewer'>
       <EntityViewerHeader
         entitiesLength={entities.length}
         isExporting={isExporting}
@@ -166,6 +168,6 @@ export const EntityViewer = ({
       ) : (
         <EntityViewerJsonView entities={entities} parsedData={parsedData} />
       )}
-    </Box>
+    </SectionContainer>
   );
 };

@@ -77,8 +77,8 @@ describe('EntityCard', () => {
 
   it('calls onClick when card is clicked', () => {
     renderEntityCard();
-    const card = screen.getByText('Test NPC').closest('.entity-card');
-    fireEvent.click(card!);
+    const card = screen.getByTestId('entity-card');
+    fireEvent.click(card);
     expect(mockOnClick).toHaveBeenCalledWith(mockEntity);
   });
 
@@ -160,7 +160,7 @@ describe('EntityCard', () => {
 
   it('applies correct CSS classes based on props', () => {
     renderEntityCard({ isDuplicate: true, isSelected: true });
-    const card = screen.getByText('Test NPC').closest('.entity-card');
-    expect(card).toHaveClass('entity-card', 'duplicate', 'selected');
+    const card = screen.getByTestId('entity-card');
+    expect(card).toHaveClass('entity-kind-npc', 'duplicate', 'selected');
   });
 });

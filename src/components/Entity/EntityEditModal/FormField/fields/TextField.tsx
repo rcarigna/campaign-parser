@@ -1,5 +1,6 @@
 import { FieldValues, UseFormRegister } from 'react-hook-form';
 import { FieldLabel } from './FieldLabel';
+import { TextField as MuiTextField } from '@mui/material';
 
 type TextFieldProps = {
   fieldKey: string;
@@ -17,21 +18,16 @@ export const TextField = ({
   placeholder,
   defaultValue,
   register,
-}: TextFieldProps) => {
-  const baseInputClasses =
-    'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm';
-
-  return (
-    <div className='mb-4'>
-      <FieldLabel htmlFor={fieldKey} label={label} required={required} />
-      <input
-        type='text'
-        id={fieldKey}
-        className={baseInputClasses}
-        placeholder={placeholder}
-        defaultValue={defaultValue}
-        {...register(fieldKey)}
-      />
-    </div>
-  );
-};
+}: TextFieldProps) => (
+  <MuiTextField
+    id={fieldKey}
+    label={<FieldLabel htmlFor={fieldKey} label={label} required={required} />}
+    variant='outlined'
+    size='small'
+    fullWidth
+    placeholder={placeholder}
+    defaultValue={defaultValue}
+    {...register(fieldKey)}
+    sx={{ mb: 2 }}
+  />
+);

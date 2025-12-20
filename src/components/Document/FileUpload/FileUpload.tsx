@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Box, Typography } from '@mui/material';
+import { SectionContainer, FlexCenter } from '../../Layout/CommonStyled';
 import { FileUploadProps } from '@/types';
 
 export const FileUpload = ({
@@ -44,25 +45,39 @@ export const FileUpload = ({
   );
 
   return (
-    <>
-      <Box
-        className={`upload-area ${dragOver ? 'drag-over' : ''}`}
+    <SectionContainer
+      sx={{
+        p: 0,
+        bgcolor: dragOver ? 'action.hover' : 'background.paper',
+        borderStyle: dragOver ? 'dashed' : 'solid',
+        borderColor: dragOver ? 'primary.main' : 'divider',
+        transition: 'all 0.2s',
+      }}
+    >
+      <FlexCenter
+        sx={{
+          minHeight: 120,
+          flexDirection: 'column',
+          cursor: 'pointer',
+          p: 3,
+        }}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
         <input
+          data-testid='file-upload-area'
           type='file'
           role='button'
           id='file-input'
           accept={allowedExtensions.join(',')}
           onChange={handleFileChange}
-          className='file-input-hidden'
+          style={{ display: 'none' }}
         />
         <Typography
           component='label'
           htmlFor='file-input'
-          className='file-input-label'
+          sx={{ width: '100%', cursor: 'pointer' }}
         >
           {selectedFile ? (
             <Box>
@@ -82,9 +97,14 @@ export const FileUpload = ({
             </Box>
           )}
         </Typography>
-      </Box>
-
-      {error && <Box className='error'>{error}</Box>}
-    </>
+      </FlexCenter>
+      {error && (
+        <Box
+          sx={{ color: 'error.main', mt: 2, textAlign: 'center', fontSize: 14 }}
+        >
+          {error}
+        </Box>
+      )}
+    </SectionContainer>
   );
 };

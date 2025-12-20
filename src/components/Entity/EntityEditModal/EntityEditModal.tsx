@@ -8,6 +8,7 @@ import {
   MenuItem,
   IconButton,
 } from '@mui/material';
+import { SectionTitle } from '../../Layout/CommonStyled';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   getEntityFields,
@@ -33,17 +34,31 @@ const EditModalHeader = ({
   onClose: () => void;
   title: string;
 }) => (
-  <Box className='bg-gray-50 px-6 py-4 border-b border-gray-200'>
-    <Box className='flex items-center justify-between'>
-      <Typography variant='h3' className='text-lg font-medium text-gray-900'>
+  <Box
+    sx={{
+      bgcolor: 'background.paper',
+      px: 4,
+      py: 3,
+      borderBottom: 1,
+      borderColor: 'divider',
+    }}
+  >
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}
+    >
+      <SectionTitle component='h3' variant='h5' sx={{ mb: 0 }}>
         Edit Entity: {title}
-      </Typography>
+      </SectionTitle>
       <IconButton
-        className='text-gray-400 hover:text-gray-600 transition-colors duration-200'
         onClick={onClose}
         aria-label='Close modal'
         data-testid='close-button'
         type='button'
+        sx={{ color: 'text.secondary', '&:hover': { color: 'text.primary' } }}
       >
         <CloseIcon />
       </IconButton>
@@ -51,18 +66,22 @@ const EditModalHeader = ({
   </Box>
 );
 const EditModalFooter = ({ onClose }: { onClose: () => void }) => (
-  <Box className='bg-gray-50 px-6 py-3 border-t border-gray-200 flex justify-end space-x-3'>
-    <Button
-      className='inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200'
-      onClick={onClose}
-      type='button'
-    >
+  <Box
+    sx={{
+      bgcolor: 'background.paper',
+      px: 4,
+      py: 2,
+      borderTop: 1,
+      borderColor: 'divider',
+      display: 'flex',
+      justifyContent: 'flex-end',
+      gap: 2,
+    }}
+  >
+    <Button variant='outlined' color='inherit' onClick={onClose} type='button'>
       Cancel
     </Button>
-    <Button
-      className='inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200'
-      type='submit'
-    >
+    <Button variant='contained' color='primary' type='submit'>
       Save Changes
     </Button>
   </Box>
@@ -78,7 +97,7 @@ const EntityTypeSelector = ({
   entityTypes: EntityMetadata[];
   originalKind: EntityKind;
 }) => (
-  <Box className='mb-6 pb-4 border-b border-gray-200'>
+  <Box sx={{ mb: 6, pb: 4, borderBottom: 1, borderColor: 'divider' }}>
     <FormControl fullWidth>
       <InputLabel id='entity-type-label'>
         Entity Type
@@ -110,7 +129,10 @@ const EntityTypeSelector = ({
       </Select>
     </FormControl>
     {entityKind !== originalKind && (
-      <Typography variant='body2' className='mt-2 text-xs text-orange-600'>
+      <Typography
+        variant='body2'
+        sx={{ mt: 2, fontSize: 12, color: 'warning.main' }}
+      >
         ⚠️ Changing entity type will preserve existing fields where possible,
         but some fields may be lost if they don&apos;t exist in the new type.
       </Typography>
@@ -138,18 +160,39 @@ export const EntityEditModal = ({
 
   return (
     <Box
-      className='fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4'
+      sx={{
+        position: 'fixed',
+        inset: 0,
+        bgcolor: 'rgba(30,30,40,0.7)',
+        overflowY: 'auto',
+        height: '100vh',
+        width: '100vw',
+        zIndex: 1300,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: 2,
+      }}
       data-testid='modal-overlay'
       onClick={onClose}
     >
       <Box
-        className='relative bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden'
+        sx={{
+          position: 'relative',
+          bgcolor: 'background.paper',
+          borderRadius: 3,
+          boxShadow: 24,
+          maxWidth: 600,
+          width: '100%',
+          maxHeight: '90vh',
+          overflow: 'hidden',
+        }}
         data-testid='modal-content'
         onClick={(e) => e.stopPropagation()}
       >
         <form onSubmit={handleSubmit(handleSave)}>
           <EditModalHeader onClose={onClose} title={entity.title} />
-          <Box className='px-6 py-4 overflow-y-auto max-h-[60vh]'>
+          <Box sx={{ px: 4, py: 3, overflowY: 'auto', maxHeight: '60vh' }}>
             <EntityTypeSelector
               entityKind={entityKind}
               setEntityKind={setEntityKind}
@@ -157,11 +200,21 @@ export const EntityEditModal = ({
               originalKind={entity.kind}
             />
             {/* Dynamic Form Fields */}
-            <Box className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                gap: 2,
+              }}
+            >
               {formFields.map((field) => (
                 <Box
                   key={field.key}
-                  className={field.type === 'textarea' ? 'md:col-span-2' : ''}
+                  sx={
+                    field.type === 'textarea'
+                      ? { gridColumn: { md: '1 / span 2' } }
+                      : {}
+                  }
                 >
                   <FormField
                     field={field}
